@@ -81,4 +81,9 @@ public class Student extends Person {
     public StudentStatus getStatus() {
         return this.status;
     }
+
+    public String toString() {
+        return "This is a student! " + "\n"
+                + super.toString();
+    }
 }
