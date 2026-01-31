@@ -14,21 +14,21 @@ public class University {
     }
 
     public void setName(String n) {
-        if (n == null ||n.isEmpty()) throw new IllegalArgumentException();
+        if (n == null ||n.isEmpty()) throw new IllegalArgumentException("input can't be empty");
         name = n;
     }
     public void setShortName(String n) {
-        if (n == null ||n.isEmpty()) throw new IllegalArgumentException();
+        if (n == null ||n.isEmpty()) throw new IllegalArgumentException("input can't be empty");
         shortName = n;
     }
 
     public void setCity(String c) {
-        if (c == null ||c.isEmpty()) throw new IllegalArgumentException();
+        if (c == null ||c.isEmpty()) throw new IllegalArgumentException("input can't be empty");
         city = c;
     }
 
     public void setAddress(String address) {
-        if (address == null ||address.isEmpty()) throw new IllegalArgumentException();
+        if (address == null ||address.isEmpty()) throw new IllegalArgumentException("input can't be empty");
         this.address = address;
     }
 
