@@ -36,6 +36,10 @@ public class Person {
         setPhoneNumber(phoneNumber);
     }
 
+    public String getFullName() {
+        return firstName + " " + lastName + " " + fatherName;
+    }
+
     public void setFirstName(String firstName) {
         if (firstName == null || firstName.isEmpty()) {
             throw new IllegalArgumentException("input can't be empty");

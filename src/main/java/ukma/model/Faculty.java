@@ -1,8 +1,8 @@
 package ukma.model;
 
 public class Faculty {
-    private int id;
-    private int idCounter = 1;
+    private final int id;
+    private static int idCounter = 1;
     private String name;
     private String shortName;
     private Teacher dean;
