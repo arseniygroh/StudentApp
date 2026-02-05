@@ -8,13 +8,13 @@ public class Teacher extends Person {
     private Degree degree;
     private String occupation;
     private String academicRank;
-    private LocalDate hireDate;
+    private String hireDate;
     private double rate;
 
     public Teacher(String firstName, String lastName, String fatherName,
-                   LocalDate birthDate, String email, String phoneNumber,
+                   String birthDate, String email, String phoneNumber,
                    Degree degree, String occupation, String academicRank,
-                   LocalDate hireDate, double rate) {
+                   String hireDate, double rate) {
 
         super(firstName, lastName, fatherName, birthDate, email, phoneNumber);
 
@@ -58,16 +58,13 @@ public class Teacher extends Person {
         this.academicRank = academicRank;
     }
 
-    public LocalDate getHireDate() {
+    public String getHireDate() {
         return hireDate;
     }
 
-    public void setHireDate(LocalDate hireDate) {
-        if (hireDate == null) {
+    public void setHireDate(String hireDate) {
+        if (hireDate == null || hireDate.isEmpty()) {
             throw new IllegalArgumentException("invalid input");
-        }
-        if (hireDate.isAfter(LocalDate.now())) {
-            throw new IllegalArgumentException("invalid date, it can't be in the future");
         }
         this.hireDate = hireDate;
     }

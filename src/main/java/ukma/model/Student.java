@@ -18,14 +18,14 @@ public class Student extends Person {
     }
 
     public Student(String firstName, String lastName, String fatherName,
-                   LocalDate birthDate, String email, String phoneNumber,
+                   String birthDate, String email, String phoneNumber,
                    String studentRecordBookId, int studyYear, String courseCode,
                    int admissionYear, StudyForm studyForm, StudentStatus status) {
 
         super(firstName, lastName, fatherName, birthDate, email, phoneNumber);
         setStudentTicketId(studentRecordBookId);
         setStudyYear(studyYear);
-        setGroupCode(courseCode);
+        setCourseCode(courseCode);
 
         if (admissionYear <= 0) throw new IllegalArgumentException("invalid year input");
         this.admissionYear = admissionYear;
@@ -44,6 +44,16 @@ public class Student extends Person {
         this.studentRecordBookId = id;
     }
 
+    public void setStudyForm(StudyForm form) {
+        if (form != null) studyForm = form;
+        else throw new IllegalArgumentException("Invalid input");
+    }
+
+    public void setStatus(StudentStatus status) {
+        if (status != null) this.status = status;
+        else throw new IllegalArgumentException("Invalid input");
+    }
+
     public void setStudyYear(int year) {
         if (year < 1 || year > 6) {
             throw new IllegalArgumentException("year of study must be between 1 and 6");
@@ -51,7 +61,7 @@ public class Student extends Person {
         this.studyYear = year;
     }
 
-    public void setGroupCode(String code) {
+    public void setCourseCode(String code) {
         if (code == null || code.isEmpty()) {
             throw new IllegalArgumentException("invalid input, it can't be empty");
         }
