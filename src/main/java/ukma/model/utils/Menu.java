@@ -4,14 +4,17 @@ import ukma.model.Student;
 import ukma.model.enums.StudentStatus;
 import ukma.model.enums.StudyForm;
 
+import java.time.LocalDate;
 import java.util.Scanner;
 
 public class Menu {
     private Scanner scan = new Scanner(System.in);
     private RegistryManager manager;
+    private ConsoleInput inputValidator;
 
-    public Menu(RegistryManager manager) {
+    public Menu(RegistryManager manager, ConsoleInput inputValidator) {
         this.manager = manager;
+        this.inputValidator = inputValidator;
     }
 
     public void initMenu() {
@@ -23,14 +26,8 @@ public class Menu {
                     + "3 - Update a student" + "\n"
                     + "4 - Get a student" + "\n"
                     + "5 - Show all students" + "\n");
-            System.out.println("Select your option: ");
-            int option = scan.nextInt();
-            scan.nextLine();
-            while (option < 0 || option > 5) {
-                System.out.println("Invalid option input! Try again: ");
-                option = scan.nextInt();
-                scan.nextLine();
-            }
+            int option = inputValidator.readInt("Select your option: ", 0, 5);
+            //scan.nextLine();
             if (option == 1) {
                 createAndAddStudent();
             } else if (option == 2) {
@@ -44,13 +41,7 @@ public class Menu {
                 System.out.println("Would you like to get a student by ID or name info?" + "\n"
                 + "1 - by id" + "\n"
                 + "2 - by name info" + "\n");
-                int choice = scan.nextInt();
-                scan.nextLine();
-                while (choice != 1 && choice != 2) {
-                    System.out.println("Invalid input! Try again: ");
-                    choice = scan.nextInt();
-                    scan.nextLine();
-                }
+                int choice = inputValidator.readInt("Enter your choice: ", 1, 2);
                 Student result = null;
                 if (choice == 1) {
                     System.out.println("Enter an ID of a student you want to get: ");
@@ -58,12 +49,7 @@ public class Menu {
                     scan.nextLine();
                     result = manager.getStudentById(id);
                 } else {
-                    System.out.println("Enter some name details of a student you want to get: ");
-                    String query = scan.nextLine().trim();
-                    while (query.isEmpty()) {
-                        System.out.println("Input can't be empty! Try again:");
-                        query = scan.nextLine().trim();
-                    }
+                    String query = inputValidator.readString("Enter some name details of a student you want to get: ");
                     result = manager.getStudentByNameInfo(query);
                 }
                 if (result != null) {
@@ -79,45 +65,34 @@ public class Menu {
     private void createAndAddStudent() {
         System.out.println("\n--- ADDING NEW STUDENT ---");
 
-        System.out.print("First Name: ");
-        String firstName = scan.nextLine().trim();
-
-        System.out.print("Last Name: ");
-        String lastName = scan.nextLine().trim();
-
-        System.out.print("Father Name (Middle Name): ");
-        String middleName = scan.nextLine().trim();
-
-        System.out.print("Birth Date (YYYY-MM-DD): ");
-        String birthDate = scan.nextLine().trim();
-
-        System.out.print("Email: ");
-        String email = scan.nextLine().trim();
-
-        System.out.print("Phone: ");
-        String phone = scan.nextLine().trim();
-
-        System.out.print("Record Book ID (Ticket): ");
-        String recordId = scan.nextLine().trim();
-
-        System.out.print("Study Year (1-6): ");
-        int year = scan.nextInt();
-        scan.nextLine();
-
-        System.out.print("Course Code: ");
-        String courseCode = scan.nextLine();
-
-        System.out.print("Admission Year: ");
-        int admYear = scan.nextInt();
-        scan.nextLine();
+        String firstName = inputValidator.readString("First Name: ");
+        String lastName = inputValidator.readString("Last Name: ");
+        String fatherName = inputValidator.readString("Father's Name: ");
+        LocalDate birthDate = inputValidator.readDate("Enter birth date");
+        String email = inputValidator.readString("Email: ");
+        while (!email.contains("@")) {
+            System.out.println("Incorrect email format!");
+            email = inputValidator.readString("Email: ");
+        }
+        String phone = inputValidator.readString("Phone: ");
+        while (phone.length() < 10) {
+            System.out.println("Phone number is too short!");
+            phone = inputValidator.readString("Phone: ");
+        }
+        String recordBookId = inputValidator.readString("Record Book ID (Ticket): ");
+        int year = inputValidator.readInt("Study Year (1-6): ", 1, 6);
+        //scan.nextLine();
+        String courseCode = inputValidator.readString("Course Code: ");
+        int admYear = inputValidator.readInt("Admission Year: ", 1991, 2025);
+        //scan.nextLine();
 
         StudyForm studyForm = selectStudyForm();
         StudentStatus status = selectStudentStatus();
 
         try {
             Student newStudent = new Student(
-                    firstName, lastName, middleName, birthDate, email, phone,
-                    recordId, year, courseCode, admYear, studyForm, status
+                    firstName, lastName, fatherName, birthDate, email, phone,
+                    recordBookId, year, courseCode, admYear, studyForm, status
             );
 
             manager.addStudent(newStudent);
@@ -133,14 +108,7 @@ public class Menu {
         for (int i = 0; i < forms.length; i++) {
             System.out.println(i + " - " + forms[i]);
         }
-        System.out.print("Your choice: ");
-        int choice = scan.nextInt();
-        scan.nextLine();
-        while (choice < 0 || choice > forms.length - 1) {
-            System.out.println("Invalid input! Try again: ");
-            choice = scan.nextInt();
-            scan.nextLine();
-        }
+        int choice = inputValidator.readInt("Your choice: ", 0, forms.length - 1);
         return forms[choice];
     }
     private StudentStatus selectStudentStatus() {
@@ -148,14 +116,7 @@ public class Menu {
         for (int i = 0; i < statuses.length; i++) {
             System.out.println(i + " - " + statuses[i]);
         }
-        System.out.print("Your choice: ");
-        int choice = scan.nextInt();
-        scan.nextLine();
-        while (choice < 0 || choice > statuses.length - 1) {
-            System.out.println("Invalid input! Try again: ");
-            choice = scan.nextInt();
-            scan.nextLine();
-        }
+        int choice = inputValidator.readInt("Your choice: ", 0, statuses.length - 1);
         return statuses[choice];
     }
 

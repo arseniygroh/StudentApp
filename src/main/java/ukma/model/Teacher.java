@@ -12,7 +12,7 @@ public class Teacher extends Person {
     private double rate;
 
     public Teacher(String firstName, String lastName, String fatherName,
-                   String birthDate, String email, String phoneNumber,
+                   LocalDate birthDate, String email, String phoneNumber,
                    Degree degree, String occupation, String academicRank,
                    String hireDate, double rate) {
 

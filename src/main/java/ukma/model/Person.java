@@ -1,13 +1,15 @@
 package ukma.model;
 
 
+import java.time.LocalDate;
+
 public class Person {
     private final long id;
     private static long idCounter = 1;
     private String firstName;
     private String lastName;
     private String fatherName;
-    private String birthDate;
+    private LocalDate birthDate;
     private String email;
     private String phoneNumber;
 
@@ -15,7 +17,7 @@ public class Person {
         this.id = idCounter++;
     } // Default
 
-    public Person(String firstName, String lastName, String fatherName, String birthDate, String email, String phoneNumber) {
+    public Person(String firstName, String lastName, String fatherName, LocalDate birthDate, String email, String phoneNumber) {
 
         this.id = idCounter++;
 
@@ -23,7 +25,7 @@ public class Person {
         setLastName(lastName);
         setFatherName(fatherName);
 
-        if (birthDate == null || birthDate.isEmpty()) {
+        if (birthDate == null || birthDate.isAfter(LocalDate.now())) {
             throw new IllegalArgumentException("invalid birthday input");
         }
 
@@ -89,12 +91,12 @@ public class Person {
     public String getPhoneNumber() {
         return this.phoneNumber;
     }
-    public String getBirthDate() {
+    public LocalDate getBirthDate() {
         return this.birthDate;
     }
 
     public String toString() {
-        return this.firstName + " " + this.lastName + " " + this.fatherName + " was born in " + this.birthDate.split("-")[2] + ". " + "\n"
+        return this.firstName + " " + this.lastName + " " + this.fatherName + " was born in " + this.birthDate.getYear() + ". " + "\n"
             + "Email: " + this.email + "\n"
             + "Phone number: " + this.phoneNumber;
     }

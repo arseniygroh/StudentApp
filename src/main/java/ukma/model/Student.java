@@ -18,7 +18,7 @@ public class Student extends Person {
     }
 
     public Student(String firstName, String lastName, String fatherName,
-                   String birthDate, String email, String phoneNumber,
+                   LocalDate birthDate, String email, String phoneNumber,
                    String studentRecordBookId, int studyYear, String courseCode,
                    int admissionYear, StudyForm studyForm, StudentStatus status) {
 
