@@ -5,6 +5,8 @@ import ukma.model.enums.StudentStatus;
 import ukma.model.enums.StudyForm;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Menu {
@@ -40,20 +42,28 @@ public class Menu {
             } else if (option == 4) {
                 System.out.println("Would you like to get a student by ID or name info?" + "\n"
                 + "1 - by id" + "\n"
-                + "2 - by name info" + "\n");
-                int choice = inputValidator.readInt("Enter your choice: ", 1, 2);
-                Student result = null;
+                + "2 - by name info" + "\n"
+                + "3 - by study year" + "\n"
+                        + "4 - by course code");
+                int choice = inputValidator.readInt("Enter your choice: ", 1, 4);
+                List<Student> result = new ArrayList<>();
                 if (choice == 1) {
                     System.out.println("Enter an ID of a student you want to get: ");
                     int id = scan.nextInt();
                     scan.nextLine();
                     result = manager.getStudentById(id);
-                } else {
+                } else if (choice == 2){
                     String query = inputValidator.readString("Enter some name details of a student you want to get: ");
                     result = manager.getStudentByNameInfo(query);
+                } else if (choice == 3) {
+                    int year = inputValidator.readInt("Enter study year: ", 1, 6);
+                    result = manager.findByCourse(year);
+                } else {
+                    String courseCode = inputValidator.readString("Enter course code: ");
+                    result = manager.findByCourseCode(courseCode);
                 }
                 if (result != null) {
-                    System.out.println("-- STUDENT FOUND --");
+                    System.out.println((result.size() != 1) ?  "-- STUDENTS FOUND --" : "-- STUDENT FOUND --");
                     System.out.println(result);
                     System.out.println("---------------------");
                 }

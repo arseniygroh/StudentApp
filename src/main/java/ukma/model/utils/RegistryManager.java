@@ -4,74 +4,83 @@ import ukma.model.Student;
 import ukma.model.enums.StudentStatus;
 import ukma.model.enums.StudyForm;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class RegistryManager {
     private Scanner scan = new Scanner(System.in);
-    private Student[] students = new Student[20];
-    private int studentCount = 0;
+    private List<Student> students = new ArrayList<>();
 
     public void addStudent(Student student) {
-        if (studentCount < students.length) {
-            students[studentCount++] = student;
-        } else {
-            Student[] studentsExpanded = new Student[students.length * 2];
-            studentsExpanded = Arrays.copyOf(students, studentsExpanded.length);
-            studentsExpanded[studentCount++] = student;
-            students = studentsExpanded;
-        }
+        students.add(student);
     }
 
     public void showAllStudents() {
-        for (int i = 0; i < studentCount; i++) {
-            System.out.println(students[i]);
+        for (int i = 0; i < students.size(); i++) {
+            System.out.println(students.get(i));
             System.out.println("===========================================================");
         }
     }
 
     public void deleteStudent(int id) {
-        int indexToRemove = -1;
-        for (int i = 0; i < studentCount; i++) {
-            if (students[i].getId() == id) {
-                indexToRemove = i;
-                break;
-            }
+        boolean isRemoved = students.removeIf(student -> student.getId() == id);
+        if (isRemoved) {
+            System.out.println("Student with ID " + id + " was successfully removed.");
+        } else {
+            System.out.println("Student with ID " + id + " not found.");
         }
-        if (indexToRemove == -1) {
-            System.out.println("Student with such ID " + id + " is not found");
-            return;
-        }
-        for (int i = indexToRemove; i < studentCount - 1; i++) {
-            students[i] = students[i + 1];
-        }
-        students[--studentCount] = null;
-        System.out.println("Student with an ID " + id + " was successfully removed");
     }
 
 
-    public Student getStudentById(int id) {
+    public List<Student> getStudentById(int id) {
+        List<Student> result = new ArrayList<>();
         Student s = null;
-        for (int i = 0; i < studentCount; i++) {
-            if (students[i].getId() == id) {
-                s = students[i];
+        for (int i = 0; i < students.size(); i++) {
+            if (students.get(i).getId() == id) {
+                s = students.get(i);
+                result.add(s);
                 break;
             }
         }
-        if (s == null) System.out.println("Student with " + id + " is no found!");
-        return s;
+        if (result.size() == 0) System.out.println("Student with " + id + " is no found!");
+        return result;
     }
 
-    public Student getStudentByNameInfo(String query) {
+    public List<Student> getStudentByNameInfo(String query) {
+        List<Student> result = new ArrayList<Student>();
         Student s = null;
-        for (int i = 0; i < studentCount; i++) {
-            if (students[i].getFullName().toLowerCase().contains(query.toLowerCase())) {
-                s = students[i];
-                break;
+        for (int i = 0; i < students.size(); i++) {
+            if (students.get(i).getFullName().toLowerCase().contains(query.toLowerCase())) {
+                s = students.get(i);
+                result.add(s);
             }
         }
-        if (s == null) System.out.println("Student with such name info is no found!");
-        return s;
+        if (result.size() == 0) System.out.println("Student with such name info is no found!");
+        return result;
+    }
+
+    public List<Student> findByCourse(int year) {
+        List<Student> result = new ArrayList<>();
+
+        for (Student student : students) {
+            if (student.getStudyYear() == year) {
+                result.add(student);
+            }
+        }
+        return result;
+    }
+
+    // Пошук за групою
+    public List<Student> findByCourseCode(String courseCode) {
+        List<Student> result = new ArrayList<>();
+
+        for (Student student : students) {
+            if (student.getCourseCode().equalsIgnoreCase(courseCode.trim())) {
+                result.add(student);
+            }
+        }
+        return result;
     }
 
     public void updateStudent() {
@@ -85,8 +94,8 @@ public class RegistryManager {
                 scan.nextLine();
             }
             Student studentToUpdate = null;
-            for (int i = 0; i < studentCount; i++) {
-                Student s = students[i];
+            for (int i = 0; i < students.size(); i++) {
+                Student s = students.get(i);
                 if (s.getId() == studentId) {
                     studentToUpdate = s;
                     break;
@@ -127,7 +136,7 @@ public class RegistryManager {
                 } else if (option == 3) {
                     System.out.print("Enter new fathers name for the student: ");
                     String fatherName = scan.nextLine();
-                    studentToUpdate.setLastName(fatherName);
+                    studentToUpdate.setFatherName(fatherName);
                 } else if (option == 4) {
                     System.out.print("Enter new course code for the student: ");
                     String courseCode = scan.nextLine();
