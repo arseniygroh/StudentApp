@@ -17,7 +17,7 @@ public class RegistryManager {
     }
 
     public Faculty getFacultyById(int id) {
-        return faculties.get(id); // Повертає факультет або null, якщо такого ID немає
+        return faculties.get(id);
     }
 
     public Map<Integer, Faculty> getFaculties() {
