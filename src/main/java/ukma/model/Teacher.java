@@ -11,6 +11,9 @@ public class Teacher extends Person {
     private String hireDate;
     private double rate;
 
+
+    public Teacher() {super();}
+
     public Teacher(String firstName, String lastName, String fatherName,
                    LocalDate birthDate, String email, String phoneNumber,
                    Degree degree, String occupation, String academicRank,
