@@ -12,6 +12,7 @@ public class Student extends Person {
     private int admissionYear;
     private StudyForm studyForm;
     private StudentStatus status;
+    private Faculty faculty;
 
     public Student() {
         super();
@@ -20,12 +21,13 @@ public class Student extends Person {
     public Student(String firstName, String lastName, String fatherName,
                    LocalDate birthDate, String email, String phoneNumber,
                    String studentRecordBookId, int studyYear, String courseCode,
-                   int admissionYear, StudyForm studyForm, StudentStatus status) {
+                   int admissionYear, StudyForm studyForm, StudentStatus status, Faculty faculty) {
 
         super(firstName, lastName, fatherName, birthDate, email, phoneNumber);
         setStudentTicketId(studentRecordBookId);
         setStudyYear(studyYear);
         setCourseCode(courseCode);
+        setFaculty(faculty);
 
         if (admissionYear <= 0) throw new IllegalArgumentException("invalid year input");
         this.admissionYear = admissionYear;
@@ -35,6 +37,17 @@ public class Student extends Person {
 
         if (status == null) throw new IllegalArgumentException("Status is required");
         this.status = status;
+    }
+
+    public void setFaculty(Faculty faculty) {
+        if (faculty == null) {
+            throw new IllegalArgumentException("Faculty cannot be null");
+        }
+        this.faculty = faculty;
+    }
+
+    public Faculty getFaculty() {
+        return this.faculty;
     }
 
     public void setStudentTicketId(String id) {

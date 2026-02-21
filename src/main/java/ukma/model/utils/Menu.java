@@ -1,5 +1,6 @@
 package ukma.model.utils;
 
+import ukma.model.Faculty;
 import ukma.model.Student;
 import ukma.model.enums.StudentStatus;
 import ukma.model.enums.StudyForm;
@@ -7,6 +8,7 @@ import ukma.model.enums.StudyForm;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 public class Menu {
@@ -98,11 +100,12 @@ public class Menu {
 
         StudyForm studyForm = selectStudyForm();
         StudentStatus status = selectStudentStatus();
+        Faculty faculty = selectFaculty();
 
         try {
             Student newStudent = new Student(
                     firstName, lastName, fatherName, birthDate, email, phone,
-                    recordBookId, year, courseCode, admYear, studyForm, status
+                    recordBookId, year, courseCode, admYear, studyForm, status, faculty
             );
 
             manager.addStudent(newStudent);
@@ -128,6 +131,31 @@ public class Menu {
         }
         int choice = inputValidator.readInt("Your choice: ", 0, statuses.length - 1);
         return statuses[choice];
+    }
+
+    private Faculty selectFaculty() {
+        System.out.println("Available Faculties:");
+
+        Map<Integer, Faculty> availableFaculties = manager.getFaculties();
+
+        if (availableFaculties.isEmpty()) {
+            System.out.println("No faculties available in the registry!");
+            return null;
+        }
+
+        for (Faculty f : availableFaculties.values()) {
+            System.out.println(f.getId() + " - " + f.getName() + " (" + f.getShortName() + ")");
+        }
+
+        Faculty chosen = null;
+        while (chosen == null) {
+            int id = inputValidator.readInt("Enter Faculty ID: ", 1, Integer.MAX_VALUE);
+            chosen = manager.getFacultyById(id);
+            if (chosen == null) {
+                System.out.println("Faculty with ID " + id + " not found. Try again.");
+            }
+        }
+        return chosen;
     }
 
 }
