@@ -3,12 +3,12 @@ package ukma.model;
 import ukma.model.enums.Role;
 
 public class User {
-    private String username;
+    private String email;
     private String password;
     private Role role;
 
-    public User(String username, String password, Role role) {
-        if (username == null || username.trim().isEmpty()) {
+    public User(String email, String password, Role role) {
+        if (email == null || email.trim().isEmpty() || !email.contains("@")) {
             throw new IllegalArgumentException("input can't be empty");
         }
         if (password == null || password.trim().isEmpty()) {
@@ -17,12 +17,12 @@ public class User {
         if (role == null) {
             throw new IllegalArgumentException("input can't be null");
         }
-        this.username = username;
+        this.email = email;
         this.password = password;
         this.role = role;
     }
-    public String getUsername() {
-        return username;
+    public String getEmail() {
+        return email;
     }
 
     public String getPassword() {
@@ -36,7 +36,7 @@ public class User {
     @Override
     public String toString() {
         return "User{" +
-                "username='" + username + '\'' +
+                "email='" + email + '\'' +
                 ", role=" + role +
                 '}';
     }
