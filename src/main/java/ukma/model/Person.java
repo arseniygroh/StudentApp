@@ -98,6 +98,7 @@ public class Person {
     public String toString() {
         return this.firstName + " " + this.lastName + " " + this.fatherName + " was born in " + this.birthDate.getYear() + ". " + "\n"
             + "Email: " + this.email + "\n"
-            + "Phone number: " + this.phoneNumber;
+            + "Phone number: " + this.phoneNumber + "\n"
+            + "ID: " + this.getId();
     }
 }
