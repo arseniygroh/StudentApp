@@ -22,7 +22,6 @@ public class AuthorizationService {
             try {
                 file.createNewFile();
                 System.out.println("File was created");
-                return;
             } catch (IOException e) {
                 System.out.println(e.getMessage());
             }
@@ -34,8 +33,8 @@ public class AuthorizationService {
                 String[] parts = line.split(",");
                 if (parts.length == 3) {
                     String email = parts[0].trim();
-                    String password = parts[1].trim().toUpperCase();
-                    Role role = Role.valueOf(parts[2].trim());
+                    String password = parts[1].trim();
+                    Role role = Role.valueOf(parts[2].trim().toUpperCase());
                     users.put(email, new User(email, password, role));
                 }
             }
