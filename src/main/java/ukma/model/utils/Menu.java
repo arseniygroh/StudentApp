@@ -15,32 +15,40 @@ public class Menu {
     private Scanner scan = new Scanner(System.in);
     private RegistryManager manager;
     private ConsoleInput inputValidator;
+    private AuthorizationService authService;
 
-    public Menu(RegistryManager manager, ConsoleInput inputValidator) {
+    public Menu(RegistryManager manager, ConsoleInput inputValidator, AuthorizationService authService) {
         this.manager = manager;
         this.inputValidator = inputValidator;
+        this.authService = authService;
     }
 
     public void initMenu() {
         while (true) {
             System.out.println("Here are the options for registry manipulations: " + "\n"
                     + "0 - Leave the menu" + "\n"
-                    + "1 - Add a student" + "\n"
-                    + "2 - Delete a student" + "\n"
-                    + "3 - Update a student" + "\n"
+                    + "1 - Add a student (manager only)" + "\n"
+                    + "2 - Delete a student (manager only)" + "\n"
+                    + "3 - Update a student (manager only)" + "\n"
                     + "4 - Get a student" + "\n"
                     + "5 - Show all students" + "\n");
             int option = inputValidator.readInt("Select your option: ", 0, 5);
             //scan.nextLine();
             if (option == 1) {
-                createAndAddStudent();
+                if (authService.isManager()) createAndAddStudent();
+                else System.out.println("You don't have a right to do it");
             } else if (option == 2) {
-                System.out.println("Enter an ID of a student you want to delete: ");
-                int id = scan.nextInt();
-                scan.nextLine();
-                manager.deleteStudent(id);
+                if (authService.isManager()) {
+                    System.out.println("Enter an ID of a student you want to delete: ");
+                    int id = scan.nextInt();
+                    scan.nextLine();
+                    manager.deleteStudent(id);
+                } else System.out.println("You don't have a right to do it");
+
             } else if (option == 3) {
-                manager.updateStudent();
+                if (authService.isManager()) manager.updateStudent();
+                else System.out.println("You don't have a right to do it");
+
             } else if (option == 4) {
                 System.out.println("Would you like to get a student by ID or name info?" + "\n"
                 + "1 - by id" + "\n"
