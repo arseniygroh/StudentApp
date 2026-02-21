@@ -46,4 +46,16 @@ public class ConsoleInput {
             }
         }
     }
+
+    public String readEmail(String message) {
+        while (true) {
+            System.out.println(message + " (don't forget valid email format):");
+            String line = scanner.nextLine().trim();
+            if (line.isEmpty() || !line.contains("@")) {
+                System.out.println("Invalid email");
+                continue;
+            }
+            return line;
+        }
+    }
 }
