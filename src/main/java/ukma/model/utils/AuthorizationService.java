@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class AuthorizationService {
     private Map<String, User> users = new HashMap<>();
-    private static final String FILE_NAME = "users.csv";
+    private static final String FILE_NAME = "files/users.csv";
     private User currentUser;
 
     public AuthorizationService() {
