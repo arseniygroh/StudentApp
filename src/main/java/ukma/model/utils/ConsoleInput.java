@@ -51,7 +51,7 @@ public class ConsoleInput {
         while (true) {
             System.out.println(message + " (don't forget valid email format):");
             String line = scanner.nextLine().trim();
-            if (line.isEmpty() || !line.contains("@")) {
+            if (!EmailValidator.validate(line)) {
                 System.out.println("Invalid email");
                 continue;
             }

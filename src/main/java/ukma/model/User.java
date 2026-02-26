@@ -1,6 +1,7 @@
 package ukma.model;
 
 import ukma.model.enums.Role;
+import ukma.model.utils.EmailValidator;
 
 public class User {
     private String email;
@@ -8,8 +9,8 @@ public class User {
     private Role role;
 
     public User(String email, String password, Role role) {
-        if (email == null || email.trim().isEmpty() || !email.contains("@")) {
-            throw new IllegalArgumentException("input can't be empty");
+        if (!EmailValidator.validate(email)) {
+            throw new IllegalArgumentException("invalid email");
         }
         if (password == null || password.trim().isEmpty()) {
             throw new IllegalArgumentException("input can't be empty");

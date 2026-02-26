@@ -89,11 +89,7 @@ public class Menu {
         String lastName = inputValidator.readString("Last Name: ");
         String fatherName = inputValidator.readString("Father's Name: ");
         LocalDate birthDate = inputValidator.readDate("Enter birth date");
-        String email = inputValidator.readString("Email: ");
-        while (!email.contains("@")) {
-            System.out.println("Incorrect email format!");
-            email = inputValidator.readString("Email: ");
-        }
+        String email = inputValidator.readEmail("Enter your email");
         String phone = inputValidator.readString("Phone: ");
         while (phone.length() < 10) {
             System.out.println("Phone number is too short!");

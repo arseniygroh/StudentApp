@@ -1,5 +1,7 @@
 package ukma.model;
 
+import ukma.model.utils.EmailValidator;
+
 public class Faculty {
     private final int id;
     private static int idCounter = 1;
@@ -37,8 +39,8 @@ public class Faculty {
     }
 
     public void setEmail(String email) {
-        if (email == null || email.trim().isEmpty()) {
-            throw new IllegalArgumentException("input can't be empty");
+        if (!EmailValidator.validate(email)) {
+            throw new IllegalArgumentException("invalid email");
         }
         this.email = email;
     }

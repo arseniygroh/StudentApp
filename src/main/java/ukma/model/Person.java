@@ -1,6 +1,8 @@
 package ukma.model;
 
 
+import ukma.model.utils.EmailValidator;
+
 import java.time.LocalDate;
 
 public class Person {
@@ -61,7 +63,7 @@ public class Person {
     }
 
     public void setEmail(String email) {
-        if (email == null || !email.contains("@")) {
+        if (!EmailValidator.validate(email)) {
             throw new IllegalArgumentException("Invalid email");
         }
         this.email = email.trim();
