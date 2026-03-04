@@ -3,12 +3,13 @@ package ukma.model;
 import ukma.model.enums.Degree;
 
 import java.time.LocalDate;
+import java.time.Period;
 
 public class Teacher extends Person {
     private Degree degree;
     private String occupation;
     private String academicRank;
-    private String hireDate;
+    private LocalDate hireDate;
     private double rate;
 
 
@@ -61,13 +62,13 @@ public class Teacher extends Person {
         this.academicRank = academicRank;
     }
 
-    public String getHireDate() {
+    public LocalDate getHireDate() {
         return hireDate;
     }
 
-    public void setHireDate(String hireDate) {
-        if (hireDate == null || hireDate.isEmpty()) {
-            throw new IllegalArgumentException("invalid input");
+    public void setHireDate(LocalDate hireDate) {
+        if (hireDate == null || hireDate.isAfter(LocalDate.now())) {
+            throw new IllegalArgumentException("invalid hire date");
         }
         this.hireDate = hireDate;
     }
@@ -83,8 +84,17 @@ public class Teacher extends Person {
         this.rate = rate;
     }
 
+    public int getExperienceYears() {
+        if (hireDate == null) return 0;
+        return Period.between(hireDate, LocalDate.now()).getYears();
+    }
+
+    @Override
     public String toString() {
-        return "This is a teacher! " + "\n"
-                + super.toString();
+        return "--- TEACHER --- \n"
+                + super.toString() + "\n"
+                + "Degree: " + degree + ", Academic Rank: " + academicRank + "\n"
+                + "Occupation: " + occupation + ", Rate: " + rate + "\n"
+                + "Experience: " + getExperienceYears() + " years (Hired: " + hireDate + ")";
     }
 }
