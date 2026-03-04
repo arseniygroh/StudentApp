@@ -46,53 +46,29 @@ public class RegistryManager {
 
 
     public List<Student> getStudentById(int id) {
-        List<Student> result = new ArrayList<>();
-        Student s = null;
-        for (int i = 0; i < students.size(); i++) {
-            if (students.get(i).getId() == id) {
-                s = students.get(i);
-                result.add(s);
-                break;
-            }
-        }
-        if (result.size() == 0) System.out.println("Student with " + id + " is no found!");
-        return result;
+        return students.stream()
+                .filter(s -> s.getId() == id)
+                .toList();
     }
 
     public List<Student> getStudentByNameInfo(String query) {
-        List<Student> result = new ArrayList<Student>();
-        Student s = null;
-        for (int i = 0; i < students.size(); i++) {
-            if (students.get(i).getFullName().toLowerCase().contains(query.toLowerCase())) {
-                s = students.get(i);
-                result.add(s);
-            }
-        }
-        if (result.size() == 0) System.out.println("Student with such name info is no found!");
-        return result;
+        String lowerQuery = query.toLowerCase();
+        return students.stream()
+                .filter(s -> s.getFullName().toLowerCase().contains(lowerQuery))
+                .toList();
     }
 
     public List<Student> findByCourse(int year) {
-        List<Student> result = new ArrayList<>();
-
-        for (Student student : students) {
-            if (student.getStudyYear() == year) {
-                result.add(student);
-            }
-        }
-        return result;
+        return students.stream()
+                .filter(s -> s.getStudyYear() == year)
+                .toList();
     }
 
     // Пошук за групою
     public List<Student> findByCourseCode(String courseCode) {
-        List<Student> result = new ArrayList<>();
-
-        for (Student student : students) {
-            if (student.getCourseCode().equalsIgnoreCase(courseCode.trim())) {
-                result.add(student);
-            }
-        }
-        return result;
+        return students.stream()
+                .filter(s -> s.getCourseCode().equalsIgnoreCase(courseCode.trim()))
+                .toList();
     }
 
     public void updateStudent() {

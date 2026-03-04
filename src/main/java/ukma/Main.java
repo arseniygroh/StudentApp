@@ -58,9 +58,9 @@ public class Main {
         Faculty fen = new Faculty("Факультет економічних наук", "ФЕН", null, "fen@ukma.edu.ua", "+380442222222");
         manager.addFaculty(fi);
         manager.addFaculty(fen);
-        Student s1 = new Student("Арсеній", "Грох", "Миколайович", LocalDate.of(2007, 01, 10), "sdsodos@gmail.com", "232932934545", "some id", 2, "ipz", 2023, StudyForm.FULL_TIME, StudentStatus.CONTRACT, fi);
-        Student s2 = new Student("Віталій", "Дида", "Миколайович", LocalDate.of(2007, 01, 10), "sdsodos@gmail.com", "2329329334343", "some i1", 1, "ipz", 2025, StudyForm.FULL_TIME, StudentStatus.CONTRACT, fi);
-        Student s3 = new Student("Артем", "Слободян", "Миколайович", LocalDate.of(2007, 01, 10), "sdsodos@gmail.com", "232932932323", "some id2", 3, "ipz", 2022, StudyForm.FULL_TIME, StudentStatus.CONTRACT, fi);
+        Student s1 = new Student("Арсеній", "Грох", "Миколайович", LocalDate.of(2007, 01, 10), "sdsodos@gmail.com", "232932934545", "some id", 2, "ipz-3", 2023, StudyForm.FULL_TIME, StudentStatus.CONTRACT, fi);
+        Student s2 = new Student("Віталій", "Дида", "Миколайович", LocalDate.of(2007, 01, 10), "sdsodos@gmail.com", "2329329334343", "some i1", 1, "ipz-2", 2025, StudyForm.FULL_TIME, StudentStatus.CONTRACT, fi);
+        Student s3 = new Student("Артем", "Слободян", "Миколайович", LocalDate.of(2007, 01, 10), "sdsodos@gmail.com", "232932932323", "some id2", 3, "ipz-1", 2022, StudyForm.FULL_TIME, StudentStatus.CONTRACT, fi);
         manager.addStudent(s1);
         manager.addStudent(s2);
         manager.addStudent(s3);
