@@ -18,7 +18,7 @@ public class Teacher extends Person {
     public Teacher(String firstName, String lastName, String fatherName,
                    LocalDate birthDate, String email, String phoneNumber,
                    Degree degree, String occupation, String academicRank,
-                   String hireDate, double rate) {
+                   LocalDate hireDate, double rate) {
 
         super(firstName, lastName, fatherName, birthDate, email, phoneNumber);
 
@@ -89,9 +89,8 @@ public class Teacher extends Person {
         return Period.between(hireDate, LocalDate.now()).getYears();
     }
 
-    @Override
     public String toString() {
-        return "--- TEACHER --- \n"
+        return "This is teacher \n"
                 + super.toString() + "\n"
                 + "Degree: " + degree + ", Academic Rank: " + academicRank + "\n"
                 + "Occupation: " + occupation + ", Rate: " + rate + "\n"
