@@ -26,10 +26,21 @@ public class RegistryManager {
     }
 
     public void showAllStudents() {
-        for (int i = 0; i < students.size(); i++) {
-            System.out.println(students.get(i));
-            System.out.println("===========================================================");
-        }
+        students.stream()
+                .sorted(Comparator.comparingInt(Student::getStudyYear))
+                .forEach(student -> {
+                    System.out.println(student);
+                    System.out.println("================================================");
+                });
+    }
+
+    public void showAllStudentsInFaculty(String facultyShortName) {
+        students.stream()
+                .filter(student -> student.getFaculty().getShortName().equalsIgnoreCase(facultyShortName))
+                .forEach(student -> {
+                    System.out.println(student);
+                    System.out.println("================================================");
+                });
     }
 
     public void deleteStudent(int id) {

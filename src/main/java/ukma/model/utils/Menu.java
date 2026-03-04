@@ -75,7 +75,21 @@ public class Menu {
                     System.out.println("---------------------");
                 }
             } else if (option == 5) {
-                manager.showAllStudents();
+                System.out.println("Would you like to get students by ?" + "\n"
+                + "1 - by faculty" + "\n"
+                + "2 - by study year in ascending order");
+                int choice = inputValidator.readInt("Enter your option", 1, 2);
+                if (choice == 1) {
+                    System.out.println("Here are all faculties: ");
+                    for (int i = 1; i <= manager.getFaculties().size(); i++) {
+                        System.out.println(i + " - " + manager.getFaculties().get(i).getName());
+                    }
+                    int facultyChoice = inputValidator.readInt("Choose your faculty", 1, manager.getFaculties().size());
+                    Faculty f = manager.getFacultyById(facultyChoice);
+                    manager.showAllStudentsInFaculty(f.getShortName());
+                } else if (choice == 2) {
+                    manager.showAllStudents();
+                }
             } else break;
         }
     }
