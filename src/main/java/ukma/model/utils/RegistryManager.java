@@ -2,13 +2,10 @@ package ukma.model.utils;
 
 import ukma.model.Faculty;
 import ukma.model.Student;
-import ukma.model.enums.StudentStatus;
-import ukma.model.enums.StudyForm;
 
 import java.util.*;
 
 public class RegistryManager {
-    private Scanner scan = new Scanner(System.in);
     private List<Student> students = new ArrayList<>();
     private Map<Integer, Faculty> faculties = new HashMap<>();
 
