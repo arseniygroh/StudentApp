@@ -2,6 +2,7 @@ package ukma.model.utils;
 
 import ukma.model.Faculty;
 import ukma.model.Student;
+import ukma.model.repositories.FacultyRepo;
 import ukma.model.repositories.Repository;
 import ukma.model.repositories.StudentRepo;
 
@@ -9,19 +10,34 @@ import java.util.*;
 
 public class RegistryManager {
     private final Repository<Student, Long> studentRepository = new StudentRepo();
-    private Map<Integer, Faculty> faculties = new HashMap<>();
+    private final Repository<Faculty, Integer> facultyRepository = new FacultyRepo();
 
 
     public void addFaculty(Faculty faculty) {
-        faculties.put(faculty.getId(), faculty);
+        facultyRepository.store(faculty);
+    }
+
+    public void deleteFaculty(int id) {
+        facultyRepository.deleteById(id);
+        System.out.println("Faculty with id " + id + " was successfully removed");
     }
 
     public Faculty getFacultyById(int id) {
-        return faculties.get(id);
+        Optional<Faculty> maybeFaculty = facultyRepository.getById(id);
+        if (maybeFaculty.isEmpty()) {
+            throw new IllegalArgumentException("Faculty with id " + id + " was not found");
+        }
+
+        return maybeFaculty.get();
     }
 
     public Map<Integer, Faculty> getFaculties() {
-        return faculties;
+        List<Faculty> facultyList = facultyRepository.getAll();
+        Map<Integer, Faculty> facultyMap = new HashMap<>();
+        for (Faculty f : facultyList) {
+            facultyMap.put(f.getId(), f);
+        }
+        return facultyMap;
     }
 
     public void addStudent(Student student) {
