@@ -93,13 +93,9 @@ public class RegistryManager {
     }
 
 
-    public List<Student> getStudentById(long id) {
-        Optional<Student> s = studentRepository.getById(id);
-        if (s.isEmpty()) {
-            throw new IllegalArgumentException("Student with id " + id + " was not found");
-        }
-        List<Student> student = List.of(s.get());
-        return student;
+    public Student getStudentById(long id) {
+        return studentRepository.getById(id)
+                .orElseThrow(() -> new ukma.exception.StudentNotFoundException("Student with id " + id + " was not found"));
     }
 
     public List<Student> getStudentByNameInfo(String query) {

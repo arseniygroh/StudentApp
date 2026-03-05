@@ -63,26 +63,41 @@ public class Menu {
                                 + "3 - by study year" + "\n"
                                 + "4 - by course code");
                         int choice = inputValidator.readInt("Enter your choice: ", 1, 4);
-                        List<Student> result = new ArrayList<>();
+
                         if (choice == 1) {
                             System.out.println("Enter an ID of a student you want to get: ");
-                            int id = scan.nextInt();
+                            long id = scan.nextLong();
                             scan.nextLine();
-                            result = manager.getStudentById(id);
-                        } else if (choice == 2){
-                            String query = inputValidator.readString("Enter some name details of a student you want to get: ");
-                            result = manager.getStudentByNameInfo(query);
-                        } else if (choice == 3) {
-                            int year = inputValidator.readInt("Enter study year: ", 1, 6);
-                            result = manager.findByCourse(year);
+                            try {
+                                Student s = manager.getStudentById(id);
+                                System.out.println("-- STUDENT FOUND --");
+                                System.out.println(s);
+                                System.out.println("---------------------");
+                            } catch (ukma.exception.StudentNotFoundException e) {
+                                System.out.println("Error: " + e.getMessage());
+                            }
                         } else {
-                            String courseCode = inputValidator.readString("Enter course code: ");
-                            result = manager.findByCourseCode(courseCode);
-                        }
-                        if (result != null) {
-                            System.out.println((result.size() != 1) ?  "-- STUDENTS FOUND --" : "-- STUDENT FOUND --");
-                            System.out.println(result);
-                            System.out.println("---------------------");
+                            List<Student> result = new ArrayList<>();
+                            if (choice == 2){
+                                String query = inputValidator.readString("Enter some name details of a student you want to get: ");
+                                result = manager.getStudentByNameInfo(query);
+                            } else if (choice == 3) {
+                                int year = inputValidator.readInt("Enter study year: ", 1, 6);
+                                result = manager.findByCourse(year);
+                            } else {
+                                String courseCode = inputValidator.readString("Enter course code: ");
+                                result = manager.findByCourseCode(courseCode);
+                            }
+
+                            if (!result.isEmpty()) {
+                                System.out.println("-- STUDENTS FOUND --");
+                                for(Student s : result) {
+                                    System.out.println(s);
+                                    System.out.println("---------------------");
+                                }
+                            } else {
+                                System.out.println("No students found matching your criteria.");
+                            }
                         }
                     } else if (option == 5) {
                         System.out.println("Would you like to get students by ?" + "\n"
@@ -136,20 +151,26 @@ public class Menu {
         }
     }
 
-    private void handleUpdateFaculty() {
+    public void handleUpdateStudent() {
         boolean isRunning = true;
         while (isRunning) {
-            int id = inputValidator.readInt("Enter ID of the faculty you want to update: ", 1, Integer.MAX_VALUE);
+            long studentId = inputValidator.readInt("Enter an id of a student you want to find: ", 1, Integer.MAX_VALUE);
             try {
-                Faculty facultyToUpdate = manager.getFacultyById(id);
+                // Використовуємо наш новий getStudentById, який кидає помилку
+                Student studentToUpdate = manager.getStudentById(studentId);
+
                 while (true) {
-                    System.out.println("What would you like to update?" + "\n"
-                            + "0 - update another faculty" + "\n"
-                            + "1 - update name" + "\n"
-                            + "2 - update dean" + "\n"
-                            + "3 - update email" + "\n"
-                            + "4 - update phone" + "\n"
-                            + "Q or q - quite" + "\n");
+                    System.out.println("What would you like to update? " + "\n"
+                            + "0 - update another student" + "\n"
+                            + "1 - first name" + "\n"
+                            + "2 - last name" + "\n"
+                            + "3 - father name" + "\n"
+                            + "4 - course code" + "\n"
+                            + "5 - study form" + "\n"
+                            + "6 - student status" + "\n"
+                            + "7 - email address" + "\n"
+                            + "8 - phone number" + "\n"
+                            + "Q or q - quit" + "\n");
 
                     String optionStr = inputValidator.readString("Choose option: ").trim();
 
@@ -161,38 +182,48 @@ public class Menu {
                     try {
                         option = Integer.parseInt(optionStr);
                     } catch (NumberFormatException e) {
-                        System.out.println("Please enter a number from 0 to 4 or 'q' to quit");
+                        System.out.println("Please enter a number from 0 to 8 or 'q' to quit");
                         continue;
                     }
 
-                    if (option < 0 || option > 4) continue;
+                    if (option < 0 || option > 8) continue;
 
                     if (option == 1) {
-                        String name = inputValidator.readString("Enter new name: ");
-                        facultyToUpdate.setName(name);
-                        String shortName = inputValidator.readString("Enter short name: ");
-                        facultyToUpdate.setShortName(shortName);
+                        String name = inputValidator.readString("Enter new name for the student");
+                        studentToUpdate.setFirstName(name);
                     } else if (option == 2) {
-                        facultyToUpdate.setDean(null);
+                        String lastName = inputValidator.readString("Enter new last name for the student");
+                        studentToUpdate.setLastName(lastName);
                     } else if (option == 3) {
-                        String email = inputValidator.readEmail("Enter new email: ");
-                        facultyToUpdate.setEmail(email);
+                        String fatherName = inputValidator.readString("Enter new fathers name for the student");
+                        studentToUpdate.setFatherName(fatherName);
                     } else if (option == 4) {
-                        String phone = inputValidator.readString("Enter new phone number: ");
-                        while (phone.length() < 10) {
-                            System.out.println("Phone number is too short!");
-                            phone = inputValidator.readString("Enter new phone number: ");
-                        }
-                        facultyToUpdate.setPhone(phone);
-                    } else break;
-                    System.out.println("Faculty with ID " + id + " has been successfully updated");
+                        String courseCode = inputValidator.readString("Enter new course code for the student");
+                        studentToUpdate.setCourseCode(courseCode);
+                    } else if (option == 5) {
+                        updateStudyForm(studentToUpdate);
+                    } else if (option == 6) {
+                        updateStudentStatus(studentToUpdate);
+                    } else if (option == 7) {
+                        String email = inputValidator.readEmail("Enter a new email address for the student");
+                        studentToUpdate.setEmail(email);
+                    } else if (option == 8) {
+                        System.out.println("Enter a new phone number for the student: ");
+                        String phone = scan.nextLine();
+                        studentToUpdate.setPhoneNumber(phone);
+                    } else {
+                        break;
+                    }
+                    System.out.println("Student with an id = " + studentToUpdate.getId() + " was successfully updated!");
                 }
-            } catch (IllegalArgumentException e) {
-                System.out.println(e.getMessage());
+            } catch (ukma.exception.StudentNotFoundException e) {
+                // Якщо студента немає, просто виводимо помилку і йдемо на початок циклу
+                System.out.println("Error: " + e.getMessage());
                 continue;
             }
 
             if (!isRunning) break;
+
             System.out.println("Would you like to update another one ? (yes - 1, no - 0): ");
             int ans = scan.nextInt();
             scan.nextLine();
