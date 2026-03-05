@@ -310,9 +310,9 @@ public class Menu {
         boolean isRunning = true;
         while (isRunning) {
             int studentId = inputValidator.readInt("Enter an id of a student you want to find: ", 1, Integer.MAX_VALUE);
-            Optional<Student> optionalStudent = Optional.ofNullable(manager.getStudentById(studentId).get(0));
-            if (optionalStudent.isPresent()) {
-                Student studentToUpdate = optionalStudent.get();
+            List<Student> foundStudents = manager.getStudentById(studentId);
+            if (!foundStudents.isEmpty()) {
+                Student studentToUpdate = foundStudents.getFirst();
                 while (true) {
                     System.out.println("What would you like to update? " + "\n"
                             + "0 - update another student" + "\n"
@@ -371,7 +371,8 @@ public class Menu {
                     System.out.println("Student with an id = " + studentToUpdate.getId() + " was successfully updated!");
                 }
             } else {
-                System.out.println("Student not found!");
+                System.out.println("Student with id " + studentId + "wasn't found");
+                continue;
             }
 
             if (!isRunning) break;
