@@ -31,6 +31,20 @@ public class RegistryManager {
         return maybeFaculty.get();
     }
 
+    public void showFacultiesAlphabeticallySorted() {
+        List<Faculty> faculties = facultyRepository.getAll();
+        if (faculties.isEmpty()) {
+            System.out.println("Repository is empty");
+            return;
+        }
+        faculties.stream()
+                .sorted(Comparator.comparing(Faculty::getName))
+                .forEach(f -> {
+                    System.out.println(f);
+                    System.out.println("================================================");
+                });
+    }
+
     public Map<Integer, Faculty> getFaculties() {
         List<Faculty> facultyList = facultyRepository.getAll();
         Map<Integer, Faculty> facultyMap = new HashMap<>();
