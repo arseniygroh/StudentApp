@@ -2,12 +2,15 @@ package ukma.model.utils;
 
 import ukma.model.Faculty;
 import ukma.model.Student;
+import ukma.model.repositories.Repository;
+import ukma.model.repositories.StudentRepo;
 
 import java.util.*;
 
 public class RegistryManager {
-    private List<Student> students = new ArrayList<>();
+    private final Repository<Student, Long> studentRepository = new StudentRepo();
     private Map<Integer, Faculty> faculties = new HashMap<>();
+
 
     public void addFaculty(Faculty faculty) {
         faculties.put(faculty.getId(), faculty);
@@ -22,10 +25,15 @@ public class RegistryManager {
     }
 
     public void addStudent(Student student) {
-        students.add(student);
+        studentRepository.store(student);
     }
 
     public void showAllStudents() {
+        List<Student> students = studentRepository.getAll();
+        if (students.isEmpty()) {
+            System.out.println("Student repository is empty");
+            return;
+        }
         students.stream()
                 .sorted(Comparator.comparingInt(Student::getStudyYear))
                 .forEach(student -> {
@@ -35,48 +43,47 @@ public class RegistryManager {
     }
 
     public void showAllStudentsInFaculty(String facultyShortName) {
+        List<Student> students = studentRepository.getAll();
+        if (students.isEmpty()) {
+            System.out.println("Student repository is empty");
+            return;
+        }
         students.stream()
                 .filter(student -> student.getFaculty().getShortName().equalsIgnoreCase(facultyShortName))
+                .sorted(Comparator.comparing(Student::getFullName))
                 .forEach(student -> {
                     System.out.println(student);
                     System.out.println("================================================");
                 });
     }
 
-    public void deleteStudent(int id) {
-        boolean isRemoved = students.removeIf(student -> student.getId() == id);
-        if (isRemoved) {
-            System.out.println("Student with ID " + id + " was successfully removed.");
-        } else {
-            System.out.println("Student with ID " + id + " not found.");
-        }
+    public void deleteStudent(long id) {
+        studentRepository.deleteById(id);
+        System.out.println("Student with id " + id + " was successfully removed");
     }
 
 
-    public List<Student> getStudentById(int id) {
-        return students.stream()
-                .filter(s -> s.getId() == id)
-                .toList();
+    public List<Student> getStudentById(long id) {
+        Optional<Student> s = studentRepository.getById(id);
+        if (s.isEmpty()) {
+            throw new IllegalArgumentException("Student with id " + id + " was not found");
+        }
+        List<Student> student = List.of(s.get());
+        return student;
     }
 
     public List<Student> getStudentByNameInfo(String query) {
         String lowerQuery = query.toLowerCase();
-        return students.stream()
-                .filter(s -> s.getFullName().toLowerCase().contains(lowerQuery))
-                .toList();
+        return studentRepository.search(s -> s.getFullName().toLowerCase().contains(lowerQuery));
     }
 
     public List<Student> findByCourse(int year) {
-        return students.stream()
-                .filter(s -> s.getStudyYear() == year)
-                .toList();
+        return studentRepository.search(s -> s.getStudyYear() == year);
     }
 
     // Пошук за групою
     public List<Student> findByCourseCode(String courseCode) {
-        return students.stream()
-                .filter(s -> s.getCourseCode().equalsIgnoreCase(courseCode.trim()))
-                .toList();
+        return studentRepository.search(s -> s.getCourseCode().equalsIgnoreCase(courseCode.trim()));
     }
 }
 
