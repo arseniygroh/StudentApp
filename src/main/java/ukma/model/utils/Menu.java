@@ -312,7 +312,7 @@ public class Menu {
             int studentId = inputValidator.readInt("Enter an id of a student you want to find: ", 1, Integer.MAX_VALUE);
             List<Student> foundStudents = manager.getStudentById(studentId);
             if (!foundStudents.isEmpty()) {
-                Student studentToUpdate = foundStudents.getFirst();
+                Student studentToUpdate = foundStudents.getClass();
                 while (true) {
                     System.out.println("What would you like to update? " + "\n"
                             + "0 - update another student" + "\n"
