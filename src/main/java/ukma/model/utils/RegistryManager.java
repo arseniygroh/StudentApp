@@ -26,11 +26,8 @@ public class RegistryManager {
     }
 
     public Faculty getFacultyById(int id) {
-        Optional<Faculty> maybeFaculty = facultyRepository.getById(id);
-        if (maybeFaculty.isEmpty()) {
-            throw new IllegalArgumentException("Faculty with id " + id + " was not found");
-        }
-        return maybeFaculty.get();
+        return facultyRepository.getById(id)
+                .orElseThrow(() -> new FacultyNotFoundException("Faculty with id " + id + " was not found"));
     }
 
     public void showFacultiesAlphabeticallySorted() {

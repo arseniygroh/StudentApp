@@ -281,7 +281,7 @@ public class Menu {
                     } else break;
                     System.out.println("Faculty with ID " + id + " has been successfully updated");
                 }
-            } catch (IllegalArgumentException e) {
+            } catch (FacultyNotFoundException e) {
                 System.out.println(e.getMessage());
                 continue;
             }
