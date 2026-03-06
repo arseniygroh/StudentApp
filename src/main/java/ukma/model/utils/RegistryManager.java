@@ -2,15 +2,20 @@ package ukma.model.utils;
 
 import ukma.model.Faculty;
 import ukma.model.Student;
+import ukma.model.Teacher;
+import ukma.model.exception.TeacherNotFoundException;
 import ukma.model.repositories.FacultyRepo;
 import ukma.model.repositories.Repository;
 import ukma.model.repositories.StudentRepo;
+import ukma.model.repositories.TeacherRepo;
 
 import java.util.*;
 
 public class RegistryManager {
     private final Repository<Student, Long> studentRepository = new StudentRepo();
+    private final Repository<Teacher, Long> teacherRepository = new TeacherRepo();
     private final Repository<Faculty, Integer> facultyRepository = new FacultyRepo();
+
 
 
     public void addFaculty(Faculty faculty) {
@@ -54,6 +59,7 @@ public class RegistryManager {
         return facultyMap;
     }
 
+
     public void addStudent(Student student) {
         studentRepository.store(student);
     }
@@ -92,14 +98,9 @@ public class RegistryManager {
         System.out.println("Student with id " + id + " was successfully removed");
     }
 
-
-    public List<Student> getStudentById(long id) {
-        Optional<Student> s = studentRepository.getById(id);
-        if (s.isEmpty()) {
-            throw new IllegalArgumentException("Student with id " + id + " was not found");
-        }
-        List<Student> student = List.of(s.get());
-        return student;
+    public Student getStudentById(long id) {
+        return studentRepository.getById(id)
+                .orElseThrow(() -> new ukma.exception.StudentNotFoundException("Student with id " + id + " was not found"));
     }
 
     public List<Student> getStudentByNameInfo(String query) {
@@ -115,5 +116,34 @@ public class RegistryManager {
     public List<Student> findByCourseCode(String courseCode) {
         return studentRepository.search(s -> s.getCourseCode().equalsIgnoreCase(courseCode.trim()));
     }
+
+    // ===== TEACHER METHODS ======
+    public void addTeacher (Teacher teacher) {
+        teacherRepository.store(teacher);
+    }
+
+    public Optional<Student> getTeacherById(long id) {
+        return studentRepository.getById(id);
+    }
+
+    public void showAllTeachers() {
+        List<Teacher> teachers = teacherRepository.getAll();
+        if (teachers.isEmpty()) {
+            System.out.println("Teachers repository is empty");
+            return;
+        }
+        teachers.stream()
+                .sorted(Comparator.comparingInt(Teacher::getStudyYear))
+                .forEach(student -> {
+                    System.out.println(student);
+                    System.out.println("================================================");
+                });
+    }
+
+    public void deleteTeacher(long id) {
+        teacherRepository.deleteById(id);
+        System.out.println("Teacher with id " + id + " was successfully removed");
+    }
+
 }
 
