@@ -2,17 +2,20 @@ package ukma.model.utils;
 
 import ukma.model.Faculty;
 import ukma.model.Student;
-import ukma.model.repositories.FacultyRepo;
-import ukma.model.repositories.Repository;
-import ukma.model.repositories.StudentRepo;
+import ukma.model.Teacher;
+import ukma.model.Department;
+import ukma.model.exception.*;
+import ukma.model.repositories.*;
 
 import java.util.*;
 
 public class RegistryManager {
     private final Repository<Student, Long> studentRepository = new StudentRepo();
+    private final Repository<Teacher, Long> teacherRepository = new TeacherRepo();
     private final Repository<Faculty, Integer> facultyRepository = new FacultyRepo();
+    private final Repository<Department, Integer> departmentRepository = new DepartmentRepo();
 
-
+    // ===== FACULTY METHODS ======
     public void addFaculty(Faculty faculty) {
         facultyRepository.store(faculty);
     }
@@ -27,7 +30,6 @@ public class RegistryManager {
         if (maybeFaculty.isEmpty()) {
             throw new IllegalArgumentException("Faculty with id " + id + " was not found");
         }
-
         return maybeFaculty.get();
     }
 
@@ -54,6 +56,7 @@ public class RegistryManager {
         return facultyMap;
     }
 
+    // ===== STUDENT METHODS ======
     public void addStudent(Student student) {
         studentRepository.store(student);
     }
@@ -92,10 +95,9 @@ public class RegistryManager {
         System.out.println("Student with id " + id + " was successfully removed");
     }
 
-
     public Student getStudentById(long id) {
         return studentRepository.getById(id)
-                .orElseThrow(() -> new ukma.exception.StudentNotFoundException("Student with id " + id + " was not found"));
+                .orElseThrow(() -> new StudentNotFoundException("Student with id " + id + " was not found"));
     }
 
     public List<Student> getStudentByNameInfo(String query) {
@@ -107,9 +109,65 @@ public class RegistryManager {
         return studentRepository.search(s -> s.getStudyYear() == year);
     }
 
-    // Пошук за групою
     public List<Student> findByCourseCode(String courseCode) {
         return studentRepository.search(s -> s.getCourseCode().equalsIgnoreCase(courseCode.trim()));
     }
-}
 
+    // ===== TEACHER METHODS ======
+    public void addTeacher(Teacher teacher) {
+        teacherRepository.store(teacher);
+    }
+
+    public Teacher getTeacherById(long id) {
+        return teacherRepository.getById(id)
+                .orElseThrow(() -> new TeacherNotFoundException("Teacher with id " + id + " was not found"));
+    }
+
+    public void showAllTeachers() {
+        List<Teacher> teachers = teacherRepository.getAll();
+        if (teachers.isEmpty()) {
+            System.out.println("Teachers repository is empty");
+            return;
+        }
+        teachers.stream()
+                .sorted(Comparator.comparing(Teacher::getFullName))
+                .forEach(teacher -> {
+                    System.out.println(teacher);
+                    System.out.println("================================================");
+                });
+    }
+
+    public void deleteTeacher(long id) {
+        teacherRepository.deleteById(id);
+        System.out.println("Teacher with id " + id + " was successfully removed");
+    }
+
+    // ===== DEPARTMENT METHODS ======
+    public void addDepartment(Department department) {
+        departmentRepository.store(department);
+    }
+
+    public Department getDepartmentById(int id) {
+        return departmentRepository.getById(id)
+                .orElseThrow(() -> new DepartmentNotFoundException("Department with id " + id + " was not found"));
+    }
+
+    public void showAllDepartments() {
+        List<Department> departments = departmentRepository.getAll();
+        if (departments.isEmpty()) {
+            System.out.println("Department repository is empty");
+            return;
+        }
+        departments.stream()
+                .sorted(Comparator.comparing(Department::getName))
+                .forEach(dept -> {
+                    System.out.println(dept);
+                    System.out.println("================================================");
+                });
+    }
+
+    public void deleteDepartment(int id) {
+        departmentRepository.deleteById(id);
+        System.out.println("Department with id " + id + " was successfully removed");
+    }
+}
