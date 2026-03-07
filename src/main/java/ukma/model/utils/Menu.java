@@ -3,8 +3,11 @@ package ukma.model.utils;
 import ukma.model.Faculty;
 import ukma.model.Student;
 import ukma.model.Teacher;
+import ukma.model.Department;
+import ukma.model.enums.Degree;
 import ukma.model.enums.StudentStatus;
 import ukma.model.enums.StudyForm;
+import ukma.model.exception.*;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -24,11 +27,13 @@ public class Menu {
     public void initMenu() {
         while (true) {
             System.out.println("Please, select which registry you want to manipulate: " + "\n"
-            + "0 - leave" + "\n"
-            + "1 - student's registry" + "\n"
-            + "2 - faculty's registy" + "\n");
+                    + "0 - leave" + "\n"
+                    + "1 - student's registry" + "\n"
+                    + "2 - faculty's registy" + "\n"
+                    + "3 - teacher's registry" + "\n"
+                    + "4 - department's registry" + "\n");
 
-            int mainMenuOption = inputValidator.readInt("Enter your option", 0, 2);
+            int mainMenuOption = inputValidator.readInt("Enter your option", 0, 4);
 
             if (mainMenuOption == 1) {
                 while (true) {
@@ -40,14 +45,13 @@ public class Menu {
                             + "4 - Get a student" + "\n"
                             + "5 - Show all students" + "\n");
                     int option = inputValidator.readInt("Select your option: ", 0, 5);
-                    //scan.nextLine();
                     if (option == 1) {
                         if (authService.isManager()) createAndAddStudent();
                         else System.out.println("You don't have a right to do it");
                     } else if (option == 2) {
                         if (authService.isManager()) {
                             System.out.println("Enter an ID of a student you want to delete: ");
-                            int id = scan.nextInt();
+                            long id = scan.nextLong();
                             scan.nextLine();
                             manager.deleteStudent(id);
                         } else System.out.println("You don't have a right to do it");
@@ -63,26 +67,39 @@ public class Menu {
                                 + "3 - by study year" + "\n"
                                 + "4 - by course code");
                         int choice = inputValidator.readInt("Enter your choice: ", 1, 4);
-                        List<Student> result = new ArrayList<>();
                         if (choice == 1) {
                             System.out.println("Enter an ID of a student you want to get: ");
-                            int id = scan.nextInt();
+                            long id = scan.nextLong();
                             scan.nextLine();
-                            result = manager.getStudentById(id);
-                        } else if (choice == 2){
-                            String query = inputValidator.readString("Enter some name details of a student you want to get: ");
-                            result = manager.getStudentByNameInfo(query);
-                        } else if (choice == 3) {
-                            int year = inputValidator.readInt("Enter study year: ", 1, 6);
-                            result = manager.findByCourse(year);
+                            try {
+                                Student s = manager.getStudentById(id);
+                                System.out.println("-- STUDENT FOUND --");
+                                System.out.println(s);
+                                System.out.println("---------------------");
+                            } catch (ukma.model.exception.StudentNotFoundException e) {
+                                System.out.println("Error: " + e.getMessage());
+                            }
                         } else {
-                            String courseCode = inputValidator.readString("Enter course code: ");
-                            result = manager.findByCourseCode(courseCode);
-                        }
-                        if (result != null) {
-                            System.out.println((result.size() != 1) ?  "-- STUDENTS FOUND --" : "-- STUDENT FOUND --");
-                            System.out.println(result);
-                            System.out.println("---------------------");
+                            List<Student> result = new ArrayList<>();
+                            if (choice == 2){
+                                String query = inputValidator.readString("Enter some name details of a student you want to get: ");
+                                result = manager.getStudentByNameInfo(query);
+                            } else if (choice == 3) {
+                                int year = inputValidator.readInt("Enter study year: ", 1, 6);
+                                result = manager.findByCourse(year);
+                            } else {
+                                String courseCode = inputValidator.readString("Enter course code: ");
+                                result = manager.findByCourseCode(courseCode);
+                            }
+                            if (!result.isEmpty()) {
+                                System.out.println("-- STUDENTS FOUND --");
+                                for (Student s : result) {
+                                    System.out.println(s);
+                                    System.out.println("---------------------");
+                                }
+                            } else {
+                                System.out.println("No students found matching your criteria.");
+                            }
                         }
                     } else if (option == 5) {
                         System.out.println("Would you like to get students by ?" + "\n"
@@ -95,43 +112,111 @@ public class Menu {
                                 System.out.println(i + " - " + manager.getFaculties().get(i).getName());
                             }
                             int facultyChoice = inputValidator.readInt("Choose your faculty", 1, Integer.MAX_VALUE);
-                            Faculty f = manager.getFacultyById(facultyChoice);
-                            manager.showAllStudentsInFaculty(f.getShortName());
+                            try {
+                                Faculty f = manager.getFacultyById(facultyChoice);
+                                manager.showAllStudentsInFaculty(f.getShortName());
+                            } catch (Exception e) {
+                                System.out.println(e.getMessage());
+                            }
                         } else if (choice == 2) {
                             manager.showAllStudents();
                         }
                     } else break;
                 }
             } else if (mainMenuOption == 2) {
-                System.out.println("Here are the options for faculty registry manipulations: " + "\n"
-                + "0 - leave the menu" + "\n"
-                + "1 - add a new faculty (manager only)" + "\n"
-                + "2 - delete a faculty by id (manager only)" + "\n"
-                + "3 - update a faculty (manager only)" + "\n"
-                + "4 - show faculty or faculties" + "\n");
+                while(true) {
+                    System.out.println("Here are the options for faculty registry manipulations: " + "\n"
+                            + "0 - leave the menu" + "\n"
+                            + "1 - add a new faculty (manager only)" + "\n"
+                            + "2 - delete a faculty by id (manager only)" + "\n"
+                            + "3 - update a faculty (manager only)" + "\n"
+                            + "4 - show faculty or faculties" + "\n");
 
-                int option = inputValidator.readInt("Enter your option", 0, 4);
-                if (option == 1) {
-                    if (authService.isManager()) createAndAddFaculty();
-                    else System.out.println("You don't have a right to do it");
-                } else if (option == 2) {
-                    if (authService.isManager()) {
-                        int id = inputValidator.readInt("Enter ID of the faculty you want to delete: ", 1, Integer.MAX_VALUE);
-                        manager.deleteFaculty(id);
-                    } else System.out.println("You don't have a right to do it");
-                } else if (option == 3) {
-                    if (authService.isManager()) handleUpdateFaculty();
-                    else System.out.println("You don't have a right to do it");
-                } else if (option == 4) {
-                    System.out.println("Here are the options: " + "\n"
-                    + "1 - by id" +"\n"
-                    + "2 - all (sorted alphabetically)" +"\n");
-                    int choice = inputValidator.readInt("Enter your option", 1, 2);
-                    if (choice == 1) {
-                        int id = inputValidator.readInt("Enter ID of the faculty you want to get: ", 1, Integer.MAX_VALUE);
-                        System.out.println(manager.getFacultyById(id));
-                    } else manager.showFacultiesAlphabeticallySorted();
-                } else break;
+                    int option = inputValidator.readInt("Enter your option", 0, 4);
+                    if (option == 1) {
+                        if (authService.isManager()) createAndAddFaculty();
+                        else System.out.println("You don't have a right to do it");
+                    } else if (option == 2) {
+                        if (authService.isManager()) {
+                            int id = inputValidator.readInt("Enter ID of the faculty you want to delete: ", 1, Integer.MAX_VALUE);
+                            manager.deleteFaculty(id);
+                        } else System.out.println("You don't have a right to do it");
+                    } else if (option == 3) {
+                        if (authService.isManager()) handleUpdateFaculty();
+                        else System.out.println("You don't have a right to do it");
+                    } else if (option == 4) {
+                        System.out.println("Here are the options: " + "\n"
+                                + "1 - by id" +"\n"
+                                + "2 - all (sorted alphabetically)" +"\n");
+                        int choice = inputValidator.readInt("Enter your option", 1, 2);
+                        if (choice == 1) {
+                            int id = inputValidator.readInt("Enter ID of the faculty you want to get: ", 1, Integer.MAX_VALUE);
+                            try {
+                                System.out.println(manager.getFacultyById(id));
+                            } catch (Exception e) {
+                                System.out.println(e.getMessage());
+                            }
+                        } else manager.showFacultiesAlphabeticallySorted();
+                    } else break;
+                }
+            } else if (mainMenuOption == 3) {
+                while(true) {
+                    System.out.println("Here are the options for teacher registry manipulations: " + "\n"
+                            + "0 - leave the menu" + "\n"
+                            + "1 - add a new teacher (manager only)" + "\n"
+                            + "2 - delete a teacher by id (manager only)" + "\n"
+                            + "3 - get teacher by id\n"
+                            + "4 - show all teachers\n");
+
+                    int option = inputValidator.readInt("Enter your option", 0, 4);
+                    if (option == 1) {
+                        if (authService.isManager()) createAndAddTeacher();
+                        else System.out.println("You don't have a right to do it");
+                    } else if (option == 2) {
+                        if (authService.isManager()) {
+                            long id = inputValidator.readInt("Enter ID of the teacher you want to delete: ", 1, Integer.MAX_VALUE);
+                            manager.deleteTeacher(id);
+                        } else System.out.println("You don't have a right to do it");
+                    } else if (option == 3) {
+                        long id = inputValidator.readInt("Enter ID of the teacher you want to get: ", 1, Integer.MAX_VALUE);
+                        try {
+                            System.out.println(manager.getTeacherById(id));
+                        } catch (Exception e) {
+                            System.out.println("Error: " + e.getMessage());
+                        }
+                    } else if (option == 4) {
+                        manager.showAllTeachers();
+                    } else break;
+                }
+            } else if (mainMenuOption == 4) {
+                while(true) {
+                    System.out.println("Here are the options for department registry manipulations: " + "\n"
+                            + "0 - leave the menu" + "\n"
+                            + "1 - add a new department (manager only)" + "\n"
+                            + "2 - delete a department by id (manager only)" + "\n"
+                            + "3 - get department by id\n"
+                            + "4 - show all departments\n");
+
+                    int option = inputValidator.readInt("Enter your option", 0, 4);
+                    if (option == 1) {
+                        if (authService.isManager()) createAndAddDepartment();
+                        else System.out.println("You don't have a right to do it");
+                    } else if (option == 2) {
+                        if (authService.isManager()) {
+                            int id = inputValidator.readInt("Enter ID of the department you want to delete: ", 1, Integer.MAX_VALUE);
+                            manager.deleteDepartment(id);
+                        } else System.out.println("You don't have a right to do it");
+                    } else if (option == 3) {
+                        int id = inputValidator.readInt("Enter ID of the department you want to get: ", 1, Integer.MAX_VALUE);
+                        try {
+                            System.out.println(manager.getDepartmentById(id));
+                        } catch (Exception e) {
+                            System.out.println("Error: " + e.getMessage());
+                        }
+                    } else if (option == 4) {
+                        manager.showAllDepartments();
+                    } else break;
+                }
             } else break;
         }
     }
@@ -173,7 +258,16 @@ public class Menu {
                         String shortName = inputValidator.readString("Enter short name: ");
                         facultyToUpdate.setShortName(shortName);
                     } else if (option == 2) {
-                        facultyToUpdate.setDean(null);
+                        System.out.println("Available Teachers:");
+                        manager.showAllTeachers();
+                        long teacherId = inputValidator.readInt("Enter Teacher ID to be Dean: ", 1, Integer.MAX_VALUE);
+                        try {
+                            Teacher dean = manager.getTeacherById(teacherId);
+                            facultyToUpdate.setDean(dean);
+                            System.out.println("Dean updated!");
+                        } catch (Exception e) {
+                            System.out.println("Teacher not found. Dean not updated.");
+                        }
                     } else if (option == 3) {
                         String email = inputValidator.readEmail("Enter new email: ");
                         facultyToUpdate.setEmail(email);
@@ -187,7 +281,7 @@ public class Menu {
                     } else break;
                     System.out.println("Faculty with ID " + id + " has been successfully updated");
                 }
-            } catch (IllegalArgumentException e) {
+            } catch (FacultyNotFoundException e) {
                 System.out.println(e.getMessage());
                 continue;
             }
@@ -241,10 +335,8 @@ public class Menu {
         }
         String recordBookId = inputValidator.readString("Record Book ID (Ticket): ");
         int year = inputValidator.readInt("Study Year (1-6): ", 1, 6);
-        //scan.nextLine();
         String courseCode = inputValidator.readString("Course Code: ");
         int admYear = inputValidator.readInt("Admission Year: ", 1991, 2025);
-        //scan.nextLine();
 
         StudyForm studyForm = selectStudyForm();
         StudentStatus status = selectStudentStatus();
@@ -264,6 +356,72 @@ public class Menu {
         }
     }
 
+    private void createAndAddTeacher() {
+        System.out.println("\n--- ADDING NEW TEACHER ---");
+        String firstName = inputValidator.readString("First Name: ");
+        String lastName = inputValidator.readString("Last Name: ");
+        String fatherName = inputValidator.readString("Father's Name: ");
+        LocalDate birthDate = inputValidator.readDate("Enter birth date");
+        String email = inputValidator.readEmail("Enter email: ");
+        String phone = inputValidator.readString("Phone: ");
+        while (phone.length() < 10) {
+            System.out.println("Phone number is too short!");
+            phone = inputValidator.readString("Phone: ");
+        }
+
+        System.out.println("Choose degree:");
+        Degree[] degrees = Degree.values();
+        for (int i = 0; i < degrees.length; i++) {
+            System.out.println(i + " - " + degrees[i]);
+        }
+        int degChoice = inputValidator.readInt("Your choice: ", 0, degrees.length - 1);
+        Degree degree = degrees[degChoice];
+
+        String occupation = inputValidator.readString("Occupation: ");
+        String academicRank = inputValidator.readString("Academic Rank: ");
+        LocalDate hireDate = inputValidator.readDate("Hire Date");
+
+        System.out.println("Rate (e.g. 1.0 or 0.5): ");
+        double rate = scan.nextDouble();
+        scan.nextLine();
+
+        try {
+            Teacher teacher = new Teacher(firstName, lastName, fatherName, birthDate, email, phone, degree, occupation, academicRank, hireDate, rate);
+            manager.addTeacher(teacher);
+            System.out.println("Teacher added successfully!");
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    private void createAndAddDepartment() {
+        System.out.println("\n--- ADDING NEW DEPARTMENT ---");
+        String name = inputValidator.readString("Department Name: ");
+        String location = inputValidator.readString("Location: ");
+
+        Faculty faculty = selectFaculty();
+        if (faculty == null) return;
+
+        System.out.println("Available Teachers for Head position:");
+        manager.showAllTeachers();
+        long teacherId = inputValidator.readInt("Enter Teacher ID to be Head: ", 1, Integer.MAX_VALUE);
+        Teacher head = null;
+        try {
+            head = manager.getTeacherById(teacherId);
+        } catch (Exception e) {
+            System.out.println("Teacher not found. Cannot create department.");
+            return;
+        }
+
+        try {
+            Department dept = new Department(name, faculty, head, location);
+            manager.addDepartment(dept);
+            System.out.println("Department added successfully!");
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
     private StudyForm selectStudyForm() {
         StudyForm[] forms = StudyForm.values();
         for (int i = 0; i < forms.length; i++) {
@@ -272,6 +430,7 @@ public class Menu {
         int choice = inputValidator.readInt("Your choice: ", 0, forms.length - 1);
         return forms[choice];
     }
+
     private StudentStatus selectStudentStatus() {
         StudentStatus[] statuses = StudentStatus.values();
         for (int i = 0; i < statuses.length; i++) {
@@ -283,7 +442,6 @@ public class Menu {
 
     private Faculty selectFaculty() {
         System.out.println("Available Faculties:");
-
         Map<Integer, Faculty> availableFaculties = manager.getFaculties();
 
         if (availableFaculties.isEmpty()) {
@@ -298,8 +456,9 @@ public class Menu {
         Faculty chosen = null;
         while (chosen == null) {
             int id = inputValidator.readInt("Enter Faculty ID: ", 1, Integer.MAX_VALUE);
-            chosen = manager.getFacultyById(id);
-            if (chosen == null) {
+            try {
+                chosen = manager.getFacultyById(id);
+            } catch (Exception e) {
                 System.out.println("Faculty with ID " + id + " not found. Try again.");
             }
         }
@@ -309,10 +468,10 @@ public class Menu {
     public void handleUpdateStudent() {
         boolean isRunning = true;
         while (isRunning) {
-            int studentId = inputValidator.readInt("Enter an id of a student you want to find: ", 1, Integer.MAX_VALUE);
-            List<Student> foundStudents = manager.getStudentById(studentId);
-            if (!foundStudents.isEmpty()) {
-                Student studentToUpdate = foundStudents.getFirst();
+            long studentId = inputValidator.readInt("Enter an id of a student you want to find: ", 1, Integer.MAX_VALUE);
+            try {
+                Student studentToUpdate = manager.getStudentById(studentId);
+
                 while (true) {
                     System.out.println("What would you like to update? " + "\n"
                             + "0 - update another student" + "\n"
@@ -370,8 +529,8 @@ public class Menu {
                     }
                     System.out.println("Student with an id = " + studentToUpdate.getId() + " was successfully updated!");
                 }
-            } else {
-                System.out.println("Student with id " + studentId + "wasn't found");
+            } catch (StudentNotFoundException e) {
+                System.out.println("Error: " + e.getMessage());
                 continue;
             }
 
