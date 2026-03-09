@@ -18,7 +18,7 @@ public class Main {
     public static void main(String[] args) {
         RegistryManager manager = new RegistryManager();
         ConsoleInput inputValidator = new ConsoleInput();
-        AuthorizationService authService = new AuthorizationService();
+        AuthorizationService authService = new AuthorizationService(manager);
 
         System.out.println("WELCOME TO OUR APP!");
         System.out.println("Before using it, you have to log in or register a new account");
@@ -52,7 +52,10 @@ public class Main {
                 } else {
                     System.out.println("Such user is already created");
                 }
-            } else break;
+            } else {
+                authService.logout();
+                break;
+            }
         }
 
         Menu menu = new Menu(manager, inputValidator, authService);
