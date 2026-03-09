@@ -15,13 +15,36 @@ public class RegistryManager {
     private final Repository<Faculty, Integer> facultyRepository = new FacultyRepo();
     private final Repository<Department, Integer> departmentRepository = new DepartmentRepo();
 
+    private final Set<String> emailRepository = new HashSet<>();
+
+    public RegistryManager() {
+        loadEmails();
+    }
+
+    private void loadEmails() {
+        studentRepository.getAll().forEach(student -> emailRepository.add(student.getEmail()));
+        teacherRepository.getAll().forEach(teacher -> emailRepository.add(teacher.getEmail()));
+        facultyRepository.getAll().forEach(faculty -> emailRepository.add(faculty.getEmail()));
+    }
+
+    public void storeEmail(String email) {
+        if (emailRepository.contains(email)) throw new IllegalArgumentException("This email already exists");
+        emailRepository.add(email);
+    }
+
+    public void removeEmail(String email) {
+        emailRepository.remove(email);
+    }
+
     // ===== FACULTY METHODS ======
     public void addFaculty(Faculty faculty) {
         facultyRepository.store(faculty);
     }
 
     public void deleteFaculty(int id) {
+        String emailToRemove = getFacultyById(id).getEmail();
         facultyRepository.deleteById(id);
+        removeEmail(emailToRemove);
         System.out.println("Faculty with id " + id + " was successfully removed");
     }
 
@@ -88,7 +111,9 @@ public class RegistryManager {
     }
 
     public void deleteStudent(long id) {
+        String emailToRemove = getStudentById(id).getEmail();
         studentRepository.deleteById(id);
+        removeEmail(emailToRemove);
         System.out.println("Student with id " + id + " was successfully removed");
     }
 
@@ -135,8 +160,35 @@ public class RegistryManager {
     }
 
     public void deleteTeacher(long id) {
+        String emailToRemove = getTeacherById(id).getEmail();
         teacherRepository.deleteById(id);
+        removeEmail(emailToRemove);
         System.out.println("Teacher with id " + id + " was successfully removed");
+    }
+
+    public List<Teacher> getAvailableTeachersForDean() {
+        List<Long> busyTeacherIds = facultyRepository.getAll().stream()
+                .map(faculty -> faculty.getDean())
+                .filter(teacher -> teacher != null)
+                .map(teacher -> teacher.getId())
+                .toList();
+        List<Teacher> availableTeachers = teacherRepository.getAll().stream()
+                .filter(teacher -> !busyTeacherIds.contains(teacher.getId()))
+                .toList();
+        return availableTeachers;
+    }
+
+    public List<Teacher> getAvailableTeachersForHead() {
+        List<Long> busyTeacherIds = departmentRepository.getAll().stream()
+                .map(department -> department.getHead())
+                .filter(teacher -> teacher != null)
+                .map(teacher -> teacher.getId())
+                .toList();
+
+        List<Teacher> availableTeachers = teacherRepository.getAll().stream()
+                .filter(teacher -> !busyTeacherIds.contains(teacher.getId()))
+                .toList();
+        return availableTeachers;
     }
 
     // ===== DEPARTMENT METHODS ======

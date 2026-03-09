@@ -269,7 +269,18 @@ public class Menu {
                             System.out.println("Teacher not found. Dean not updated.");
                         }
                     } else if (option == 3) {
-                        String email = inputValidator.readEmail("Enter new email: ");
+                        String oldEmail = facultyToUpdate.getEmail();
+                        String email;
+                        while (true) {
+                            try {
+                                email = inputValidator.readEmail("Enter new email: ");
+                                manager.storeEmail(email);
+                                break;
+                            } catch (IllegalArgumentException e) {
+                                System.out.println(e.getMessage() + " Try another one!");
+                            }
+                        }
+                        if (!oldEmail.equals(email)) manager.removeEmail(oldEmail);
                         facultyToUpdate.setEmail(email);
                     } else if (option == 4) {
                         String phone = inputValidator.readString("Enter new phone number: ");
@@ -305,7 +316,16 @@ public class Menu {
         String name = inputValidator.readString("Enter faculty's name: ");
         String shortName = inputValidator.readString("Enter faculty's short name: ");
         Teacher dean = null;
-        String email = inputValidator.readEmail("Enter email of the faculty");
+        String email;
+        while (true) {
+            try {
+                email = inputValidator.readEmail("Enter email of the faculty");
+                manager.storeEmail(email);
+                break;
+            } catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage() + " Try another one");
+            }
+        }
         String phone = inputValidator.readString("Enter faculty's phone number: ");
         while (phone.length() < 10) {
             System.out.println("Phone number is too short!");
@@ -327,7 +347,16 @@ public class Menu {
         String lastName = inputValidator.readString("Last Name: ");
         String fatherName = inputValidator.readString("Father's Name: ");
         LocalDate birthDate = inputValidator.readDate("Enter birth date");
-        String email = inputValidator.readEmail("Enter your email");
+        String email;
+        while (true) {
+            try {
+                email = inputValidator.readEmail("Enter email of the student");
+                manager.storeEmail(email);
+                break;
+            } catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage() + " Try another one");
+            }
+        }
         String phone = inputValidator.readString("Phone: ");
         while (phone.length() < 10) {
             System.out.println("Phone number is too short!");
@@ -362,7 +391,16 @@ public class Menu {
         String lastName = inputValidator.readString("Last Name: ");
         String fatherName = inputValidator.readString("Father's Name: ");
         LocalDate birthDate = inputValidator.readDate("Enter birth date");
-        String email = inputValidator.readEmail("Enter email: ");
+        String email;
+        while (true) {
+            try {
+                email = inputValidator.readEmail("Enter email of the teacher");
+                manager.storeEmail(email);
+                break;
+            } catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage() + " Try another one");
+            }
+        }
         String phone = inputValidator.readString("Phone: ");
         while (phone.length() < 10) {
             System.out.println("Phone number is too short!");
@@ -518,7 +556,18 @@ public class Menu {
                     } else if (option == 6) {
                         updateStudentStatus(studentToUpdate);
                     } else if (option == 7) {
-                        String email = inputValidator.readEmail("Enter a new email address for the student");
+                        String email;
+                        String oldEmail = studentToUpdate.getEmail();
+                        while (true) {
+                            try {
+                                email = inputValidator.readEmail("Enter new email of the student");
+                                manager.storeEmail(email);
+                                break;
+                            } catch (IllegalArgumentException e) {
+                                System.out.println(e.getMessage() + " Try another one");
+                            }
+                        }
+                        if (!oldEmail.equals(email)) manager.removeEmail(oldEmail);
                         studentToUpdate.setEmail(email);
                     } else if (option == 8) {
                         System.out.println("Enter a new phone number for the student: ");

@@ -11,8 +11,10 @@ public class AuthorizationService {
     private Map<String, User> users = new HashMap<>();
     private static final String FILE_NAME = "files/users.csv";
     private User currentUser;
+    private RegistryManager manager;
 
-    public AuthorizationService() {
+    public AuthorizationService(RegistryManager manager) {
+        this.manager = manager;
         loadUsersFromFile();
     }
 
@@ -67,6 +69,12 @@ public class AuthorizationService {
 
     public boolean register(String email, String password, Role role) {
         if (users.containsKey(email)) {
+            return false;
+        }
+        try {
+           manager.storeEmail(email);
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
             return false;
         }
         User newUser = new User(email, password, role);
