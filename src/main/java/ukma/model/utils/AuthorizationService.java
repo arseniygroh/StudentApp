@@ -107,4 +107,9 @@ public class AuthorizationService {
         return currentUser.getRole() == Role.MANAGER;
     }
 
+    public boolean isAdmin() {
+        if (currentUser == null) return false;
+        return currentUser.getRole() == Role.ADMIN;
+    }
+
 }
