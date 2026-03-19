@@ -7,20 +7,20 @@ public class User {
     private String email;
     private String password;
     private Role role;
+    private boolean isBlocked;
 
     public User(String email, String password, Role role) {
         if (!EmailValidator.validate(email)) {
             throw new IllegalArgumentException("invalid email");
         }
-        if (password == null || password.trim().isEmpty()) {
-            throw new IllegalArgumentException("input can't be empty");
-        }
+        setPassword(password);
         if (role == null) {
             throw new IllegalArgumentException("input can't be null");
         }
         this.email = email;
         this.password = password;
         this.role = role;
+        this.isBlocked = false;
     }
     public String getEmail() {
         return email;
@@ -32,6 +32,29 @@ public class User {
 
     public Role getRole() {
         return role;
+    }
+
+    public void setEmail(String email) {
+        if (!EmailValidator.validate(email)) {
+            throw new IllegalArgumentException("Invalid email");
+        }
+        this.email = email;
+    }
+    public boolean isBlocked() {
+        return isBlocked;
+    }
+
+    public void setBlocked(boolean blocked) {
+        isBlocked = blocked;
+    }
+
+    public void setPassword(String password) {
+        if (password == null || password.isBlank()) throw new IllegalArgumentException("input can't be null or empty");
+        this.password = password;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 
     @Override

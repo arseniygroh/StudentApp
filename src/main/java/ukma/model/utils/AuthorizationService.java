@@ -33,11 +33,16 @@ public class AuthorizationService {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
-                if (parts.length == 3) {
+                if (parts.length >= 3) {
                     String email = parts[0].trim();
                     String password = parts[1].trim();
                     Role role = Role.valueOf(parts[2].trim().toUpperCase());
-                    users.put(email, new User(email, password, role));
+                    User user = new User(email, password, role);
+
+                    if (parts.length == 4) {
+                        user.setBlocked(Boolean.parseBoolean(parts[3].trim()));
+                    }
+                    users.put(email, user);
                 }
             }
             reader.close();
@@ -46,7 +51,7 @@ public class AuthorizationService {
         }
     }
 
-    private void saveUserToFile(User user) {
+    public void saveUserToFile(User user) {
         File file = new File(FILE_NAME);
         if (!file.exists()) {
             try {
@@ -59,8 +64,21 @@ public class AuthorizationService {
         }
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(file, true));
-            String data = user.getEmail() + ", " + user.getPassword() + ", " + user.getRole() + "\n";
+            String data = user.getEmail() + "," + user.getPassword() + "," + user.getRole() + "," + user.isBlocked() + "\n";
             writer.write(data);
+            writer.close();
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public void updateUsersFile() {
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_NAME));
+            for (User user : users.values()) {
+                String data = user.getEmail() + "," + user.getPassword() + "," + user.getRole() + "," + user.isBlocked() + "\n";
+                writer.write(data);
+            }
             writer.close();
         } catch (IOException e) {
             System.out.println(e.getMessage());
@@ -83,9 +101,17 @@ public class AuthorizationService {
         return true;
     }
 
+    public Map<String, User> getUsers() {
+        return users;
+    }
+
     public boolean login(String email, String password) {
         User user = users.get(email);
         if (user != null && user.getPassword().equals(password)) {
+            if (user.isBlocked()) {
+                System.out.println("Error: This account has been blocked by admin");
+                return false;
+            }
             currentUser = user;
             return true;
         }
@@ -105,6 +131,11 @@ public class AuthorizationService {
             return false;
         }
         return currentUser.getRole() == Role.MANAGER;
+    }
+
+    public boolean isAdmin() {
+        if (currentUser == null) return false;
+        return currentUser.getRole() == Role.ADMIN;
     }
 
 }
