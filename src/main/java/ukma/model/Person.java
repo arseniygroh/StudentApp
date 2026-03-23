@@ -4,6 +4,7 @@ package ukma.model;
 import ukma.model.utils.EmailValidator;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 public class Person {
     private final long id;
@@ -95,6 +96,21 @@ public class Person {
     }
     public LocalDate getBirthDate() {
         return this.birthDate;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Person that = (Person) o;
+        return this.getId() == that.getId();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId());
     }
 
     public String toString() {

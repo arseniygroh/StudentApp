@@ -2,6 +2,8 @@ package ukma.model;
 
 import ukma.model.utils.EmailValidator;
 
+import java.util.Objects;
+
 public class Faculty {
     private final int id;
     private static int idCounter = 1;
@@ -70,6 +72,21 @@ public class Faculty {
 
     public int getId() {
         return id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Faculty that = (Faculty) o;
+        return this.getId() == that.getId();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId());
     }
 
     @Override

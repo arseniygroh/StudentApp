@@ -72,7 +72,7 @@ public class Menu {
                         else System.out.println("You don't have a right to do it");
 
                     } else if (option == 4) {
-                        System.out.println("Would you like to get a student by ID or name info?" + "\n"
+                        System.out.println("How would you like to get a student?" + "\n"
                                 + "1 - by id" + "\n"
                                 + "2 - by name info" + "\n"
                                 + "3 - by study year" + "\n"
@@ -115,8 +115,12 @@ public class Menu {
                     } else if (option == 5) {
                         System.out.println("Would you like to get students by ?" + "\n"
                                 + "1 - by faculty" + "\n"
-                                + "2 - by study year in ascending order");
-                        int choice = inputValidator.readInt("Enter your option", 1, 2);
+                                + "2 - by study year in ascending order" + "\n"
+                                + "3 - by department (sorted by study year)" + "\n"
+                                + "4 - by department (sorted alphabetically)" + "\n"
+                                + "5 - by department (specific study year)"
+                        );
+                        int choice = inputValidator.readInt("Enter your option", 1, 5);
                         if (choice == 1) {
                             System.out.println("Here are all faculties: ");
                             for (int i = 1; i <= manager.getFaculties().size(); i++) {
@@ -130,7 +134,17 @@ public class Menu {
                                 System.out.println(e.getMessage());
                             }
                         } else if (choice == 2) {
-                            manager.showAllStudents();
+                            manager.showAllStudentsSortedByStudyYear();
+                        } else if (choice == 3) {
+                            Department department = selectDepartment();
+                            if (department != null) manager.showAllStudentsInDepartmentSortedByStudyYear(department);
+                        } else if (choice == 4) {
+                            Department department = selectDepartment();
+                            if (department != null) manager.showAllStudentsInDepartmentSortedAlphabetically(department);
+                        } else if (choice == 5) {
+                            Department department = selectDepartment();
+                            int studyYear = inputValidator.readInt("Enter a study year (1-6): ", 1, 6);
+                            if (department != null) manager.showAllStudentsOfSameCourseInDepartmentSortedAlphabetically(department, studyYear);
                         }
                     } else break;
                 }
@@ -176,7 +190,7 @@ public class Menu {
                             + "0 - leave the menu" + "\n"
                             + "1 - add a new teacher (manager, admin only)" + "\n"
                             + "2 - delete a teacher by id (manager, admin only)" + "\n"
-                            + "3 - get teacher by id\n"
+                            + "3 - get teacher\n"
                             + "4 - show all teachers\n"
                             + "5 - update teacher (manager, admin only)\n"
                     );
@@ -191,14 +205,41 @@ public class Menu {
                             manager.deleteTeacher(id);
                         } else System.out.println("You don't have a right to do it");
                     } else if (option == 3) {
-                        long id = inputValidator.readInt("Enter ID of the teacher you want to get: ", 1, Integer.MAX_VALUE);
-                        try {
-                            System.out.println(manager.getTeacherById(id));
-                        } catch (Exception e) {
-                            System.out.println("Error: " + e.getMessage());
+                        System.out.println("How would you like to get a teacher ?" + "\n"
+                                + "1 - by id" + "\n"
+                                + "2 - by name info" + "\n"
+                        );
+                        int choice = inputValidator.readInt("Enter your choice: ", 1, 2);
+                        if (choice == 1) {
+                            long id = inputValidator.readInt("Enter ID of the teacher you want to get: ", 1, Integer.MAX_VALUE);
+                            try {
+                                System.out.println(manager.getTeacherById(id));
+                            } catch (TeacherNotFoundException e) {
+                                System.out.println("Error: " + e.getMessage());
+                            }
+                        } else {
+                            String query = inputValidator.readString("Enter some name details of a teacher you want to get: ");
+                            List<Teacher> result = manager.getTeachersByNameInfo(query);
+                            result.forEach(teacher -> {
+                                System.out.println(teacher);
+                                System.out.println("================================================");
+                            });
                         }
                     } else if (option == 4) {
-                        manager.showAllTeachers();
+                        System.out.println("--- TEACHER REPORTS --- \n"
+                                + "1 - All teachers (unsorted)\n"
+                                + "2 - Faculty teachers (sorted alphabetically)\n"
+                                + "3 - Department teachers (sorted alphabetically)\n");
+                        int choice = inputValidator.readInt("Enter your option: ", 1, 3);
+                        if (choice == 1) {
+                            manager.showAllTeachers();
+                        } else if (choice == 2) {
+                            Faculty faculty = selectFaculty();
+                            if (faculty != null) manager.showAllTeachersInFaculty(faculty.getShortName());
+                        } else if (choice == 3) {
+                            Department d = selectDepartment();
+                            if (d != null) manager.showDepartmentTeachersAlphabetically(d);
+                        }
                     } else if (option == 5) {
                         if (authService.isManager() || authService.isAdmin()) handleUpdateTeacher();
                         else System.out.println("You don't have a right to do it");
@@ -574,9 +615,10 @@ public class Menu {
         System.out.println("Rate (e.g. 1.0 or 0.5): ");
         double rate = scan.nextDouble();
         scan.nextLine();
+        Department department = selectDepartment();
 
         try {
-            Teacher teacher = new Teacher(firstName, lastName, fatherName, birthDate, email, phone, degree, occupation, academicRank, hireDate, rate);
+            Teacher teacher = new Teacher(firstName, lastName, fatherName, birthDate, email, phone, degree, occupation, academicRank, hireDate, rate, department);
             manager.addTeacher(teacher);
             System.out.println("Teacher added successfully!");
         } catch (IllegalArgumentException e) {
@@ -602,6 +644,7 @@ public class Menu {
                             + "7 - occupation\n"
                             + "8 - academic rank\n"
                             + "9 - rate\n"
+                            + "10 - department\n"
                             + "Q or q - quit\n");
 
                     String optionStr = inputValidator.readString("Choose option: ").trim();
@@ -614,11 +657,11 @@ public class Menu {
                     try {
                         option = Integer.parseInt(optionStr);
                     } catch (NumberFormatException e) {
-                        System.out.println("Please enter a number from 0 to 9 or 'q' to quit");
+                        System.out.println("Please enter a number from 0 to 10 or 'q' to quit");
                         continue;
                     }
 
-                    if (option < 0 || option > 9) continue;
+                    if (option < 0 || option > 10) continue;
 
                     if (option == 1) {
                         String name = inputValidator.readString("Enter new first name: ");
@@ -669,6 +712,11 @@ public class Menu {
                         double rate = scan.nextDouble();
                         scan.nextLine();
                         teacherToUpdate.setRate(rate);
+                    } else if (option == 10) {
+                        Department department = selectDepartment();
+                        if (department != null) {
+                            teacherToUpdate.setDepartment(department);
+                        }
                     } else {
                         break;
                     }

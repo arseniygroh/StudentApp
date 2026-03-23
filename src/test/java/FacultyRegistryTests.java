@@ -1,5 +1,6 @@
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import ukma.model.Department;
 import ukma.model.Faculty;
 import ukma.model.Teacher;
 import ukma.model.enums.Degree;
@@ -15,20 +16,22 @@ public class FacultyRegistryTests {
     private RegistryManager manager;
     private Teacher testDean;
     private Faculty testFaculty;
+    private Department testDepartment;
 
     @BeforeEach
     public void init() {
         manager = new RegistryManager();
-
+        testDepartment = new Department("Кафедра математики", testFaculty, null, "some location");
         testDean = new Teacher(
                 "Олександр", "Мельник", "Олександрович",
                 LocalDate.of(1980, 1, 1),
                 "dean@ukma.edu.ua", "0441112233",
                 Degree.PHD, "Доцент", "Доцент",
-                LocalDate.of(2010, 9, 1), 1.0
+                LocalDate.of(2010, 9, 1), 1.0, testDepartment
         );
-        manager.addTeacher(testDean);
         testFaculty = new Faculty("Факультет Інформатики", "ФІ", testDean, "fi_office@ukma.edu.ua", "0449998877");
+        manager.addTeacher(testDean);
+
         manager.addFaculty(testFaculty);
     }
 
@@ -56,7 +59,7 @@ public class FacultyRegistryTests {
                 LocalDate.of(1985, 2, 2),
                 "free@ukma.edu.ua", "0990001122",
                 Degree.MASTER, "Асистент", "Асистент",
-                LocalDate.of(2020, 9, 1), 1.0
+                LocalDate.of(2020, 9, 1), 1.0, testDepartment
         );
         manager.addTeacher(freeTeacher);
         List<Teacher> freeTeachers = manager.getAvailableTeachersForDean();

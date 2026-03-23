@@ -81,7 +81,7 @@ public class RegistryManager {
         studentRepository.store(student);
     }
 
-    public void showAllStudents() {
+    public void showAllStudentsSortedByStudyYear() {
         List<Student> students = studentRepository.getAll();
         if (students.isEmpty()) {
             System.out.println("Student repository is empty");
@@ -89,6 +89,52 @@ public class RegistryManager {
         }
         students.stream()
                 .sorted(Comparator.comparingInt(Student::getStudyYear))
+                .forEach(student -> {
+                    System.out.println(student);
+                    System.out.println("================================================");
+                });
+    }
+
+    public void showAllStudentsInDepartmentSortedByStudyYear(Department d) {
+        List<Student> students = studentRepository.getAll();
+        if (students.isEmpty()) {
+            System.out.println("Student repository is empty");
+            return;
+        }
+        students.stream()
+                .filter(student -> d.equals(student.getDepartment()))
+                .sorted(Comparator.comparingInt(Student::getStudyYear))
+                .forEach(student -> {
+                    System.out.println(student);
+                    System.out.println("================================================");
+                });
+    }
+
+    public void showAllStudentsInDepartmentSortedAlphabetically(Department d) {
+        List<Student> students = studentRepository.getAll();
+        if (students.isEmpty()) {
+            System.out.println("Student repository is empty");
+            return;
+        }
+        students.stream()
+                .filter(student -> d.equals(student.getDepartment()))
+                .sorted(Comparator.comparing(Student::getFullName))
+                .forEach(student -> {
+                    System.out.println(student);
+                    System.out.println("================================================");
+                });
+    }
+
+    public void showAllStudentsOfSameCourseInDepartmentSortedAlphabetically(Department d, int studyYear) {
+        List<Student> students = studentRepository.getAll();
+        if (students.isEmpty()) {
+            System.out.println("Student repository is empty");
+            return;
+        }
+        students.stream()
+                .filter(student -> d.equals(student.getDepartment()))
+                .filter(student -> student.getStudyYear() == studyYear)
+                .sorted(Comparator.comparing(Student::getFullName))
                 .forEach(student -> {
                     System.out.println(student);
                     System.out.println("================================================");
@@ -144,6 +190,45 @@ public class RegistryManager {
         return teacherRepository.getById(id)
                 .orElseThrow(() -> new TeacherNotFoundException("Teacher with id " + id + " was not found"));
     }
+
+    public List<Teacher> getTeachersByNameInfo(String query) {
+        String lowerQuery = query.toLowerCase();
+        return teacherRepository.search(teacher -> teacher.getFullName().toLowerCase().contains(lowerQuery));
+    }
+
+    public void showAllTeachersInFaculty(String facultyShortName) {
+        List<Teacher> teachers = teacherRepository.getAll();
+        if (teachers.isEmpty()) {
+            System.out.println("Teacher repository is empty");
+            return;
+        }
+        teachers.stream()
+                .filter(teacher -> teacher.getDepartment() != null
+                        && teacher.getDepartment().getFaculty() != null
+                        && teacher.getDepartment().getFaculty().getShortName().equalsIgnoreCase(facultyShortName))
+                .sorted(Comparator.comparing(Teacher::getFullName))
+                .forEach(teacher -> {
+                    System.out.println(teacher);
+                    System.out.println("================================================");
+                });
+    }
+
+    public void showDepartmentTeachersAlphabetically(Department department) {
+        List<Teacher> teachers = teacherRepository.getAll();
+        if (teachers.isEmpty()) {
+            System.out.println("Teacher repository is empty");
+            return;
+        }
+
+        teachers.stream()
+                .filter(teacher -> department.equals(teacher.getDepartment()))
+                .sorted(Comparator.comparing(Teacher::getFullName))
+                .forEach(t -> {
+                    System.out.println(t);
+                    System.out.println("================================================");
+                });
+    }
+
 
     public void showAllTeachers() {
         List<Teacher> teachers = teacherRepository.getAll();

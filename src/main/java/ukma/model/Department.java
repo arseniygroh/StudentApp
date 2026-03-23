@@ -1,5 +1,7 @@
 package ukma.model;
 
+import java.util.Objects;
+
 public class Department {
     private final int id;
     private static int idCounter = 1;
@@ -55,13 +57,27 @@ public class Department {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Department that = (Department) o;
+        return this.getId() == that.getId();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId());
+    }
+
+    @Override
     public String toString() {
         return "Department{" +
                 "id=" + id +
-                ", idCounter=" + idCounter +
                 ", name='" + name + '\'' +
-                ", faculty=" + faculty.getName() +
-                ", head=" + head.getFullName() +
+                ", faculty=" + (faculty != null ? faculty.getName() : "None") +
+                ", head=" + (head != null ? head.getFullName() : "None") +
                 ", location='" + location + '\'' +
                 '}';
     }
