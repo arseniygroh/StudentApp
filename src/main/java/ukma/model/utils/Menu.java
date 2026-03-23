@@ -521,11 +521,12 @@ public class Menu {
         StudyForm studyForm = selectStudyForm();
         StudentStatus status = selectStudentStatus();
         Faculty faculty = selectFaculty();
+        Department department = selectDepartment();
 
         try {
             Student newStudent = new Student(
                     firstName, lastName, fatherName, birthDate, email, phone,
-                    recordBookId, year, courseCode, admYear, studyForm, status, faculty
+                    recordBookId, year, courseCode, admYear, studyForm, status, faculty, department
             );
 
             manager.addStudent(newStudent);
@@ -829,6 +830,31 @@ public class Menu {
         return chosen;
     }
 
+    private Department selectDepartment() {
+        System.out.println("Available departments:");
+        Map<Integer, Department> availableDepartments = manager.getDepartments();
+
+        if (availableDepartments.isEmpty()) {
+            System.out.println("There are no available departments");
+            return null;
+        }
+
+        for (Department d : availableDepartments.values()) {
+            System.out.println(d.getId() + " - " + d.getName());
+        }
+
+        Department chosen = null;
+        while (chosen == null) {
+            int id = inputValidator.readInt("Enter Department ID: ", 1, Integer.MAX_VALUE);
+            try {
+                chosen = manager.getDepartmentById(id);
+            } catch (DepartmentNotFoundException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+        return chosen;
+    }
+
     public void handleUpdateStudent() {
         boolean isRunning = true;
         while (isRunning) {
@@ -847,6 +873,9 @@ public class Menu {
                             + "6 - student status" + "\n"
                             + "7 - email address" + "\n"
                             + "8 - phone number" + "\n"
+                            + "9 - study year" + "\n"
+                            + "10 - faculty" + "\n"
+                            + "11 - department" + "\n"
                             + "Q or q - quit" + "\n");
 
                     String optionStr = inputValidator.readString("Choose option: ").trim();
@@ -859,11 +888,11 @@ public class Menu {
                     try {
                         option = Integer.parseInt(optionStr);
                     } catch (NumberFormatException e) {
-                        System.out.println("Please enter a number from 0 to 8 or 'q' to quit");
+                        System.out.println("Please enter a number from 0 to 11 or 'q' to quit");
                         continue;
                     }
 
-                    if (option < 0 || option > 8) continue;
+                    if (option < 0 || option > 11) continue;
 
                     if (option == 1) {
                         String name = inputValidator.readString("Enter new name for the student");
@@ -899,6 +928,19 @@ public class Menu {
                         System.out.println("Enter a new phone number for the student: ");
                         String phone = scan.nextLine();
                         studentToUpdate.setPhoneNumber(phone);
+                    } else if (option == 9) {
+                        int year = inputValidator.readInt("Enter new study year (1-6): ", 1, 6);
+                        studentToUpdate.setStudyYear(year);
+                    } else if (option == 10) {
+                        Faculty newFaculty = selectFaculty();
+                        if (newFaculty != null) {
+                            studentToUpdate.setFaculty(newFaculty);
+                        }
+                    } else if (option == 11) {
+                        Department newDept = selectDepartment();
+                        if (newDept != null) {
+                            studentToUpdate.setDepartment(newDept);
+                        }
                     } else {
                         break;
                     }

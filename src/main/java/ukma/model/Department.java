@@ -26,7 +26,6 @@ public class Department {
     }
 
     public void setHead(Teacher head) {
-        if (head == null) throw new IllegalArgumentException("input can't be null");
         this.head = head;
     }
 

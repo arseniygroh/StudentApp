@@ -201,6 +201,16 @@ public class RegistryManager {
                 .orElseThrow(() -> new DepartmentNotFoundException("Department with id " + id + " was not found"));
     }
 
+    public Map<Integer, Department> getDepartments() {
+        List<Department> departmentList = departmentRepository.getAll();
+        Map<Integer, Department> departmentMap = new HashMap<>();
+        for (Department d : departmentList) {
+            departmentMap.put(d.getId(), d);
+        }
+        return departmentMap;
+    }
+
+
     public void showAllDepartments() {
         List<Department> departments = departmentRepository.getAll();
         if (departments.isEmpty()) {
