@@ -105,8 +105,16 @@ public class Student extends Person {
         return this.status;
     }
 
+    @Override
     public String toString() {
-        return "This is a student! " + "\n"
-                + super.toString();
+        return "STUDENT INFO\n"
+                + super.toString() + "\n"
+                + "Record Book ID: " + studentRecordBookId + "\n"
+                + "Study Year: " + studyYear + "\n"
+                + "Course Code: " + courseCode + "\n"
+                + "Admission Year: " + admissionYear + "\n"
+                + "Study Form: " + studyForm + "\n"
+                + "Status: " + status + "\n"
+                + "Faculty: " + (faculty != null ? faculty.getName() : "None");
     }
 }

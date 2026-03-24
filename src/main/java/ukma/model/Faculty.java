@@ -74,13 +74,11 @@ public class Faculty {
 
     @Override
     public String toString() {
-        return "Faculty{" +
-                ", id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", shortName='" + shortName + '\'' +
-                ", dean=" + (dean != null ? dean.getFirstName() + " " + dean.getLastName() + " " + dean.getFatherName() : "null") +
-                ", email='" + email + '\'' +
-                ", phone='" + phone + '\'' +
-                '}';
+        return "FACULTY INFO\n"
+                + "ID: " + id + "\n"
+                + "Name: " + name + " (" + shortName + ")\n"
+                + "Dean: " + (dean != null ? dean.getFullName() : "None") + "\n"
+                + "Email: " + email + "\n"
+                + "Phone: " + phone;
     }
 }

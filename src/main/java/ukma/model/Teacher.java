@@ -89,11 +89,15 @@ public class Teacher extends Person {
         return Period.between(hireDate, LocalDate.now()).getYears();
     }
 
+    @Override
     public String toString() {
-        return "This is teacher \n"
+        return "TEACHER INFO\n"
                 + super.toString() + "\n"
-                + "Degree: " + degree + ", Academic Rank: " + academicRank + "\n"
-                + "Occupation: " + occupation + ", Rate: " + rate + "\n"
-                + "Experience: " + getExperienceYears() + " years (Hired: " + hireDate + ")";
+                + "Degree: " + degree + "\n"
+                + "Academic Rank: " + academicRank + "\n"
+                + "Occupation: " + occupation + "\n"
+                + "Hire Date: " + hireDate + "\n"
+                + "Rate: " + rate + "\n"
+                + "Experience: " + getExperienceYears() + " years";
     }
 }

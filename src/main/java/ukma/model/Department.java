@@ -57,13 +57,11 @@ public class Department {
 
     @Override
     public String toString() {
-        return "Department{" +
-                "id=" + id +
-                ", idCounter=" + idCounter +
-                ", name='" + name + '\'' +
-                ", faculty=" + faculty.getName() +
-                ", head=" + head.getFullName() +
-                ", location='" + location + '\'' +
-                '}';
+        return "DEPARTMENT INFO\n"
+                + "ID: " + id + "\n"
+                + "Name: " + name + "\n"
+                + "Location: " + location + "\n"
+                + "Faculty: " + (faculty != null ? faculty.getName() : "None") + "\n"
+                + "Head: " + (head != null ? head.getFullName() : "None");
     }
 }
