@@ -1,11 +1,12 @@
 package ukma.model;
 
 import ukma.model.enums.Degree;
+import ukma.model.utils.ShortViewable;
 
 import java.time.LocalDate;
 import java.time.Period;
 
-public class Teacher extends Person {
+public class Teacher extends Person implements ShortViewable {
     private Degree degree;
     private String occupation;
     private String academicRank;
@@ -99,5 +100,11 @@ public class Teacher extends Person {
                 + "Hire Date: " + hireDate + "\n"
                 + "Rate: " + rate + "\n"
                 + "Experience: " + getExperienceYears() + " years";
+    }
+
+    @Override
+    public String toShortString() {
+        String extraInfo = occupation + " (" + degree + ")";
+        return String.format("| %-4d | %-30s | %-25s |", getId(), getInitials(), extraInfo);
     }
 }

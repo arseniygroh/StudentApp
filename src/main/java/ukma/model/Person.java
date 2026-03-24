@@ -97,6 +97,10 @@ public class Person {
         return this.birthDate;
     }
 
+    public String getInitials() {
+        return lastName + " " + firstName.charAt(0) + ". " + fatherName.charAt(0) + ".";
+    }
+
     public String toString() {
         return "ID: " + id + "\n"
                 + "Full Name: " + getFullName() + "\n"
