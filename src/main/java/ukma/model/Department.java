@@ -70,6 +70,6 @@ public class Department implements ShortViewable {
     @Override
     public String toShortString() {
         String extraInfo = "Head: " + (head != null ? head.getInitials() : "None");
-        return String.format("| %-4d | %-30s | %-25s |", id, name, extraInfo);
+        return String.format("| %-5d | %-50s | %-25s |", id, name, extraInfo);
     }
 }

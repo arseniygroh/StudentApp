@@ -86,6 +86,6 @@ public class Faculty implements ShortViewable {
     @Override
     public String toShortString() {
         String extraInfo = "Dean: " + (dean != null ? dean.getInitials() : "None");
-        return String.format("| %-4d | %-30s | %-25s |", id, name, extraInfo);
+        return String.format("| %-5d | %-50s | %-25s |", id, name, extraInfo);
     }
 }

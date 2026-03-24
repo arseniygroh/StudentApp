@@ -122,6 +122,6 @@ public class Student extends Person implements ShortViewable {
     @Override
     public String toShortString() {
         String extraInfo = courseCode + "-" + studyYear + " (" + studyForm + ")";
-        return String.format("| %-5d | %-40s | %-25s |", getId(), getInitials(), extraInfo);
+        return String.format("| %-5d | %-50s | %-25s |", getId(), getInitials(), extraInfo);
     }
 }

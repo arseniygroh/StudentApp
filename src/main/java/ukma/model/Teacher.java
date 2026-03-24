@@ -105,6 +105,6 @@ public class Teacher extends Person implements ShortViewable {
     @Override
     public String toShortString() {
         String extraInfo = occupation + " (" + degree + ")";
-        return String.format("| %-4d | %-30s | %-25s |", getId(), getInitials(), extraInfo);
+        return String.format("| %-5d | %-50s | %-25s |", getId(), getInitials(), extraInfo);
     }
 }

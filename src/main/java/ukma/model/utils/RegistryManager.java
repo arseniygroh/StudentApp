@@ -59,12 +59,11 @@ public class RegistryManager {
             System.out.println("Repository is empty");
             return;
         }
+        System.out.println(String.format("| %-5s | %-50s | %-25s |", "ID", "Faculty Name", "Dean"));
+        System.out.println("-".repeat(89));
         faculties.stream()
                 .sorted(Comparator.comparing(Faculty::getName))
-                .forEach(f -> {
-                    System.out.println(f);
-                    System.out.println("================================================");
-                });
+                .forEach(f -> System.out.println(f.toShortString()));
     }
 
     public Map<Integer, Faculty> getFaculties() {
@@ -87,12 +86,11 @@ public class RegistryManager {
             System.out.println("Student repository is empty");
             return;
         }
+        System.out.println(String.format("| %-5s | %-50s | %-25s |", "ID", "Student Name", "Course Info"));
+        System.out.println("-".repeat(89));
         students.stream()
                 .sorted(Comparator.comparingInt(Student::getStudyYear))
-                .forEach(student -> {
-                    System.out.println(student);
-                    System.out.println("================================================");
-                });
+                .forEach(student -> System.out.println(student.toShortString()));
     }
 
     public void showAllStudentsInFaculty(String facultyShortName) {
@@ -101,13 +99,12 @@ public class RegistryManager {
             System.out.println("Student repository is empty");
             return;
         }
+        System.out.println(String.format("| %-5s | %-50s | %-25s |", "ID", "Student Name", "Course Info"));
+        System.out.println("-".repeat(89));
         students.stream()
                 .filter(student -> student.getFaculty().getShortName().equalsIgnoreCase(facultyShortName))
                 .sorted(Comparator.comparing(Student::getFullName))
-                .forEach(student -> {
-                    System.out.println(student);
-                    System.out.println("================================================");
-                });
+                .forEach(student -> System.out.println(student.toShortString()));
     }
 
     public void deleteStudent(long id) {
@@ -151,12 +148,11 @@ public class RegistryManager {
             System.out.println("Teachers repository is empty");
             return;
         }
+        System.out.println(String.format("| %-5s | %-50s | %-25s |", "ID", "Teacher Name", "Occupation"));
+        System.out.println("-".repeat(89));
         teachers.stream()
                 .sorted(Comparator.comparing(Teacher::getFullName))
-                .forEach(teacher -> {
-                    System.out.println(teacher);
-                    System.out.println("================================================");
-                });
+                .forEach(teacher -> System.out.println(teacher.toShortString()));
     }
 
     public void deleteTeacher(long id) {
@@ -207,12 +203,11 @@ public class RegistryManager {
             System.out.println("Department repository is empty");
             return;
         }
+        System.out.println(String.format("| %-5s | %-50s | %-25s |", "ID", "Department Name", "Head"));
+        System.out.println("-".repeat(89));
         departments.stream()
                 .sorted(Comparator.comparing(Department::getName))
-                .forEach(dept -> {
-                    System.out.println(dept);
-                    System.out.println("================================================");
-                });
+                .forEach(dept -> System.out.println(dept.toShortString()));
     }
 
     public void deleteDepartment(int id) {
