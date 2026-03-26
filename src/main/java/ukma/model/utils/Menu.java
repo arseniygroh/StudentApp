@@ -54,8 +54,9 @@ public class Menu {
                             + "2 - Delete a student (manager, admin only)" + "\n"
                             + "3 - Update a student (manager, admin only)" + "\n"
                             + "4 - Get a student" + "\n"
-                            + "5 - Show all students" + "\n");
-                    int option = inputValidator.readInt("Select your option: ", 0, 5);
+                            + "5 - Show all students" + "\n"
+                            + "6 - Show student statistics (Reports)" + "\n");
+                    int option = inputValidator.readInt("Select your option: ", 0, 6);
                     if (option == 1) {
                         if (authService.isManager() || authService.isAdmin()) createAndAddStudent();
                         else System.out.println("You don't have a right to do it");
@@ -146,18 +147,24 @@ public class Menu {
                             int studyYear = inputValidator.readInt("Enter a study year (1-6): ", 1, 6);
                             if (department != null) manager.showAllStudentsOfSameCourseInDepartmentSortedAlphabetically(department, studyYear);
                         }
+                    } else if (option == 6) {
+                        manager.printStudentCountByStudyForm();
+                        manager.printStudentCountByFaculty();
                     } else break;
                 }
             } else if (mainMenuOption == 2) {
                 while(true) {
-                    System.out.println("Here are the options for faculty registry manipulations: " + "\n"
+                    System.out.println("Here are the options for teacher registry manipulations: " + "\n"
                             + "0 - leave the menu" + "\n"
-                            + "1 - add a new faculty (manager, admin only)" + "\n"
-                            + "2 - delete a faculty by id (manager, admin only)" + "\n"
-                            + "3 - update a faculty (manager, admin only)" + "\n"
-                            + "4 - show faculty or faculties" + "\n");
+                            + "1 - add a new teacher (manager, admin only)" + "\n"
+                            + "2 - delete a teacher by id (manager, admin only)" + "\n"
+                            + "3 - get teacher\n"
+                            + "4 - show all teachers\n"
+                            + "5 - update teacher (manager, admin only)\n"
+                            + "6 - show teacher statistics (Reports)\n"
+                    );
 
-                    int option = inputValidator.readInt("Enter your option", 0, 4);
+                    int option = inputValidator.readInt("Enter your option", 0, 6);
                     if (option == 1) {
                         if (authService.isManager() || authService.isAdmin()) createAndAddFaculty();
                         else System.out.println("You don't have a right to do it");
@@ -243,6 +250,8 @@ public class Menu {
                     } else if (option == 5) {
                         if (authService.isManager() || authService.isAdmin()) handleUpdateTeacher();
                         else System.out.println("You don't have a right to do it");
+                    } else if (option == 6) {
+                        manager.printAverageTeacherRate();
                     } else break;
                 }
             } else if (mainMenuOption == 4) {
