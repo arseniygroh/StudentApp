@@ -1,8 +1,8 @@
 package ukma.model;
 
-import java.util.Objects;
+import ukma.model.utils.ShortViewable;
 
-public class Department {
+public class Department implements ShortViewable {
     private final int id;
     private static int idCounter = 1;
     private String name;
@@ -73,12 +73,17 @@ public class Department {
 
     @Override
     public String toString() {
-        return "Department{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", faculty=" + (faculty != null ? faculty.getName() : "None") +
-                ", head=" + (head != null ? head.getFullName() : "None") +
-                ", location='" + location + '\'' +
-                '}';
+        return "DEPARTMENT INFO\n"
+                + "ID: " + id + "\n"
+                + "Name: " + name + "\n"
+                + "Location: " + location + "\n"
+                + "Faculty: " + (faculty != null ? faculty.getName() : "None") + "\n"
+                + "Head: " + (head != null ? head.getFullName() : "None");
+    }
+
+    @Override
+    public String toShortString() {
+        String extraInfo = "Head: " + (head != null ? head.getInitials() : "None");
+        return String.format("| %-5d | %-50s | %-25s |", id, name, extraInfo);
     }
 }

@@ -12,10 +12,10 @@ import java.util.*;
 import java.util.function.Predicate;
 
 public class Menu {
-    private Scanner scan = new Scanner(System.in);
-    private RegistryManager manager;
-    private ConsoleInput inputValidator;
-    private AuthorizationService authService;
+    private final Scanner scan = new Scanner(System.in);
+    private final RegistryManager manager;
+    private final ConsoleInput inputValidator;
+    private final AuthorizationService authService;
 
     public Menu(RegistryManager manager, ConsoleInput inputValidator, AuthorizationService authService) {
         this.manager = manager;
@@ -103,11 +103,20 @@ public class Menu {
                                 String courseCode = inputValidator.readString("Enter course code: ");
                                 result = manager.findByCourseCode(courseCode);
                             }
+
                             if (!result.isEmpty()) {
                                 System.out.println("-- STUDENTS FOUND --");
-                                for (Student s : result) {
-                                    System.out.println(s);
-                                    System.out.println("---------------------");
+                                if (choice == 2) {
+                                    for (Student s : result) {
+                                        System.out.println(s);
+                                        System.out.println("---------------------");
+                                    }
+                                } else {
+                                    System.out.printf("| %-5s | %-50s | %-25s |%n", "ID", "Student Name", "Course Info");
+                                    System.out.println("-".repeat(89));
+                                    for (Student s : result) {
+                                        System.out.println(s.toShortString());
+                                    }
                                 }
                             } else {
                                 System.out.println("No students found matching your criteria.");
@@ -410,7 +419,11 @@ public class Menu {
 
     private long selectAvailableTeacherId(List<Teacher> teachers, boolean isDean) {
         System.out.println("Available Teachers:");
-        teachers.forEach(teacher -> System.out.println("ID: " + teacher.getId() + " - " + teacher.getFullName()));
+        System.out.printf("| %-5s | %-50s | %-25s |%n", "ID", "Teacher Name", "Occupation");
+        System.out.println("-".repeat(89));
+
+        teachers.forEach(teacher -> System.out.println(teacher.toShortString()));
+
         String position = isDean ? "Dean" : "Head";
         return inputValidator.readInt("Enter Teacher ID to be " + position, 1, Integer.MAX_VALUE);
     }
@@ -871,8 +884,10 @@ public class Menu {
             return null;
         }
 
+        System.out.printf("| %-5s | %-50s | %-25s |%n", "ID", "Faculty Name", "Dean");
+        System.out.println("-".repeat(89));
         for (Faculty f : availableFaculties.values()) {
-            System.out.println(f.getId() + " - " + f.getName() + " (" + f.getShortName() + ")");
+            System.out.println(f.toShortString());
         }
 
         Faculty chosen = null;

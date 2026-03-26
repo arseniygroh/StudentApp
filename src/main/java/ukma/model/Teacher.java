@@ -1,11 +1,13 @@
 package ukma.model;
 
 import ukma.model.enums.Degree;
+import ukma.model.utils.ShortViewable;
 
 import java.time.LocalDate;
 import java.time.Period;
 
-public final class Teacher extends Person {
+
+public final class Teacher extends Person implements ShortViewable {
     private Degree degree;
     private String occupation;
     private String academicRank;
@@ -102,11 +104,21 @@ public final class Teacher extends Person {
         return Period.between(hireDate, LocalDate.now()).getYears();
     }
 
+    @Override
     public String toString() {
-        return "This is teacher \n"
+        return "TEACHER INFO\n"
                 + super.toString() + "\n"
-                + "Degree: " + degree + ", Academic Rank: " + academicRank + "\n"
-                + "Occupation: " + occupation + ", Rate: " + rate + "\n"
-                + "Experience: " + getExperienceYears() + " years (Hired: " + hireDate + ")";
+                + "Degree: " + degree + "\n"
+                + "Academic Rank: " + academicRank + "\n"
+                + "Occupation: " + occupation + "\n"
+                + "Hire Date: " + hireDate + "\n"
+                + "Rate: " + rate + "\n"
+                + "Experience: " + getExperienceYears() + " years";
+    }
+
+    @Override
+    public String toShortString() {
+        String extraInfo = occupation + " (" + degree + ")";
+        return String.format("| %-5d | %-50s | %-25s |", getId(), getInitials(), extraInfo);
     }
 }
