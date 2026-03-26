@@ -2,10 +2,11 @@ package ukma.model;
 
 import ukma.model.enums.StudentStatus;
 import ukma.model.enums.StudyForm;
+import ukma.model.utils.ShortViewable;
 
 import java.time.LocalDate;
 
-public class Student extends Person {
+public class Student extends Person implements ShortViewable {
     private String studentRecordBookId;
     private int studyYear;
     private String courseCode;
@@ -119,8 +120,22 @@ public class Student extends Person {
         return this.status;
     }
 
+    @Override
     public String toString() {
-        return "This is a student! " + "\n"
-                + super.toString();
+        return "STUDENT INFO\n"
+                + super.toString() + "\n"
+                + "Record Book ID: " + studentRecordBookId + "\n"
+                + "Study Year: " + studyYear + "\n"
+                + "Course Code: " + courseCode + "\n"
+                + "Admission Year: " + admissionYear + "\n"
+                + "Study Form: " + studyForm + "\n"
+                + "Status: " + status + "\n"
+                + "Faculty: " + (faculty != null ? faculty.getName() : "None");
+    }
+
+    @Override
+    public String toShortString() {
+        String extraInfo = courseCode + "-" + studyYear + " (" + studyForm + ")";
+        return String.format("| %-5d | %-50s | %-25s |", getId(), getInitials(), extraInfo);
     }
 }

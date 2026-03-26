@@ -98,6 +98,10 @@ public class Person {
         return this.birthDate;
     }
 
+    public String getInitials() {
+        return lastName + " " + firstName.charAt(0) + ". " + fatherName.charAt(0) + "."; 
+    }  
+  
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -114,9 +118,10 @@ public class Person {
     }
 
     public String toString() {
-        return this.firstName + " " + this.lastName + " " + this.fatherName + " was born in " + this.birthDate.getYear() + ". " + "\n"
-            + "Email: " + this.email + "\n"
-            + "Phone number: " + this.phoneNumber + "\n"
-            + "ID: " + this.getId();
+        return "ID: " + id + "\n"
+                + "Full Name: " + getFullName() + "\n"
+                + "Birth Date: " + birthDate.toString() + "\n"
+                + "Email: " + email + "\n"
+                + "Phone: " + phoneNumber;
     }
 }

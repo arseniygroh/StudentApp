@@ -1,10 +1,9 @@
 package ukma.model;
 
 import ukma.model.utils.EmailValidator;
+import ukma.model.utils.ShortViewable;
 
-import java.util.Objects;
-
-public class Faculty {
+public class Faculty implements ShortViewable {
     private final int id;
     private static int idCounter = 1;
     private String name;
@@ -91,13 +90,17 @@ public class Faculty {
 
     @Override
     public String toString() {
-        return "Faculty{" +
-                ", id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", shortName='" + shortName + '\'' +
-                ", dean=" + (dean != null ? dean.getFirstName() + " " + dean.getLastName() + " " + dean.getFatherName() : "null") +
-                ", email='" + email + '\'' +
-                ", phone='" + phone + '\'' +
-                '}';
+        return "FACULTY INFO\n"
+                + "ID: " + id + "\n"
+                + "Name: " + name + " (" + shortName + ")\n"
+                + "Dean: " + (dean != null ? dean.getFullName() : "None") + "\n"
+                + "Email: " + email + "\n"
+                + "Phone: " + phone;
+    }
+
+    @Override
+    public String toShortString() {
+        String extraInfo = "Dean: " + (dean != null ? dean.getInitials() : "None");
+        return String.format("| %-5d | %-50s | %-25s |", id, name, extraInfo);
     }
 }
