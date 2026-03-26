@@ -6,7 +6,8 @@ import ukma.model.utils.ShortViewable;
 import java.time.LocalDate;
 import java.time.Period;
 
-public class Teacher extends Person implements ShortViewable {
+
+public final class Teacher extends Person implements ShortViewable {
     private Degree degree;
     private String occupation;
     private String academicRank;

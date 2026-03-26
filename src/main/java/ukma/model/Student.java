@@ -6,7 +6,7 @@ import ukma.model.utils.ShortViewable;
 
 import java.time.LocalDate;
 
-public class Student extends Person implements ShortViewable {
+public final class Student extends Person implements ShortViewable {
     private String studentRecordBookId;
     private int studyYear;
     private String courseCode;

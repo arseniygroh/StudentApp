@@ -5,13 +5,22 @@ import ukma.model.utils.EmailValidator;
 
 import java.time.LocalDate;
 import java.util.Objects;
+import ukma.model.annotations.Length;
+import ukma.model.utils.AnnotationValidator;
 
-public class Person {
+public sealed class Person permits Student, Teacher  {
     private final long id;
     private static long idCounter = 1;
+
+    @Length(min = 2, max = 50)
     private String firstName;
+
+    @Length(min = 2, max = 50)
     private String lastName;
+
+    @Length(min = 2, max = 50)
     private String fatherName;
+
     private LocalDate birthDate;
     private String email;
     private String phoneNumber;
@@ -36,6 +45,7 @@ public class Person {
 
         setEmail(email);
         setPhoneNumber(phoneNumber);
+        AnnotationValidator.validate(this);
     }
 
     public String getFullName() {
