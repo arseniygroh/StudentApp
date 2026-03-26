@@ -6,7 +6,7 @@ import ukma.model.utils.EmailValidator;
 import java.time.LocalDate;
 import java.util.Objects;
 
-public class Person {
+public sealed class Person permits Student, Teacher  {
     private final long id;
     private static long idCounter = 1;
     private String firstName;

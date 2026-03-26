@@ -5,7 +5,7 @@ import ukma.model.enums.StudyForm;
 
 import java.time.LocalDate;
 
-public class Student extends Person {
+public final class Student extends Person {
     private String studentRecordBookId;
     private int studyYear;
     private String courseCode;
