@@ -2,6 +2,7 @@ package ukma.model;
 
 import ukma.model.enums.Role;
 import ukma.model.utils.EmailValidator;
+import ukma.model.utils.PasswordValidator;
 
 public class User {
     private String email;
@@ -49,7 +50,7 @@ public class User {
     }
 
     public void setPassword(String password) {
-        if (password == null || password.isBlank()) throw new IllegalArgumentException("input can't be null or empty");
+        if (!PasswordValidator.validate(password)) throw new IllegalArgumentException("Invalid password format");
         this.password = password;
     }
 
