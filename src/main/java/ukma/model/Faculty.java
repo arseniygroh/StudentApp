@@ -74,6 +74,21 @@ public class Faculty implements ShortViewable {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Faculty that = (Faculty) o;
+        return this.getId() == that.getId();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId());
+    }
+
+    @Override
     public String toString() {
         return "FACULTY INFO\n"
                 + "ID: " + id + "\n"

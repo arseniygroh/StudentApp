@@ -14,6 +14,7 @@ public class Student extends Person implements ShortViewable {
     private StudyForm studyForm;
     private StudentStatus status;
     private Faculty faculty;
+    private Department department;
 
     public Student() {
         super();
@@ -22,13 +23,14 @@ public class Student extends Person implements ShortViewable {
     public Student(String firstName, String lastName, String fatherName,
                    LocalDate birthDate, String email, String phoneNumber,
                    String studentRecordBookId, int studyYear, String courseCode,
-                   int admissionYear, StudyForm studyForm, StudentStatus status, Faculty faculty) {
+                   int admissionYear, StudyForm studyForm, StudentStatus status, Faculty faculty, Department department) {
 
         super(firstName, lastName, fatherName, birthDate, email, phoneNumber);
         setStudentTicketId(studentRecordBookId);
         setStudyYear(studyYear);
         setCourseCode(courseCode);
         setFaculty(faculty);
+        setDepartment(department);
 
         if (admissionYear <= 0) throw new IllegalArgumentException("invalid year input");
         this.admissionYear = admissionYear;
@@ -47,8 +49,20 @@ public class Student extends Person implements ShortViewable {
         this.faculty = faculty;
     }
 
+
     public Faculty getFaculty() {
         return this.faculty;
+    }
+
+    public void setDepartment(Department department) {
+        if (department == null) {
+            throw new IllegalArgumentException("Department can't be null");
+        }
+        this.department = department;
+    }
+
+    public Department getDepartment() {
+        return this.department;
     }
 
     public void setStudentTicketId(String id) {

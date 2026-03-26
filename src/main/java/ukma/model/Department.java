@@ -28,7 +28,6 @@ public class Department implements ShortViewable {
     }
 
     public void setHead(Teacher head) {
-        if (head == null) throw new IllegalArgumentException("input can't be null");
         this.head = head;
     }
 
@@ -55,6 +54,21 @@ public class Department implements ShortViewable {
 
     public Teacher getHead() {
         return head;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Department that = (Department) o;
+        return this.getId() == that.getId();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId());
     }
 
     @Override

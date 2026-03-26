@@ -11,6 +11,7 @@ public class Teacher extends Person implements ShortViewable {
     private String occupation;
     private String academicRank;
     private LocalDate hireDate;
+    private Department department;
     private double rate;
 
 
@@ -19,7 +20,7 @@ public class Teacher extends Person implements ShortViewable {
     public Teacher(String firstName, String lastName, String fatherName,
                    LocalDate birthDate, String email, String phoneNumber,
                    Degree degree, String occupation, String academicRank,
-                   LocalDate hireDate, double rate) {
+                   LocalDate hireDate, double rate, Department department) {
 
         super(firstName, lastName, fatherName, birthDate, email, phoneNumber);
 
@@ -28,6 +29,18 @@ public class Teacher extends Person implements ShortViewable {
         setAcademicRank(academicRank);
         setHireDate(hireDate);
         setRate(rate);
+        setDepartment(department);
+    }
+
+    public Department getDepartment() {
+        return this.department;
+    }
+
+    public void setDepartment(Department department) {
+        if (department == null) {
+            throw new IllegalArgumentException("Department can't be null");
+        }
+        this.department = department;
     }
 
     public Degree getDegree() {
