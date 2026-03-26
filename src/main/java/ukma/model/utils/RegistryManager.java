@@ -1,11 +1,14 @@
 package ukma.model.utils;
 
+
 import ukma.model.Faculty;
 import ukma.model.Student;
 import ukma.model.Teacher;
 import ukma.model.Department;
 import ukma.model.exception.*;
 import ukma.model.repositories.*;
+import java.util.stream.Collectors;
+import ukma.model.enums.StudyForm;
 
 import java.util.*;
 
@@ -308,5 +311,55 @@ public class RegistryManager {
     public void deleteDepartment(int id) {
         departmentRepository.deleteById(id);
         System.out.println("Department with id " + id + " was successfully removed");
+    }
+
+    // REPORTS / STATISTICS (STREAM API)
+
+    // Звіт 1: Кількість студентів за формою навчання (Бюджет/Контракт)
+    public void printStudentCountByStudyForm() {
+        List<Student> students = studentRepository.getAll();
+        if (students.isEmpty()) {
+            System.out.println("No students available for the report.");
+            return;
+        }
+        Map<StudyForm, Long> stats = students.stream()
+                .collect(Collectors.groupingBy(Student::getStudyForm, Collectors.counting()));
+
+        System.out.println("\nSTUDENT COUNT BY STUDY FORM");
+        stats.forEach((form, count) -> System.out.println(form + ": " + count + " students"));
+        System.out.println("-----------------------------------");
+    }
+
+    // Звіт 2: Кількість студентів на кожному факультеті
+    public void printStudentCountByFaculty() {
+        List<Student> students = studentRepository.getAll();
+        if (students.isEmpty()) {
+            System.out.println("No students available for the report.");
+            return;
+        }
+        Map<String, Long> stats = students.stream()
+                .filter(s -> s.getFaculty() != null)
+                .collect(Collectors.groupingBy(s -> s.getFaculty().getName(), Collectors.counting()));
+
+        System.out.println("\nSTUDENT COUNT BY FACULTY");
+        stats.forEach((facultyName, count) -> System.out.println(facultyName + ": " + count + " students"));
+        System.out.println("--------------------------------");
+    }
+
+    // Звіт 3: Середня ставка всіх викладачів
+    public void printAverageTeacherRate() {
+        List<Teacher> teachers = teacherRepository.getAll();
+        if (teachers.isEmpty()) {
+            System.out.println("No teachers available for the report.");
+            return;
+        }
+        double avgRate = teachers.stream()
+                .mapToDouble(Teacher::getRate)
+                .average()
+                .orElse(0.0);
+
+        System.out.println("\nAVERAGE TEACHER RATE");
+        System.out.printf("Average rate across all teachers: %.2f%n", avgRate);
+        System.out.println("----------------------------");
     }
 }
