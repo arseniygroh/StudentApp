@@ -8,7 +8,7 @@ import java.util.Objects;
 import ukma.model.annotations.Length;
 import ukma.model.utils.AnnotationValidator;
 
-public sealed class Person permits Student, Teacher  {
+abstract public sealed class Person permits Student, Teacher  {
     private final long id;
     private static long idCounter = 1;
 
