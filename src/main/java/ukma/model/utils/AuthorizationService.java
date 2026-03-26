@@ -89,12 +89,19 @@ public class AuthorizationService {
         if (users.containsKey(email)) {
             return false;
         }
+
+        if (!PasswordValidator.validate(password)) {
+            System.out.println("Incorrect password format");
+            return false;
+        }
+
         try {
            manager.storeEmail(email);
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
             return false;
         }
+
         User newUser = new User(email, password, role);
         users.put(email, newUser);
         saveUserToFile(newUser);

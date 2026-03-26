@@ -58,4 +58,17 @@ public class ConsoleInput {
             return line;
         }
     }
+
+    public String readPassword(String message) {
+        while (true) {
+            System.out.println(message + " (at least 1 uppercase, 1 lowercase, 1 digit and length >= 8)");
+            String line = scanner.nextLine().trim();
+            if (!PasswordValidator.validate(line)) {
+                System.out.println("Invalid password");
+                continue;
+            }
+            return line;
+        }
+    }
+
 }

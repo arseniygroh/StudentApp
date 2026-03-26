@@ -367,7 +367,7 @@ public class Menu {
                 userToUpdate.setEmail(email);
 
             } else if (option == 2) {
-                String password = inputValidator.readString("Enter password: ");
+                String password = inputValidator.readPassword("Enter password: ");
                 userToUpdate.setPassword(password);
             } else if (option == 3) {
                 Role role = getSelectedRole();
@@ -398,7 +398,7 @@ public class Menu {
 
     private void registerUser() {
         String email = inputValidator.readEmail("Enter user's email:");
-        String password = inputValidator.readString("Enter user's password:");
+        String password = inputValidator.readPassword("Enter user's password:");
         Role role = getSelectedRole();
 
         try {

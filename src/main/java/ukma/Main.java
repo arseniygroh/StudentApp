@@ -40,7 +40,7 @@ public class Main {
                 }
             } else if (option == 2) {
                 String email = inputValidator.readEmail("Enter your email");
-                String password = inputValidator.readString("Enter your password");
+                String password = inputValidator.readPassword("Enter your password");
                 System.out.println("Now, you have to choose your authorization status");
                 for (int i = 0; i < Role.values().length; i++) {
                     System.out.println(i + " - " + Role.values()[i]);
