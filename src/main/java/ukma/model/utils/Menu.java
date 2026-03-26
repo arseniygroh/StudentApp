@@ -46,7 +46,11 @@ public class Menu {
                 mainMenuOption = inputValidator.readInt("Enter your option", 0, 5);
             } else mainMenuOption = inputValidator.readInt("Enter your option", 0, 4);
 
-            if (mainMenuOption == 1) {
+            if (mainMenuOption == 0) {
+                System.out.println("Goodbye!");
+                break;
+            }
+            else if (mainMenuOption == 1) {
                 while (true) {
                     System.out.println("Here are the options for student registry manipulations: " + "\n"
                             + "0 - Leave the menu" + "\n"
@@ -289,24 +293,21 @@ public class Menu {
                     } else break;
                 }
             }
-            if (authService.isAdmin()) {
-                if (mainMenuOption == 5) {
-                    while (true) {
-                        System.out.println("Here are the options for user's registry manipulations: \n"
-                                + "0 - leave the menu\n"
-                                + "1 - register a new user\n"
-                                + "2 - edit an existing user\n"
-                        );
-                        int option = inputValidator.readInt("Enter your option", 0, 2);
-                        if (option == 1) {
-                            registerUser();
-                        } else if (option == 2) {
-                            editUser();
-                        } else break;
-                    }
+            else if (mainMenuOption == 5 && authService.isAdmin()) {
+                while (true) {
+                    System.out.println("Here are the options for user's registry manipulations: \n"
+                            + "0 - leave the menu\n"
+                            + "1 - register a new user\n"
+                            + "2 - edit an existing user\n"
+                    );
+                    int option = inputValidator.readInt("Enter your option", 0, 2);
+                    if (option == 1) {
+                        registerUser();
+                    } else if (option == 2) {
+                        editUser();
+                    } else break;
                 }
             }
-            else break;
         }
     }
 

@@ -3,6 +3,8 @@ package ukma.model;
 import ukma.model.utils.EmailValidator;
 import ukma.model.utils.ShortViewable;
 
+import java.util.Objects;
+
 public class Faculty implements ShortViewable {
     private final int id;
     private static int idCounter = 1;

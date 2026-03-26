@@ -99,13 +99,12 @@ public class RegistryManager {
             System.out.println("Student repository is empty");
             return;
         }
+        System.out.println(String.format("| %-5s | %-50s | %-25s |", "ID", "Student Name", "Course Info"));
+        System.out.println("-".repeat(89));
         students.stream()
                 .filter(student -> d.equals(student.getDepartment()))
                 .sorted(Comparator.comparingInt(Student::getStudyYear))
-                .forEach(student -> {
-                    System.out.println(student);
-                    System.out.println("================================================");
-                });
+                .forEach(student -> System.out.println(student.toShortString()));
     }
 
     public void showAllStudentsInDepartmentSortedAlphabetically(Department d) {
@@ -114,13 +113,12 @@ public class RegistryManager {
             System.out.println("Student repository is empty");
             return;
         }
+        System.out.println(String.format("| %-5s | %-50s | %-25s |", "ID", "Student Name", "Course Info"));
+        System.out.println("-".repeat(89));
         students.stream()
                 .filter(student -> d.equals(student.getDepartment()))
                 .sorted(Comparator.comparing(Student::getFullName))
-                .forEach(student -> {
-                    System.out.println(student);
-                    System.out.println("================================================");
-                });
+                .forEach(student -> System.out.println(student.toShortString()));
     }
 
     public void showAllStudentsOfSameCourseInDepartmentSortedAlphabetically(Department d, int studyYear) {
@@ -129,14 +127,13 @@ public class RegistryManager {
             System.out.println("Student repository is empty");
             return;
         }
+        System.out.println(String.format("| %-5s | %-50s | %-25s |", "ID", "Student Name", "Course Info"));
+        System.out.println("-".repeat(89));
         students.stream()
                 .filter(student -> d.equals(student.getDepartment()))
                 .filter(student -> student.getStudyYear() == studyYear)
                 .sorted(Comparator.comparing(Student::getFullName))
-                .forEach(student -> {
-                    System.out.println(student);
-                    System.out.println("================================================");
-                });
+                .forEach(student -> System.out.println(student.toShortString()));
     }
 
     public void showAllStudentsInFaculty(String facultyShortName) {
