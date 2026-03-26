@@ -163,21 +163,20 @@ public class Menu {
                     } else if (option == 6) {
                         manager.printStudentCountByStudyForm();
                         manager.printStudentCountByFaculty();
+                        manager.printStudentCountByStatus();
                     } else break;
                 }
-            } else if (mainMenuOption == 2) {
-                while(true) {
-                    System.out.println("Here are the options for teacher registry manipulations: " + "\n"
+            }
+            else if (mainMenuOption == 2) {
+                while (true) {
+                    System.out.println("Here are the options for faculty registry manipulations: " + "\n"
                             + "0 - leave the menu" + "\n"
-                            + "1 - add a new teacher (manager, admin only)" + "\n"
-                            + "2 - delete a teacher by id (manager, admin only)" + "\n"
-                            + "3 - get teacher\n"
-                            + "4 - show all teachers\n"
-                            + "5 - update teacher (manager, admin only)\n"
-                            + "6 - show teacher statistics (Reports)\n"
-                    );
+                            + "1 - add a new faculty (manager, admin only)" + "\n"
+                            + "2 - delete a faculty by id (manager, admin only)" + "\n"
+                            + "3 - update a faculty (manager, admin only)" + "\n"
+                            + "4 - show faculty or faculties" + "\n");
 
-                    int option = inputValidator.readInt("Enter your option", 0, 6);
+                    int option = inputValidator.readInt("Enter your option", 0, 4);
                     if (option == 1) {
                         if (authService.isManager() || authService.isAdmin()) createAndAddFaculty();
                         else System.out.println("You don't have a right to do it");
@@ -191,8 +190,8 @@ public class Menu {
                         else System.out.println("You don't have a right to do it");
                     } else if (option == 4) {
                         System.out.println("Here are the options: " + "\n"
-                                + "1 - by id" +"\n"
-                                + "2 - all (sorted alphabetically)" +"\n");
+                                + "1 - by id" + "\n"
+                                + "2 - all (sorted alphabetically)" + "\n");
                         int choice = inputValidator.readInt("Enter your option", 1, 2);
                         if (choice == 1) {
                             int id = inputValidator.readInt("Enter ID of the faculty you want to get: ", 1, Integer.MAX_VALUE);
@@ -204,7 +203,8 @@ public class Menu {
                         } else manager.showFacultiesAlphabeticallySorted();
                     } else break;
                 }
-            } else if (mainMenuOption == 3) {
+            }
+            else if (mainMenuOption == 3) {
                 while(true) {
                     System.out.println("Here are the options for teacher registry manipulations: " + "\n"
                             + "0 - leave the menu" + "\n"
@@ -249,8 +249,10 @@ public class Menu {
                         System.out.println("--- TEACHER REPORTS --- \n"
                                 + "1 - All teachers (unsorted)\n"
                                 + "2 - Faculty teachers (sorted alphabetically)\n"
-                                + "3 - Department teachers (sorted alphabetically)\n");
-                        int choice = inputValidator.readInt("Enter your option: ", 1, 3);
+                                + "3 - Department teachers (sorted alphabetically)\n"
+                                + "4 - Print avarage teacher's rate\n"
+                        );
+                        int choice = inputValidator.readInt("Enter your option: ", 1, 4);
                         if (choice == 1) {
                             manager.showAllTeachers();
                         } else if (choice == 2) {
@@ -259,12 +261,12 @@ public class Menu {
                         } else if (choice == 3) {
                             Department d = selectDepartment();
                             if (d != null) manager.showDepartmentTeachersAlphabetically(d);
+                        } else {
+                            manager.printAverageTeacherRate();
                         }
                     } else if (option == 5) {
                         if (authService.isManager() || authService.isAdmin()) handleUpdateTeacher();
                         else System.out.println("You don't have a right to do it");
-                    } else if (option == 6) {
-                        manager.printAverageTeacherRate();
                     } else break;
                 }
             } else if (mainMenuOption == 4) {

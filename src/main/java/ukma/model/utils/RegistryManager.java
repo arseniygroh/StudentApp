@@ -5,6 +5,7 @@ import ukma.model.Faculty;
 import ukma.model.Student;
 import ukma.model.Teacher;
 import ukma.model.Department;
+import ukma.model.enums.StudentStatus;
 import ukma.model.exception.*;
 import ukma.model.repositories.*;
 import java.util.stream.Collectors;
@@ -312,7 +313,7 @@ public class RegistryManager {
 
     // REPORTS / STATISTICS (STREAM API)
 
-    // Звіт 1: Кількість студентів за формою навчання (Бюджет/Контракт)
+    // Звіт 1: Кількість студентів за формою навчання (Full time/Expelled/Graduated/Academic leave)
     public void printStudentCountByStudyForm() {
         List<Student> students = studentRepository.getAll();
         if (students.isEmpty()) {
@@ -343,7 +344,23 @@ public class RegistryManager {
         System.out.println("--------------------------------");
     }
 
-    // Звіт 3: Середня ставка всіх викладачів
+    // Звіт 3: Кількість студентів за статусом (Budget/Contract)
+    public void printStudentCountByStatus() {
+        List<Student> students = studentRepository.getAll();
+        if (students.isEmpty()) {
+            System.out.println("No students available for the report.");
+            return;
+        }
+        Map<StudentStatus, Long> stats = students.stream()
+                .collect(Collectors.groupingBy(Student::getStatus, Collectors.counting()));
+
+        System.out.println("\nSTUDENT COUNT BY STUDENT STATUS");
+        stats.forEach((status, count) -> System.out.println(status + ": " + count + " students"));
+        System.out.println("-----------------------------------");
+    }
+
+
+    // Звіт 4: Середня ставка всіх викладачів
     public void printAverageTeacherRate() {
         List<Teacher> teachers = teacherRepository.getAll();
         if (teachers.isEmpty()) {
