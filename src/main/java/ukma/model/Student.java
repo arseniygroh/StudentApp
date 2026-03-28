@@ -47,9 +47,6 @@ public final class Student extends Person implements ShortViewable {
     }
 
     public void setFaculty(Faculty faculty) {
-        if (faculty == null) {
-            throw new IllegalArgumentException("Faculty cannot be null");
-        }
         this.faculty = faculty;
     }
 
@@ -59,9 +56,6 @@ public final class Student extends Person implements ShortViewable {
     }
 
     public void setDepartment(Department department) {
-        if (department == null) {
-            throw new IllegalArgumentException("Department can't be null");
-        }
         this.department = department;
     }
 

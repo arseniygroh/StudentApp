@@ -20,6 +20,7 @@ public class Main {
         RegistryManager manager = new RegistryManager();
         ConsoleInput inputValidator = new ConsoleInput();
         AuthorizationService authService = new AuthorizationService(manager);
+        boolean isRunningProgram = true;
 
         System.out.println("WELCOME TO OUR APP!");
         System.out.println("Before using it, you have to log in or register a new account");
@@ -55,11 +56,13 @@ public class Main {
                 }
             } else {
                 authService.logout();
+                isRunningProgram = false;
                 break;
             }
         }
-
-        Menu menu = new Menu(manager, inputValidator, authService);
-        menu.initMenu();
+        if (isRunningProgram) {
+            Menu menu = new Menu(manager, inputValidator, authService);
+            menu.initMenu();
+        }
     }
 }

@@ -42,9 +42,6 @@ public final class Teacher extends Person implements ShortViewable {
     }
 
     public void setDepartment(Department department) {
-        if (department == null) {
-            throw new IllegalArgumentException("Department can't be null");
-        }
         this.department = department;
     }
 

@@ -760,8 +760,6 @@ public class Menu {
         String location = inputValidator.readString("Location: ");
 
         Faculty faculty = selectFaculty();
-        if (faculty == null) return;
-
         List<Teacher> availableTeachers = manager.getAvailableTeachersForHead();
         if (availableTeachers.isEmpty()) {
             System.out.println("There are no available teachers. Please add more first");
