@@ -2,9 +2,10 @@ package ukma.model;
 
 import ukma.model.utils.ShortViewable;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Department implements ShortViewable {
+public class Department implements ShortViewable, Serializable {
     private final int id;
     private static int idCounter = 1;
     private String name;

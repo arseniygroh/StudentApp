@@ -3,11 +3,12 @@ package ukma.model;
 import ukma.model.enums.Degree;
 import ukma.model.utils.ShortViewable;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.Period;
 
 
-public final class Teacher extends Person implements ShortViewable {
+public final class Teacher extends Person implements ShortViewable, Serializable {
     private Degree degree;
     private String occupation;
     private String academicRank;

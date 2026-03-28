@@ -3,9 +3,10 @@ package ukma.model;
 import ukma.model.utils.EmailValidator;
 import ukma.model.utils.ShortViewable;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Faculty implements ShortViewable {
+public class Faculty implements ShortViewable, Serializable {
     private final int id;
     private static int idCounter = 1;
     private String name;
