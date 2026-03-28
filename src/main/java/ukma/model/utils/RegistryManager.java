@@ -158,6 +158,17 @@ public class RegistryManager {
                 .forEach(student -> System.out.println(student.toShortString()));
     }
 
+    public void showAll() {
+        List<Student> students = studentRepository.getAll();
+        if (students.isEmpty()) {
+            System.out.println("Student repository is empty");
+            return;
+        }
+        System.out.println(String.format("| %-5s | %-50s | %-25s |", "ID", "Student Name", "Course Info"));
+        System.out.println("-".repeat(89));
+        students.forEach(student -> System.out.println(student.toShortString()));
+    }
+
     public void deleteStudent(long id) {
         String emailToRemove = getStudentById(id).getEmail();
         studentRepository.deleteById(id);

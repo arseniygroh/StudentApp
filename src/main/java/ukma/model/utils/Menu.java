@@ -132,21 +132,13 @@ public class Menu {
                                 + "2 - by study year in ascending order" + "\n"
                                 + "3 - by department (sorted by study year)" + "\n"
                                 + "4 - by department (sorted alphabetically)" + "\n"
-                                + "5 - by department (specific study year)"
+                                + "5 - by department (specific study year)" + "\n"
+                                + "6 - just print all" + "\n"
                         );
-                        int choice = inputValidator.readInt("Enter your option", 1, 5);
+                        int choice = inputValidator.readInt("Enter your option", 1, 6);
                         if (choice == 1) {
-                            System.out.println("Here are all faculties: ");
-                            for (int i = 1; i <= manager.getFaculties().size(); i++) {
-                                System.out.println(i + " - " + manager.getFaculties().get(i).getName());
-                            }
-                            int facultyChoice = inputValidator.readInt("Choose your faculty", 1, Integer.MAX_VALUE);
-                            try {
-                                Faculty f = manager.getFacultyById(facultyChoice);
-                                manager.showAllStudentsInFaculty(f.getShortName());
-                            } catch (Exception e) {
-                                System.out.println(e.getMessage());
-                            }
+                            Faculty f = selectFaculty();
+                            if (f != null) manager.showAllStudentsInFaculty(f.getShortName());
                         } else if (choice == 2) {
                             manager.showAllStudentsSortedByStudyYear();
                         } else if (choice == 3) {
@@ -159,6 +151,8 @@ public class Menu {
                             Department department = selectDepartment();
                             int studyYear = inputValidator.readInt("Enter a study year (1-6): ", 1, 6);
                             if (department != null) manager.showAllStudentsOfSameCourseInDepartmentSortedAlphabetically(department, studyYear);
+                        } else {
+                            manager.showAll();
                         }
                     } else if (option == 6) {
                         manager.printStudentCountByStudyForm();
