@@ -1,17 +1,38 @@
 package ukma.model.repositories;
 
+import ukma.model.Person;
 import ukma.model.Student;
+import ukma.model.utils.DataStorage;
 
+import java.nio.file.Path;
 import java.util.*;
 import java.util.function.Predicate;
 
 public class StudentRepo implements Repository<Student, Long>{
-    private final Map<Long, Student> storage = new HashMap<>();
+    private final Path FILE_NAME = Path.of("files/students.ser");
+    private Map<Long, Student> storage = new HashMap<>();
+
+    public StudentRepo() {
+        Object loadedData = DataStorage.loadData(FILE_NAME);
+        if (loadedData != null) {
+            storage = (Map<Long, Student>) loadedData;
+            long maxId = 0;
+            for (Long id : storage.keySet()) {
+                if (id > maxId) maxId = id;
+            }
+            Person.setNextId(maxId);
+        }
+    }
+
+    private void saveToFile() {
+        DataStorage.saveData(FILE_NAME, storage);
+    }
 
     @Override
     public void store(Student student) {
         if (student == null) throw new IllegalArgumentException("Can't store null value");
         storage.put(student.getId(), student);
+        saveToFile();
     }
 
     @Override
@@ -30,6 +51,7 @@ public class StudentRepo implements Repository<Student, Long>{
     public void deleteById(Long id) {
         if (!storage.containsKey(id)) throw new IllegalArgumentException("Student with id " + id + " is not found(");
         storage.remove(id);
+        saveToFile();
     }
 
     @Override

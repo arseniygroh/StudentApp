@@ -504,6 +504,7 @@ public class Menu {
                         facultyToUpdate.setPhone(phone);
                     } else break;
                     System.out.println("Faculty with ID " + id + " has been successfully updated");
+                    manager.updateFaculty(facultyToUpdate);
                 }
             } catch (FacultyNotFoundException e) {
                 System.out.println(e.getMessage());
@@ -746,6 +747,7 @@ public class Menu {
                         break;
                     }
                     System.out.println("Teacher with ID " + teacherId + " has been successfully updated!");
+                    manager.updateTeacher(teacherToUpdate);
                 }
             } catch (TeacherNotFoundException e) {
                 System.out.println("Error: " + e.getMessage());
@@ -848,6 +850,7 @@ public class Menu {
                     } else break;
 
                     System.out.println("Department with ID " + deptId + " has been successfully updated!");
+                    manager.updateDepartment(deptToUpdate);
                 }
             } catch (DepartmentNotFoundException e) {
                 System.out.println("Error: " + e.getMessage());
@@ -1020,6 +1023,7 @@ public class Menu {
                         break;
                     }
                     System.out.println("Student with an id = " + studentToUpdate.getId() + " was successfully updated!");
+                    manager.updateStudent(studentToUpdate);
                 }
             } catch (StudentNotFoundException e) {
                 System.out.println("Error: " + e.getMessage());

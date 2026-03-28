@@ -3,14 +3,18 @@ package ukma.model;
 
 import ukma.model.utils.EmailValidator;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
 import ukma.model.annotations.Length;
 import ukma.model.utils.AnnotationValidator;
 
-abstract public sealed class Person permits Student, Teacher  {
+abstract public sealed class Person implements Serializable permits Student, Teacher {
     private final long id;
     private static long idCounter = 1;
+    public static void setNextId(long id) {
+        idCounter = id;
+    }
 
     @Length(min = 2, max = 50)
     private String firstName;

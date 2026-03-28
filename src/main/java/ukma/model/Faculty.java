@@ -3,12 +3,19 @@ package ukma.model;
 import ukma.model.utils.EmailValidator;
 import ukma.model.utils.ShortViewable;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
 
 public class Faculty implements ShortViewable, Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
     private final int id;
     private static int idCounter = 1;
+    public static void setNextId(int id) {
+        idCounter = id;
+    }
+
     private String name;
     private String shortName;
     private Teacher dean;

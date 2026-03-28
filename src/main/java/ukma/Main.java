@@ -60,19 +60,6 @@ public class Main {
         }
 
         Menu menu = new Menu(manager, inputValidator, authService);
-        Faculty fi = new Faculty("Факультет інформатики", "ФІ", null, "fi@ukma.edu.ua", "+380440000000");
-        Faculty fen = new Faculty("Факультет економічних наук", "ФЕН", null, "fen@ukma.edu.ua", "+380442222222");
-        Department math = new Department("Кафедра математики", fi, null, "some location");
-        manager.addFaculty(fi);
-        manager.addFaculty(fen);
-        manager.addDepartment(math);
-        Student s1 = new Student("Арсеній", "Грох", "Миколайович", LocalDate.of(2007, 01, 10), "sdsodos@gmail.com", "232932934545", "some id", 2, "ipz-3", 2023, StudyForm.FULL_TIME, StudentStatus.CONTRACT, fi, math);
-        Student s2 = new Student("Віталій", "Дида", "Миколайович", LocalDate.of(2007, 01, 10), "sdsodos@gmail.com", "2329329334343", "some i1", 1, "ipz-2", 2025, StudyForm.FULL_TIME, StudentStatus.CONTRACT, fi, math);
-        Student s3 = new Student("Артем", "Слободян", "Миколайович", LocalDate.of(2007, 01, 10), "sdsodos@gmail.com", "232932932323", "some id2", 3, "ipz-1", 2022, StudyForm.FULL_TIME, StudentStatus.CONTRACT, fi, math);
-        manager.addStudent(s1);
-        manager.addStudent(s2);
-        manager.addStudent(s3);
-
         menu.initMenu();
     }
 }

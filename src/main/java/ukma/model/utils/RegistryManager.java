@@ -45,6 +45,10 @@ public class RegistryManager {
         facultyRepository.store(faculty);
     }
 
+    public void updateFaculty(Faculty faculty) {
+        facultyRepository.store(faculty);
+    }
+
     public void deleteFaculty(int id) {
         String emailToRemove = getFacultyById(id).getEmail();
         facultyRepository.deleteById(id);
@@ -161,6 +165,10 @@ public class RegistryManager {
         System.out.println("Student with id " + id + " was successfully removed");
     }
 
+    public void updateStudent(Student student) {
+        studentRepository.store(student);
+    }
+
     public Student getStudentById(long id) {
         return studentRepository.getById(id)
                 .orElseThrow(() -> new StudentNotFoundException("Student with id " + id + " was not found"));
@@ -181,6 +189,10 @@ public class RegistryManager {
 
     // ===== TEACHER METHODS ======
     public void addTeacher(Teacher teacher) {
+        teacherRepository.store(teacher);
+    }
+
+    public void updateTeacher(Teacher teacher) {
         teacherRepository.store(teacher);
     }
 
@@ -275,6 +287,10 @@ public class RegistryManager {
 
     // ===== DEPARTMENT METHODS ======
     public void addDepartment(Department department) {
+        departmentRepository.store(department);
+    }
+
+    public void updateDepartment(Department department) {
         departmentRepository.store(department);
     }
 

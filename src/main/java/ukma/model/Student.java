@@ -4,10 +4,13 @@ import ukma.model.enums.StudentStatus;
 import ukma.model.enums.StudyForm;
 import ukma.model.utils.ShortViewable;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
 
-public final class Student extends Person implements ShortViewable, Serializable {
+public final class Student extends Person implements ShortViewable {
+    @Serial
+    private static final long serialVersionUID = 1L;
     private String studentRecordBookId;
     private int studyYear;
     private String courseCode;
