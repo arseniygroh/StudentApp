@@ -1,3 +1,4 @@
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ukma.model.Department;
@@ -8,6 +9,7 @@ import ukma.model.enums.StudyForm;
 import ukma.model.exception.StudentNotFoundException;
 import ukma.model.utils.RegistryManager;
 
+import java.io.File;
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -19,8 +21,8 @@ public class StudentRegistryTests {
     private Department testDepartment;
     @BeforeEach
     public void initStudent() {
-        manager = new RegistryManager();
-        testFaculty = new Faculty("Факультет Інформатики", "ФІ", null, "fi@ukma.edu.ua", "0441234567");
+        manager = new RegistryManager(true);
+        testFaculty = new Faculty("Факультет Інформатики", "ФІ", null, "fi2@ukma.edu.ua", "0441234567");
         testDepartment = new Department("Кафедра математики", testFaculty, null, "some location");
         manager.addFaculty(testFaculty);
 
@@ -33,6 +35,23 @@ public class StudentRegistryTests {
         );
         manager.storeEmail(testStudent.getEmail());
         manager.addStudent(testStudent);
+    }
+
+    @AfterEach
+    public void cleanup() {
+        deleteDirectory(new File("test_files"));
+    }
+
+    private void deleteDirectory(File file) {
+        if (file.exists()) {
+            File[] contents = file.listFiles();
+            if (contents != null) {
+                for (File f : contents) {
+                    deleteDirectory(f);
+                }
+            }
+            file.delete();
+        }
     }
 
     @Test

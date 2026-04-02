@@ -10,9 +10,10 @@ import java.util.function.Predicate;
 
 public class FacultyRepo implements Repository<Faculty, Integer>{
     private Map<Integer, Faculty> storage = new HashMap<>();
-    private final Path FILE_NAME = Path.of("files/faculties.ser");
+    private final Path FILE_NAME;
 
-    public FacultyRepo() {
+    public FacultyRepo(String filepath) {
+        this.FILE_NAME = Path.of(filepath);
         Object loadedData = DataStorage.loadData(FILE_NAME);
         if (loadedData != null) {
             storage = (Map<Integer, Faculty>) loadedData;
@@ -23,6 +24,11 @@ public class FacultyRepo implements Repository<Faculty, Integer>{
             Faculty.setNextId(maxId);
         }
     }
+
+    public FacultyRepo() {
+        this("files/faculties.ser");
+    }
+
     private void saveToFile() {
         DataStorage.saveData(FILE_NAME, storage);
     }

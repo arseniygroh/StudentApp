@@ -14,15 +14,23 @@ import ukma.model.enums.StudyForm;
 import java.util.*;
 
 public class RegistryManager {
-    private final Repository<Student, Long> studentRepository = new StudentRepo();
-    private final Repository<Teacher, Long> teacherRepository = new TeacherRepo();
-    private final Repository<Faculty, Integer> facultyRepository = new FacultyRepo();
-    private final Repository<Department, Integer> departmentRepository = new DepartmentRepo();
+    private final Repository<Student, Long> studentRepository;
+    private final Repository<Teacher, Long> teacherRepository;
+    private final Repository<Faculty, Integer> facultyRepository;
+    private final Repository<Department, Integer> departmentRepository;
 
     private final Set<String> emailRepository = new HashSet<>();
 
-    public RegistryManager() {
+    public RegistryManager(boolean isTestMode) {
+        String dir = isTestMode ? "test_files/" : "files/";
+        this.studentRepository = new StudentRepo(dir + "students.ser");
+        this.teacherRepository = new TeacherRepo(dir + "teachers.ser");
+        this.facultyRepository = new FacultyRepo(dir + "faculties.ser");
+        this.departmentRepository = new DepartmentRepo(dir + "departments.ser");
         loadEmails();
+    }
+    public RegistryManager() {
+        this(false);
     }
 
     private void loadEmails() {
