@@ -1,3 +1,4 @@
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ukma.model.Department;
@@ -7,6 +8,7 @@ import ukma.model.enums.Degree;
 import ukma.model.exception.FacultyNotFoundException;
 import ukma.model.utils.RegistryManager;
 
+import java.io.File;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -20,7 +22,7 @@ public class FacultyRegistryTests {
 
     @BeforeEach
     public void init() {
-        manager = new RegistryManager();
+        manager = new RegistryManager(true);
         testDepartment = new Department("Кафедра математики", testFaculty, null, "some location");
         testDean = new Teacher(
                 "Олександр", "Мельник", "Олександрович",
@@ -33,6 +35,23 @@ public class FacultyRegistryTests {
         manager.addTeacher(testDean);
 
         manager.addFaculty(testFaculty);
+    }
+
+    @AfterEach
+    public void cleanup() {
+        deleteDirectory(new File("test_files"));
+    }
+
+    private void deleteDirectory(File file) {
+        if (file.exists()) {
+            File[] contents = file.listFiles();
+            if (contents != null) {
+                for (File f : contents) {
+                    deleteDirectory(f);
+                }
+            }
+            file.delete();
+        }
     }
 
     @Test
@@ -68,5 +87,4 @@ public class FacultyRegistryTests {
         assertEquals(freeTeacher.getId(), freeTeachers.getFirst().getId());
         assertTrue(!freeTeachers.contains(testDean));
     }
-
 }

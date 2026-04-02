@@ -11,10 +11,11 @@ import java.util.function.Predicate;
 
 public class TeacherRepo implements Repository<Teacher, Long>{
     private Map<Long, Teacher> storage = new HashMap<>();
-    private final Path FILE_NAME = Path.of("files/teachers.ser");
+    private final Path FILE_NAME;
 
 
-    public TeacherRepo() {
+    public TeacherRepo(String filePath) {
+        this.FILE_NAME = Path.of(filePath);
         Object loadedData = DataStorage.loadData(FILE_NAME);
         if (loadedData != null) {
             storage = (Map<Long, Teacher>) loadedData;
@@ -24,6 +25,9 @@ public class TeacherRepo implements Repository<Teacher, Long>{
             }
             Person.setNextId(maxId);
         }
+    }
+    public TeacherRepo() {
+        this("files/students.ser");
     }
 
     private void saveToFile() {

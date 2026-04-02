@@ -10,9 +10,10 @@ import java.util.function.Predicate;
 
 public class DepartmentRepo implements Repository<Department, Integer> {
     private Map<Integer, Department> storage = new HashMap<>();
-    private final Path FILE_NAME = Path.of("files/departments.ser");
+    private final Path FILE_NAME;
 
-    public DepartmentRepo() {
+    public DepartmentRepo(String filepath) {
+        this.FILE_NAME = Path.of(filepath);
         Object loadedData = DataStorage.loadData(FILE_NAME);
         if (loadedData != null) {
             storage = (Map<Integer, Department>) loadedData;
@@ -22,6 +23,10 @@ public class DepartmentRepo implements Repository<Department, Integer> {
             }
             Department.setNextId(maxId);
         }
+    }
+
+    public DepartmentRepo() {
+        this("files/departments.ser");
     }
 
     private void saveToFile() {
