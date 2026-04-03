@@ -1,4 +1,4 @@
-package ukma.domain.model;
+package ukma.ui.cli;
 
 import ukma.domain.*;
 import ukma.domain.exception.DepartmentNotFoundException;
@@ -11,7 +11,6 @@ import ukma.domain.enums.StudentStatus;
 import ukma.domain.enums.StudyForm;
 import ukma.service.AuthorizationService;
 import ukma.service.RegistryManager;
-import ukma.ui.cli.ConsoleInput;
 
 import java.time.LocalDate;
 import java.util.*;
