@@ -1,19 +1,10 @@
 package ukma;
 
-import ukma.model.Department;
-import ukma.model.Faculty;
-import ukma.model.Student;
-import ukma.model.enums.Role;
-import ukma.model.enums.StudentStatus;
-import ukma.model.enums.StudyForm;
-import ukma.model.repositories.Repository;
-import ukma.model.repositories.StudentRepo;
-import ukma.model.utils.AuthorizationService;
-import ukma.model.utils.ConsoleInput;
-import ukma.model.utils.Menu;
-import ukma.model.utils.RegistryManager;
-
-import java.time.LocalDate;
+import ukma.domain.enums.Role;
+import ukma.service.AuthorizationService;
+import ukma.ui.cli.ConsoleInput;
+import ukma.ui.cli.Menu;
+import ukma.service.RegistryManager;
 
 public class Main {
     public static void main(String[] args) {

@@ -1,13 +1,13 @@
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ukma.model.Department;
-import ukma.model.Faculty;
-import ukma.model.Student;
-import ukma.model.enums.StudentStatus;
-import ukma.model.enums.StudyForm;
-import ukma.model.exception.StudentNotFoundException;
-import ukma.model.utils.RegistryManager;
+import ukma.domain.Department;
+import ukma.domain.Faculty;
+import ukma.domain.Student;
+import ukma.domain.enums.StudentStatus;
+import ukma.domain.enums.StudyForm;
+import ukma.domain.exception.StudentNotFoundException;
+import ukma.service.RegistryManager;
 
 import java.io.File;
 import java.time.LocalDate;
