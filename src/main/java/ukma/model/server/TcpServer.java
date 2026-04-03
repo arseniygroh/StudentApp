@@ -1,5 +1,7 @@
 package ukma.model.server;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ukma.model.Student;
 import ukma.model.exception.StudentNotFoundException;
 import ukma.model.utils.RegistryManager;
@@ -9,12 +11,14 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class TcpServer {
+    // Створюємо логер
+    private static final Logger logger = LoggerFactory.getLogger(TcpServer.class);
 
     public static void main(String[] args) {
         // Сервер має свій власний менеджер з даними
         RegistryManager manager = new RegistryManager();
 
-        System.out.println("Starting University TCP Server on port 8080...");
+        logger.info("University TCP Server is starting on port 8080...");
 
         try (ServerSocket serverSocket = new ServerSocket(8080)) {
             while (true) {
@@ -26,7 +30,7 @@ public class TcpServer {
                 new Thread(new ClientHandler(clientSocket, manager)).start();
             }
         } catch (IOException e) {
-            System.out.println("Server error: " + e.getMessage());
+            logger.error("Server error occurred", e);
         }
     }
 }

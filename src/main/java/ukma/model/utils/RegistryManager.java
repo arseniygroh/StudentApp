@@ -1,6 +1,8 @@
 package ukma.model.utils;
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ukma.model.Faculty;
 import ukma.model.Student;
 import ukma.model.Teacher;
@@ -14,6 +16,8 @@ import ukma.model.enums.StudyForm;
 import java.util.*;
 
 public class RegistryManager {
+    private static final Logger logger = LoggerFactory.getLogger(RegistryManager.class);
+
     private final Repository<Student, Long> studentRepository;
     private final Repository<Teacher, Long> teacherRepository;
     private final Repository<Faculty, Integer> facultyRepository;
@@ -61,7 +65,7 @@ public class RegistryManager {
         String emailToRemove = getFacultyById(id).getEmail();
         facultyRepository.deleteById(id);
         removeEmail(emailToRemove);
-        System.out.println("Faculty with id " + id + " was successfully removed");
+        logger.info("Faculty with ID {} was successfully removed", id);
     }
 
     public Faculty getFacultyById(int id) {
@@ -181,7 +185,7 @@ public class RegistryManager {
         String emailToRemove = getStudentById(id).getEmail();
         studentRepository.deleteById(id);
         removeEmail(emailToRemove);
-        System.out.println("Student with id " + id + " was successfully removed");
+        logger.info("Student with ID {} was successfully removed", id);
     }
 
     public void updateStudent(Student student) {
@@ -276,7 +280,7 @@ public class RegistryManager {
         String emailToRemove = getTeacherById(id).getEmail();
         teacherRepository.deleteById(id);
         removeEmail(emailToRemove);
-        System.out.println("Teacher with id " + id + " was successfully removed");
+        logger.info("Teacher with ID {} was successfully removed", id);
     }
 
     public List<Teacher> getAvailableTeachersForDean() {
@@ -343,7 +347,7 @@ public class RegistryManager {
 
     public void deleteDepartment(int id) {
         departmentRepository.deleteById(id);
-        System.out.println("Department with id " + id + " was successfully removed");
+        logger.info("Department with ID {} was successfully removed", id);
     }
 
     // REPORTS / STATISTICS (STREAM API)
