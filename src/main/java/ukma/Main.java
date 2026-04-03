@@ -3,7 +3,7 @@ package ukma;
 import ukma.domain.enums.Role;
 import ukma.service.AuthorizationService;
 import ukma.ui.cli.ConsoleInput;
-import ukma.ui.cli.Menu;
+import ukma.domain.model.Menu;
 import ukma.service.RegistryManager;
 
 public class Main {
