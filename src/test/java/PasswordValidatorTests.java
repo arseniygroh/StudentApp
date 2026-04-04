@@ -1,5 +1,5 @@
 import org.junit.jupiter.api.Test;
-import ukma.model.utils.PasswordValidator;
+import ukma.service.validation.PasswordValidator;
 
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
