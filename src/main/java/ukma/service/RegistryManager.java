@@ -312,6 +312,18 @@ public class RegistryManager {
         return availableTeachers;
     }
 
+    public List<Teacher> getAvailableTeacherForPosition() {
+        List<Teacher> teachersForDean = getAvailableTeachersForDean();
+        List<Teacher> teachersForHead = getAvailableTeachersForHead();
+
+        List<Teacher> availableTeachers =  teachersForDean.stream()
+                .filter(teacher -> teachersForHead.contains(teacher))
+                .toList();
+
+
+        return availableTeachers;
+    }
+
     // ===== DEPARTMENT METHODS ======
     public void addDepartment(Department department) {
         departmentRepository.store(department);
