@@ -5,19 +5,29 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class DataStorage {
+    private static final byte[] KEY = "xorEncryption".getBytes();
     public static <T> void saveData(Path filename, T data) {
 
-        if (!Files.exists(filename)) {
-            try {
-                Files.createFile(filename);
-                System.out.println("File was successfully created");
-            } catch (IOException e) {
-                System.out.println(e.getMessage());
+        try {
+            if (filename.getParent() != null) {
+                Files.createDirectories(filename.getParent());
             }
+        } catch (IOException e) {
+            System.out.println("Could not create directories: " + e.getMessage());
+            return;
         }
 
-        try (ObjectOutputStream out = new ObjectOutputStream(Files.newOutputStream(filename))) {
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+
+        byte[] dataRawBytes;
+
+        try (ObjectOutputStream out = new ObjectOutputStream(bos)) {
             out.writeObject(data);
+            dataRawBytes = bos.toByteArray();
+            for (int i = 0; i < dataRawBytes.length; i++) {
+                dataRawBytes[i] = (byte) (dataRawBytes[i] ^ KEY[i % KEY.length]);
+            }
+            Files.write(filename, dataRawBytes);
         } catch (IOException e) {
             System.out.println("Error saving data to " + filename.getFileName() + ": " + e.getMessage());
         }
@@ -25,7 +35,21 @@ public class DataStorage {
 
     public static Object loadData(Path filename) {
         if (!Files.exists(filename)) return null;
-        try (ObjectInputStream in = new ObjectInputStream(Files.newInputStream(filename))) {
+
+        byte[] dataRawBytes = null;
+        ByteArrayInputStream bai = null;
+        try {
+            dataRawBytes = Files.readAllBytes(filename);
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+        for (int i = 0; i < dataRawBytes.length; i++) {
+            dataRawBytes[i] = (byte) (dataRawBytes[i] ^ KEY[i % KEY.length]);
+        }
+
+        bai = new ByteArrayInputStream(dataRawBytes);
+
+        try (ObjectInputStream in = new ObjectInputStream(bai)) {
             return in.readObject();
         } catch (IOException | ClassNotFoundException e) {
             System.out.println("Error loading data from " + filename.getFileName() + ": " + e.getMessage());

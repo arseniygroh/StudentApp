@@ -466,7 +466,7 @@ public class Menu {
                         String shortName = inputValidator.readString("Enter short name: ");
                         facultyToUpdate.setShortName(shortName);
                     } else if (option == 2) {
-                        List<Teacher> availableTeachers = manager.getAvailableTeachersForDean();
+                        List<Teacher> availableTeachers = manager.getAvailableTeacherForPosition();
                         if (availableTeachers.isEmpty()) {
                             System.out.println("There are no available teachers. Please add more first");
                             return;
@@ -520,7 +520,7 @@ public class Menu {
 
         String name = inputValidator.readString("Enter faculty's name: ");
         String shortName = inputValidator.readString("Enter faculty's short name: ");
-        List<Teacher> availableTeachers = manager.getAvailableTeachersForDean();
+        List<Teacher> availableTeachers = manager.getAvailableTeacherForPosition();
         if (availableTeachers.isEmpty()) {
             System.out.println("There are no available teachers. Please add more first");
             return;
@@ -764,7 +764,7 @@ public class Menu {
         String location = inputValidator.readString("Location: ");
 
         Faculty faculty = selectFaculty();
-        List<Teacher> availableTeachers = manager.getAvailableTeachersForHead();
+        List<Teacher> availableTeachers = manager.getAvailableTeacherForPosition();
         if (availableTeachers.isEmpty()) {
             System.out.println("There are no available teachers. Please add more first");
             return;
@@ -830,7 +830,7 @@ public class Menu {
                             System.out.println("Faculty updated!");
                         }
                     } else if (option == 4) {
-                        List<Teacher> availableTeachers = manager.getAvailableTeachersForHead();
+                        List<Teacher> availableTeachers = manager.getAvailableTeacherForPosition();
                         if (availableTeachers.isEmpty()) {
                             System.out.println("There are no available teachers for Head position. Please add more first");
                             continue;
