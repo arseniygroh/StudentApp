@@ -26,7 +26,7 @@ public class TeacherRepo implements Repository<Teacher, Long>{
         }
     }
     public TeacherRepo() {
-        this("files/students.ser");
+        this("files/teachers.ser");
     }
 
     private void saveToFile() {
