@@ -74,4 +74,35 @@ public class ConsoleInput {
         }
     }
 
+    // Для ID студентів та викладачів
+    public long readLong(String message) {
+        while (true) {
+            System.out.println(message);
+            String line = scanner.nextLine().trim();
+            try {
+                return Long.parseLong(line);
+            } catch (NumberFormatException e) {
+                System.out.println("It is not a valid number, try again");
+            }
+        }
+    }
+
+    // Для ставки викладача (rate)
+    public double readDouble(String message, double min, double max) {
+        while (true) {
+            System.out.println(message);
+            String line = scanner.nextLine().trim();
+            line = line.replace(",", ".");
+            try {
+                double value = Double.parseDouble(line);
+                if (value >= min && value <= max) {
+                    return value;
+                }
+                System.out.println("Number must be from " + min + " to " + max);
+            } catch (NumberFormatException e) {
+                System.out.println("Not a valid fractional number, try again");
+            }
+        }
+    }
+
 }

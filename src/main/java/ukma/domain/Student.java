@@ -5,6 +5,7 @@ import ukma.domain.enums.StudyForm;
 
 import java.io.Serial;
 import java.time.LocalDate;
+import java.time.Period;
 
 public final class Student extends Person implements ShortViewable {
     @Serial
@@ -34,8 +35,7 @@ public final class Student extends Person implements ShortViewable {
         setFaculty(faculty);
         setDepartment(department);
 
-        if (admissionYear <= 0) throw new IllegalArgumentException("invalid year input");
-        this.admissionYear = admissionYear;
+        setAdmissionYear(admissionYear);
 
         if (studyForm == null) throw new IllegalArgumentException("Study form is required");
         this.studyForm = studyForm;
@@ -116,6 +116,18 @@ public final class Student extends Person implements ShortViewable {
         return this.status;
     }
 
+    public int getAge() {
+        return Period.between(getBirthDate(), LocalDate.now()).getYears();
+    }
+
+    public void setAdmissionYear(int year) {
+        int currentYear = LocalDate.now().getYear();
+        if (admissionYear < 1991 || admissionYear > currentYear) {
+            throw new IllegalArgumentException("Admission year must be between 1991 and " + currentYear);
+        }
+        this.admissionYear = year;
+    }
+
     @Override
     public String toString() {
         return "STUDENT INFO\n"
@@ -126,7 +138,8 @@ public final class Student extends Person implements ShortViewable {
                 + "Admission Year: " + admissionYear + "\n"
                 + "Study Form: " + studyForm + "\n"
                 + "Status: " + status + "\n"
-                + "Faculty: " + (faculty != null ? faculty.getName() : "None");
+                + "Faculty: " + (faculty != null ? faculty.getName() : "None") + "\n"
+                + "Department: " + (department != null ? department.getName() : "None");
     }
 
     @Override

@@ -11,6 +11,7 @@ import ukma.domain.enums.StudentStatus;
 import ukma.domain.enums.StudyForm;
 import ukma.service.AuthorizationService;
 import ukma.service.RegistryManager;
+import ukma.service.validation.AnnotationValidator;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -70,9 +71,7 @@ public class Menu {
                         else System.out.println("You don't have a right to do it");
                     } else if (option == 2) {
                         if (authService.isManager() || authService.isAdmin()) {
-                            System.out.println("Enter an ID of a student you want to delete: ");
-                            long id = scan.nextLong();
-                            scan.nextLine();
+                            long id = inputValidator.readLong("Enter an ID of a student you want to delete: ");
                             manager.deleteStudent(id);
                         } else System.out.println("You don't have a right to do it");
 
@@ -219,7 +218,7 @@ public class Menu {
                         else System.out.println("You don't have a right to do it");
                     } else if (option == 2) {
                         if (authService.isManager() || authService.isAdmin()) {
-                            long id = inputValidator.readInt("Enter ID of the teacher you want to delete: ", 1, Integer.MAX_VALUE);
+                            long id = inputValidator.readLong("Enter ID of the teacher you want to delete: ");
                             manager.deleteTeacher(id);
                         } else System.out.println("You don't have a right to do it");
                     } else if (option == 3) {
@@ -426,7 +425,7 @@ public class Menu {
         teachers.forEach(teacher -> System.out.println(teacher.toShortString()));
 
         String position = isDean ? "Dean" : "Head";
-        return inputValidator.readInt("Enter Teacher ID to be " + position, 1, Integer.MAX_VALUE);
+        return inputValidator.readLong("Enter Teacher ID to be " + position);
     }
 
     private void handleUpdateFaculty() {
@@ -635,10 +634,7 @@ public class Menu {
         String occupation = inputValidator.readString("Occupation: ");
         String academicRank = inputValidator.readString("Academic Rank: ");
         LocalDate hireDate = inputValidator.readDate("Hire Date");
-
-        System.out.println("Rate (e.g. 1.0 or 0.5): ");
-        double rate = scan.nextDouble();
-        scan.nextLine();
+        double rate = inputValidator.readDouble("Rate (e.g. 1.0 or 0.5): ", 0.5, 1.0);
         Department department = selectDepartment();
 
         try {
@@ -653,7 +649,7 @@ public class Menu {
     public void handleUpdateTeacher() {
         boolean isRunning = true;
         while (isRunning) {
-            long teacherId = inputValidator.readInt("Enter an id of a teacher you want to find: ", 1, Integer.MAX_VALUE);
+            long teacherId = inputValidator.readLong("Enter an id of a teacher you want to find: ");
             try {
                 Teacher teacherToUpdate = manager.getTeacherById(teacherId);
                 while (true) {
@@ -732,9 +728,7 @@ public class Menu {
                         String academicRank = inputValidator.readString("Enter new academic rank: ");
                         teacherToUpdate.setAcademicRank(academicRank);
                     } else if (option == 9) {
-                        System.out.println("Enter new rate (e.g. 1.0 or 0.5): ");
-                        double rate = scan.nextDouble();
-                        scan.nextLine();
+                        double rate = inputValidator.readDouble("Enter new rate (e.g. 1.0 or 0.5): ", 0.5, 1.0);
                         teacherToUpdate.setRate(rate);
                     } else if (option == 10) {
                         Department department = selectDepartment();
@@ -744,8 +738,13 @@ public class Menu {
                     } else {
                         break;
                     }
-                    System.out.println("Teacher with ID " + teacherId + " has been successfully updated!");
-                    manager.updateTeacher(teacherToUpdate);
+                    try {
+                        AnnotationValidator.validate(teacherToUpdate);
+                        manager.updateTeacher(teacherToUpdate);
+                        System.out.println("Teacher with ID " + teacherId + " has been successfully updated!");
+                    } catch (IllegalArgumentException e) {
+                        System.out.println("Validation failed: " + e.getMessage());
+                    }
                 }
             } catch (TeacherNotFoundException e) {
                 System.out.println("Error: " + e.getMessage());
@@ -932,7 +931,7 @@ public class Menu {
     public void handleUpdateStudent() {
         boolean isRunning = true;
         while (isRunning) {
-            long studentId = inputValidator.readInt("Enter an id of a student you want to find: ", 1, Integer.MAX_VALUE);
+            long studentId = inputValidator.readLong("Enter an id of the student you want to update");
             try {
                 Student studentToUpdate = manager.getStudentById(studentId);
 
@@ -999,8 +998,11 @@ public class Menu {
                         if (!oldEmail.equals(email)) manager.removeEmail(oldEmail);
                         studentToUpdate.setEmail(email);
                     } else if (option == 8) {
-                        System.out.println("Enter a new phone number for the student: ");
-                        String phone = scan.nextLine();
+                        String phone = inputValidator.readString("Enter a new phone number for the student: ");
+                        while (phone.length() < 10) {
+                            System.out.println("Phone number is too short!");
+                            phone = inputValidator.readString("Enter a new phone number: ");
+                        }
                         studentToUpdate.setPhoneNumber(phone);
                     } else if (option == 9) {
                         int year = inputValidator.readInt("Enter new study year (1-6): ", 1, 6);
@@ -1018,8 +1020,13 @@ public class Menu {
                     } else {
                         break;
                     }
-                    System.out.println("Student with an id = " + studentToUpdate.getId() + " was successfully updated!");
-                    manager.updateStudent(studentToUpdate);
+                    try {
+                        AnnotationValidator.validate(studentToUpdate);
+                        manager.updateStudent(studentToUpdate);
+                        System.out.println("Student with an id = " + studentToUpdate.getId() + " was successfully updated!");
+                    } catch (IllegalArgumentException e) {
+                        System.out.println("Validation failed: " + e.getMessage());
+                    }
                 }
             } catch (StudentNotFoundException e) {
                 System.out.println("Error: " + e.getMessage());
@@ -1040,9 +1047,7 @@ public class Menu {
             System.out.println(i + " - " + statuses[i]);
         }
 
-        System.out.print("Your choice: ");
-        int choice = scan.nextInt();
-        scan.nextLine();
+        int choice = inputValidator.readInt("Your choice: ", 0, statuses.length - 1);
 
         if (choice >= 0 && choice < statuses.length) {
             s.setStatus(statuses[choice]);
@@ -1058,9 +1063,7 @@ public class Menu {
         for (int i = 0; i < forms.length; i++) {
             System.out.println(i + " - " + forms[i]);
         }
-        System.out.print("Your choice: ");
-        int choice = scan.nextInt();
-        scan.nextLine();
+        int choice = inputValidator.readInt("Your choice: ", 0, forms.length - 1);
 
         if (choice >= 0 && choice < forms.length) {
             s.setStudyForm(forms[choice]);

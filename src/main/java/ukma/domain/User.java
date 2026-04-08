@@ -4,6 +4,8 @@ import ukma.domain.enums.Role;
 import ukma.service.validation.EmailValidator;
 import ukma.service.validation.PasswordValidator;
 
+import java.util.Objects;
+
 public class User {
     private String email;
     private String password;
@@ -19,7 +21,6 @@ public class User {
             throw new IllegalArgumentException("input can't be null");
         }
         this.email = email;
-        this.password = password;
         this.role = role;
         this.isBlocked = false;
     }
@@ -56,6 +57,19 @@ public class User {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return email.equals(user.email);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(email);
     }
 
     @Override

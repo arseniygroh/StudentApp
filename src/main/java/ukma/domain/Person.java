@@ -3,6 +3,7 @@ package ukma.domain;
 
 import ukma.service.validation.EmailValidator;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
@@ -10,10 +11,14 @@ import ukma.domain.annotations.Length;
 import ukma.service.validation.AnnotationValidator;
 
 abstract public sealed class Person implements Serializable permits Student, Teacher {
+    @Serial
+    private static final long serialVersionUID = 1L;
     private final long id;
     private static long idCounter = 1;
     public static void setNextId(long id) {
-        idCounter = id;
+        if (id >= idCounter) {
+            idCounter = id + 1;
+        }
     }
 
     @Length(min = 2, max = 50)

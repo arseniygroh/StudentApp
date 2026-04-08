@@ -29,7 +29,7 @@ public class DataStorage {
             }
             Files.write(filename, dataRawBytes);
         } catch (IOException e) {
-            System.out.println("Error saving data to " + filename.getFileName() + ": " + e.getMessage());
+            throw new RuntimeException("Error saving data to " + filename.getFileName() + ": " + e.getMessage());
         }
     }
 

@@ -84,6 +84,9 @@ public final class Teacher extends Person implements ShortViewable {
         if (hireDate == null || hireDate.isAfter(LocalDate.now())) {
             throw new IllegalArgumentException("invalid hire date");
         }
+        if (getBirthDate() != null && hireDate.isBefore(getBirthDate().plusYears(18))) {
+            throw new IllegalArgumentException("Hire date is invalid: teacher must be at least 18 years old at the time of hiring");
+        }
         this.hireDate = hireDate;
     }
 
@@ -112,7 +115,8 @@ public final class Teacher extends Person implements ShortViewable {
                 + "Occupation: " + occupation + "\n"
                 + "Hire Date: " + hireDate + "\n"
                 + "Rate: " + rate + "\n"
-                + "Experience: " + getExperienceYears() + " years";
+                + "Experience: " + getExperienceYears() + " years" + "\n"
+                + "Department: " + (department != null ? department.getName() : "None");
     }
 
     @Override

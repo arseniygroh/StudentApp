@@ -10,7 +10,7 @@ public class Department implements ShortViewable, Serializable {
     private final int id;
     private static int idCounter = 1;
     public static void setNextId(int id) {
-        idCounter = id;
+        idCounter = id + 1;
     }
 
     private String name;

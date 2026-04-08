@@ -23,6 +23,7 @@ public class AuthorizationService {
         File file = new File(FILE_NAME);
         if (!file.exists()) {
             try {
+                file.getParentFile().mkdirs();
                 file.createNewFile();
                 System.out.println("File was created");
             } catch (IOException e) {
@@ -56,9 +57,9 @@ public class AuthorizationService {
         File file = new File(FILE_NAME);
         if (!file.exists()) {
             try {
+                file.getParentFile().mkdirs();
                 file.createNewFile();
                 System.out.println("File was created");
-                return;
             } catch (IOException e) {
                 System.out.println(e.getMessage());
             }
