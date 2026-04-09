@@ -15,13 +15,12 @@ import ukma.service.AuthorizationService;
 import ukma.service.RegistryManager;
 import ukma.service.validation.AnnotationValidator;
 
+import java.nio.file.Files;
 import java.time.LocalDate;
 import java.util.*;
 
 public class Menu {
     private static final Logger logger = LoggerFactory.getLogger(Menu.class);
-
-    private final Scanner scan = new Scanner(System.in);
     private final RegistryManager manager;
     private final ConsoleInput inputValidator;
     private final AuthorizationService authService;
@@ -91,9 +90,7 @@ public class Menu {
                                 + "4 - by course code");
                         int choice = inputValidator.readInt("Enter your choice: ", 1, 4);
                         if (choice == 1) {
-                            System.out.println("Enter an ID of a student you want to get: ");
-                            long id = scan.nextLong();
-                            scan.nextLine();
+                            long id = inputValidator.readLong("Enter an ID of a student you want to get: ");
                             try {
                                 Student s = manager.getStudentById(id);
                                 System.out.println("-- STUDENT FOUND --");
@@ -162,9 +159,23 @@ public class Menu {
                             manager.showAll();
                         }
                     } else if (option == 6) {
-                        manager.printStudentCountByStudyForm();
-                        manager.printStudentCountByFaculty();
-                        manager.printStudentCountByStatus();
+                        System.out.println("Which report would you like to see ?" + "\n"
+                                + "1 - study form report" + "\n"
+                                + "2 - amount of students per faculty" + "\n"
+                                + "3 - student status report" + "\n"
+                                + "4 - student's average age per faculty" + "\n"
+                        );
+                        int choice = inputValidator.readInt("Enter an option:", 1, 4);
+                        if (choice == 1) {
+                            manager.printStudentCountByStudyForm();
+                        } else if (choice == 2) {
+                            manager.printStudentCountByFaculty();
+                        } else if (choice == 3) {
+                            manager.printStudentCountByStatus();
+                        } else {
+                            Faculty f = selectFaculty();
+                            if (f != null) manager.printAvarageStudentAge(f.getName().trim());
+                        }
                     } else break;
                 }
             }

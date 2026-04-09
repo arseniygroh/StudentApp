@@ -431,4 +431,23 @@ public class RegistryManager {
         System.out.printf("Average rate across all teachers: %.2f%n", avgRate);
         System.out.println("----------------------------");
     }
+
+    // Звіт 5: Середній вік студента на факультеті
+    public void printAvarageStudentAge(String facultyName) {
+        List<Student> students = studentRepository.getAll();
+        if (students.isEmpty()) {
+            System.out.println("No students available for the report.");
+            return;
+        }
+
+        double avgAge = students.stream()
+                .filter(student -> facultyName.equalsIgnoreCase(student.getFaculty().getName()))
+                .mapToInt(Student::getAge)
+                .average()
+                .orElse(0.0);
+
+        System.out.println("\nAVERAGE STUDENT AGE");
+        System.out.println("Average age: " + Math.floor(avgAge));
+        System.out.println("----------------------------");
+    }
 }
