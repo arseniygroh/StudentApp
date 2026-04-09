@@ -1,5 +1,7 @@
 package ukma.ui.cli;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ukma.domain.*;
 import ukma.domain.exception.DepartmentNotFoundException;
 import ukma.domain.exception.FacultyNotFoundException;
@@ -17,6 +19,8 @@ import java.time.LocalDate;
 import java.util.*;
 
 public class Menu {
+    private static final Logger logger = LoggerFactory.getLogger(Menu.class);
+
     private final Scanner scan = new Scanner(System.in);
     private final RegistryManager manager;
     private final ConsoleInput inputValidator;
@@ -68,16 +72,16 @@ public class Menu {
                     int option = inputValidator.readInt("Select your option: ", 0, 6);
                     if (option == 1) {
                         if (authService.isManager() || authService.isAdmin()) createAndAddStudent();
-                        else System.out.println("You don't have a right to do it");
+                        else handleUnauthorizedAccess();
                     } else if (option == 2) {
                         if (authService.isManager() || authService.isAdmin()) {
                             long id = inputValidator.readLong("Enter an ID of a student you want to delete: ");
                             manager.deleteStudent(id);
-                        } else System.out.println("You don't have a right to do it");
+                        } else handleUnauthorizedAccess();
 
                     } else if (option == 3) {
                         if (authService.isManager() || authService.isAdmin()) handleUpdateStudent();
-                        else System.out.println("You don't have a right to do it");
+                        else handleUnauthorizedAccess();
 
                     } else if (option == 4) {
                         System.out.println("How would you like to get a student?" + "\n"
@@ -176,15 +180,15 @@ public class Menu {
                     int option = inputValidator.readInt("Enter your option", 0, 4);
                     if (option == 1) {
                         if (authService.isManager() || authService.isAdmin()) createAndAddFaculty();
-                        else System.out.println("You don't have a right to do it");
+                        else handleUnauthorizedAccess();
                     } else if (option == 2) {
                         if (authService.isManager() || authService.isAdmin()) {
                             int id = inputValidator.readInt("Enter ID of the faculty you want to delete: ", 1, Integer.MAX_VALUE);
                             manager.deleteFaculty(id);
-                        } else System.out.println("You don't have a right to do it");
+                        } else handleUnauthorizedAccess();
                     } else if (option == 3) {
                         if (authService.isManager() || authService.isAdmin()) handleUpdateFaculty();
-                        else System.out.println("You don't have a right to do it");
+                        else handleUnauthorizedAccess();
                     } else if (option == 4) {
                         System.out.println("Here are the options: " + "\n"
                                 + "1 - by id" + "\n"
@@ -215,12 +219,12 @@ public class Menu {
                     int option = inputValidator.readInt("Enter your option", 0, 5);
                     if (option == 1) {
                         if (authService.isManager() || authService.isAdmin()) createAndAddTeacher();
-                        else System.out.println("You don't have a right to do it");
+                        else handleUnauthorizedAccess();
                     } else if (option == 2) {
                         if (authService.isManager() || authService.isAdmin()) {
                             long id = inputValidator.readLong("Enter ID of the teacher you want to delete: ");
                             manager.deleteTeacher(id);
-                        } else System.out.println("You don't have a right to do it");
+                        } else handleUnauthorizedAccess();
                     } else if (option == 3) {
                         System.out.println("How would you like to get a teacher ?" + "\n"
                                 + "1 - by id" + "\n"
@@ -263,7 +267,7 @@ public class Menu {
                         }
                     } else if (option == 5) {
                         if (authService.isManager() || authService.isAdmin()) handleUpdateTeacher();
-                        else System.out.println("You don't have a right to do it");
+                        else handleUnauthorizedAccess();
                     } else break;
                 }
             } else if (mainMenuOption == 4) {
@@ -280,12 +284,12 @@ public class Menu {
                     int option = inputValidator.readInt("Enter your option", 0, 5);
                     if (option == 1) {
                         if (authService.isManager() || authService.isAdmin()) createAndAddDepartment();
-                        else System.out.println("You don't have a right to do it");
+                        else handleUnauthorizedAccess();
                     } else if (option == 2) {
                         if (authService.isManager() || authService.isAdmin()) {
                             int id = inputValidator.readInt("Enter ID of the department you want to delete: ", 1, Integer.MAX_VALUE);
                             manager.deleteDepartment(id);
-                        } else System.out.println("You don't have a right to do it");
+                        } else handleUnauthorizedAccess();
                     } else if (option == 3) {
                         int id = inputValidator.readInt("Enter ID of the department you want to get: ", 1, Integer.MAX_VALUE);
                         try {
@@ -297,7 +301,7 @@ public class Menu {
                         manager.showAllDepartments();
                     } else if (option == 5) {
                         if (authService.isManager() || authService.isAdmin()) handleUpdateDepartment();
-                        else System.out.println("You don't have a right to do it");
+                        else handleUnauthorizedAccess();
                     } else break;
                 }
             }
@@ -1071,5 +1075,11 @@ public class Menu {
         } else {
             System.out.println("Incorrect choice");
         }
+    }
+
+    private void handleUnauthorizedAccess() {
+        System.out.println("Access denied: You don't have a right to do it");
+        String userEmail = (authService.getCurrentUser() != null) ? authService.getCurrentUser().getEmail() : "Unknown";
+        logger.warn("Unauthorized access attempt (Access Denied) by user: {}", userEmail);
     }
 }
