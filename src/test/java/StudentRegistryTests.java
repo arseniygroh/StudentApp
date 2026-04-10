@@ -1,12 +1,15 @@
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ukma.model.Faculty;
-import ukma.model.Student;
-import ukma.model.enums.StudentStatus;
-import ukma.model.enums.StudyForm;
-import ukma.model.exception.StudentNotFoundException;
-import ukma.model.utils.RegistryManager;
+import ukma.domain.Department;
+import ukma.domain.Faculty;
+import ukma.domain.Student;
+import ukma.domain.enums.StudentStatus;
+import ukma.domain.enums.StudyForm;
+import ukma.domain.exception.StudentNotFoundException;
+import ukma.service.RegistryManager;
 
+import java.io.File;
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -15,10 +18,12 @@ public class StudentRegistryTests {
     private RegistryManager manager;
     private Student testStudent;
     private Faculty testFaculty;
+    private Department testDepartment;
     @BeforeEach
     public void initStudent() {
-        manager = new RegistryManager();
-        testFaculty = new Faculty("Факультет Інформатики", "ФІ", null, "fi@ukma.edu.ua", "0441234567");
+        manager = new RegistryManager(true);
+        testFaculty = new Faculty("Факультет Інформатики", "ФІ", null, "fi2@ukma.edu.ua", "0441234567");
+        testDepartment = new Department("Кафедра математики", testFaculty, null, "some location");
         manager.addFaculty(testFaculty);
 
         testStudent = new Student(
@@ -26,10 +31,27 @@ public class StudentRegistryTests {
                 LocalDate.of(2005, 5, 20),
                 "name@ukma.edu.ua", "0991234567",
                 "K-12345", 2, "121", 2023,
-                StudyForm.FULL_TIME, StudentStatus.BUDGET, testFaculty
+                StudyForm.FULL_TIME, StudentStatus.BUDGET, testFaculty, testDepartment
         );
         manager.storeEmail(testStudent.getEmail());
         manager.addStudent(testStudent);
+    }
+
+    @AfterEach
+    public void cleanup() {
+        deleteDirectory(new File("test_files"));
+    }
+
+    private void deleteDirectory(File file) {
+        if (file.exists()) {
+            File[] contents = file.listFiles();
+            if (contents != null) {
+                for (File f : contents) {
+                    deleteDirectory(f);
+                }
+            }
+            file.delete();
+        }
     }
 
     @Test
@@ -52,7 +74,7 @@ public class StudentRegistryTests {
                 LocalDate.of(2005, 5, 20),
                 "name2@ukma.edu.ua", "232738274872",
                 "K-23214", 3, "F-3", 2024,
-                StudyForm.FULL_TIME, StudentStatus.CONTRACT, testFaculty);
+                StudyForm.FULL_TIME, StudentStatus.CONTRACT, testFaculty, testDepartment);
         manager.addStudent(studentToAdd);
 
         assertEquals(studentToAdd, manager.getStudentById(studentToAdd.getId()));
@@ -75,7 +97,7 @@ public class StudentRegistryTests {
                 LocalDate.of(2005, 5, 20),
                 "name@ukma.edu.ua", "0990000000",
                 "K-99999", 1, "121", 2024,
-                StudyForm.FULL_TIME, StudentStatus.BUDGET, testFaculty
+                StudyForm.FULL_TIME, StudentStatus.BUDGET, testFaculty, testDepartment
         );
 
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
