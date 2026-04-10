@@ -15,7 +15,6 @@ import ukma.service.AuthorizationService;
 import ukma.service.RegistryManager;
 import ukma.service.validation.AnnotationValidator;
 
-import java.nio.file.Files;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -243,7 +242,7 @@ public class Menu {
                         );
                         int choice = inputValidator.readInt("Enter your choice: ", 1, 2);
                         if (choice == 1) {
-                            long id = inputValidator.readInt("Enter ID of the teacher you want to get: ", 1, Integer.MAX_VALUE);
+                            long id = inputValidator.readLong("Enter ID of the teacher you want to get: ");
                             try {
                                 System.out.println(manager.getTeacherById(id));
                             } catch (TeacherNotFoundException e) {
@@ -481,18 +480,23 @@ public class Menu {
                         facultyToUpdate.setShortName(shortName);
                     } else if (option == 2) {
                         List<Teacher> availableTeachers = manager.getAvailableTeacherForPosition();
+                        boolean hasDean = true;
                         if (availableTeachers.isEmpty()) {
-                            System.out.println("There are no available teachers. Please add more first");
-                            return;
+                            System.out.println("There are no available teachers." + "\nWould you like to continue without a dean? (1 - yes, 0 - no)");
+                            int choice = inputValidator.readInt("Enter you choice", 0, 1);
+                            if (choice == 0) continue;
+                            else hasDean = false;
                         }
-                        long teacherId = selectAvailableTeacherId(availableTeachers, true);
-                        try {
-                            Teacher dean = manager.getTeacherById(teacherId);
-                            facultyToUpdate.setDean(dean);
-                            System.out.println("Dean updated!");
-                        } catch (Exception e) {
-                            System.out.println("Teacher not found. Dean not updated.");
-                        }
+                        if (hasDean) {
+                            long teacherId = selectAvailableTeacherId(availableTeachers, true);
+                            try {
+                                Teacher dean = manager.getTeacherById(teacherId);
+                                facultyToUpdate.setDean(dean);
+                                System.out.println("Dean updated!");
+                            } catch (Exception e) {
+                                System.out.println("Teacher not found. Dean not updated.");
+                            }
+                        } else facultyToUpdate.setDean(null);
                     } else if (option == 3) {
                         String oldEmail = facultyToUpdate.getEmail();
                         String email;
@@ -534,18 +538,24 @@ public class Menu {
 
         String name = inputValidator.readString("Enter faculty's name: ");
         String shortName = inputValidator.readString("Enter faculty's short name: ");
+        boolean hasDean = true;
+        Teacher dean = null;
         List<Teacher> availableTeachers = manager.getAvailableTeacherForPosition();
         if (availableTeachers.isEmpty()) {
-            System.out.println("There are no available teachers. Please add more first");
-            return;
+            System.out.println("There are no available teachers." + "\nWould you like to continue without a dean? (1 - yes, 0 - no)");
+            int choice = inputValidator.readInt("Enter you choice", 0, 1);
+            if (choice == 0) return;
+            else hasDean = false;
         }
-        long teacherId = selectAvailableTeacherId(availableTeachers, true);
-        Teacher dean = null;
-        try {
-            dean = manager.getTeacherById(teacherId);
-        } catch (Exception e) {
-            System.out.println("Teacher not found");
+        if (hasDean) {
+            long teacherId = selectAvailableTeacherId(availableTeachers, true);
+            try {
+                dean = manager.getTeacherById(teacherId);
+            } catch (Exception e) {
+                System.out.println("Teacher not found");
+            }
         }
+
         String email;
         while (true) {
             try {
@@ -779,16 +789,21 @@ public class Menu {
 
         Faculty faculty = selectFaculty();
         List<Teacher> availableTeachers = manager.getAvailableTeacherForPosition();
-        if (availableTeachers.isEmpty()) {
-            System.out.println("There are no available teachers. Please add more first");
-            return;
-        }
-        long teacherId = selectAvailableTeacherId(availableTeachers, false);
+        boolean hasHead = true;
         Teacher head = null;
-        try {
-            head = manager.getTeacherById(teacherId);
-        } catch (Exception e) {
-            System.out.println("Teacher not found");
+        if (availableTeachers.isEmpty()) {
+            System.out.println("There are no available teachers." + "\nWould you like to continue without a head? (1 - yes, 0 - no)");
+            int choice = inputValidator.readInt("Enter you choice", 0, 1);
+            if (choice == 0) return;
+            else hasHead = false;
+        }
+        if (hasHead) {
+            long teacherId = selectAvailableTeacherId(availableTeachers, false);
+            try {
+                head = manager.getTeacherById(teacherId);
+            } catch (Exception e) {
+                System.out.println("Teacher not found");
+            }
         }
 
         try {
@@ -844,19 +859,25 @@ public class Menu {
                             System.out.println("Faculty updated!");
                         }
                     } else if (option == 4) {
+                        boolean hasHead = true;
                         List<Teacher> availableTeachers = manager.getAvailableTeacherForPosition();
                         if (availableTeachers.isEmpty()) {
-                            System.out.println("There are no available teachers for Head position. Please add more first");
-                            continue;
+                            System.out.println("There are no available teachers." + "\nWould you like to continue without a head? (1 - yes, 0 - no)");
+                            int choice = inputValidator.readInt("Enter you choice", 0, 1);
+                            if (choice == 0) continue;
+                            else hasHead = false;
                         }
-                        long teacherId = selectAvailableTeacherId(availableTeachers, false);
-                        try {
-                            Teacher head = manager.getTeacherById(teacherId);
-                            deptToUpdate.setHead(head);
-                            System.out.println("Head of department updated!");
-                        } catch (Exception e) {
-                            System.out.println("Teacher not found. Head not updated.");
-                        }
+                        if (hasHead) {
+                            long teacherId = selectAvailableTeacherId(availableTeachers, false);
+                            try {
+                                Teacher head = manager.getTeacherById(teacherId);
+                                deptToUpdate.setHead(head);
+                                System.out.println("Head of department updated!");
+                            } catch (Exception e) {
+                                System.out.println("Teacher not found. Head not updated.");
+                            }
+                        } else deptToUpdate.setHead(null);
+
                     } else break;
 
                     System.out.println("Department with ID " + deptId + " has been successfully updated!");

@@ -122,7 +122,7 @@ public final class Student extends Person implements ShortViewable {
 
     public void setAdmissionYear(int year) {
         int currentYear = LocalDate.now().getYear();
-        if (admissionYear < 1991 || admissionYear > currentYear) {
+        if (year < 1991 || year > currentYear) {
             throw new IllegalArgumentException("Admission year must be between 1991 and " + currentYear);
         }
         this.admissionYear = year;
