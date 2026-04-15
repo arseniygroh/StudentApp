@@ -369,18 +369,19 @@ public class RegistryManager {
 
     // REPORTS / STATISTICS (STREAM API)
 
-    // Звіт 1: Кількість студентів за формою навчання (Full time/Expelled/Graduated/Academic leave)
+    // Звіт 1: Кількість студентів за формою навчання
     public void printStudentCountByStudyForm() {
         List<Student> students = studentRepository.getAll();
         if (students.isEmpty()) {
             System.out.println("No students available for the report.");
             return;
         }
-        Map<StudyForm, Long> stats = students.stream()
-                .collect(Collectors.groupingBy(Student::getStudyForm, Collectors.counting()));
-
         System.out.println("\nSTUDENT COUNT BY STUDY FORM");
-        stats.forEach((form, count) -> System.out.println(form + ": " + count + " students"));
+        students.stream()
+                .collect(Collectors.groupingBy(Student::getStudyForm, Collectors.counting()))
+                .entrySet().stream()
+                .map(e -> new ukma.domain.ReportEntry(e.getKey().toString(), e.getValue()))
+                .forEach(System.out::println);
         System.out.println("-----------------------------------");
     }
 
@@ -391,12 +392,13 @@ public class RegistryManager {
             System.out.println("No students available for the report.");
             return;
         }
-        Map<String, Long> stats = students.stream()
-                .filter(s -> s.getFaculty() != null)
-                .collect(Collectors.groupingBy(s -> s.getFaculty().getName(), Collectors.counting()));
-
         System.out.println("\nSTUDENT COUNT BY FACULTY");
-        stats.forEach((facultyName, count) -> System.out.println(facultyName + ": " + count + " students"));
+        students.stream()
+                .filter(s -> s.getFaculty() != null)
+                .collect(Collectors.groupingBy(s -> s.getFaculty().getName(), Collectors.counting()))
+                .entrySet().stream()
+                .map(e -> new ukma.domain.ReportEntry(e.getKey(), e.getValue()))
+                .forEach(System.out::println);
         System.out.println("--------------------------------");
     }
 
@@ -407,11 +409,12 @@ public class RegistryManager {
             System.out.println("No students available for the report.");
             return;
         }
-        Map<StudentStatus, Long> stats = students.stream()
-                .collect(Collectors.groupingBy(Student::getStatus, Collectors.counting()));
-
         System.out.println("\nSTUDENT COUNT BY STUDENT STATUS");
-        stats.forEach((status, count) -> System.out.println(status + ": " + count + " students"));
+        students.stream()
+                .collect(Collectors.groupingBy(Student::getStatus, Collectors.counting()))
+                .entrySet().stream()
+                .map(e -> new ukma.domain.ReportEntry(e.getKey().toString(), e.getValue()))
+                .forEach(System.out::println);
         System.out.println("-----------------------------------");
     }
 
