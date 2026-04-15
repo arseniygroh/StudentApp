@@ -41,13 +41,15 @@ public class ValidationTests {
 
     @Test
     public void testAnnotationValidatorPasses() {
-        University validUni = new University("National University of Kyiv-Mohyla Academy", "NaUKMA", "Kyiv", "Skovorody st.");
-        assertDoesNotThrow(() -> AnnotationValidator.validate(validUni));
+        assertDoesNotThrow(() ->
+                new University("National University of Kyiv-Mohyla Academy", "NaUKMA", "Kyiv", "Skovorody st.")
+        );
     }
 
     @Test
     public void testAnnotationValidatorFails() {
-        University invalidUni = new University("A", "NaUKMA", "Kyiv", "Skovorody st.");
-        assertThrows(IllegalArgumentException.class, () -> AnnotationValidator.validate(invalidUni));
+        assertThrows(IllegalArgumentException.class, () ->
+                new University("A", "NaUKMA", "Kyiv", "Skovorody st.")
+        );
     }
 }
