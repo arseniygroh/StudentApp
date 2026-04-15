@@ -169,7 +169,8 @@ public class RegistryManager {
         System.out.println(String.format("| %-5s | %-50s | %-25s |", "ID", "Student Name", "Course Info"));
         System.out.println("-".repeat(89));
         students.stream()
-                .filter(student -> student.getFaculty().getShortName().equalsIgnoreCase(facultyShortName))
+                .filter(student -> student.getFaculty() != null
+                        && student.getFaculty().getShortName().equalsIgnoreCase(facultyShortName))
                 .sorted(Comparator.comparing(Student::getFullName))
                 .forEach(student -> System.out.println(student.toShortString()));
     }
@@ -441,7 +442,8 @@ public class RegistryManager {
         }
 
         double avgAge = students.stream()
-                .filter(student -> facultyName.equalsIgnoreCase(student.getFaculty().getName()))
+                .filter(student -> student.getFaculty() != null
+                        && facultyName.equalsIgnoreCase(student.getFaculty().getName()))
                 .mapToInt(Student::getAge)
                 .average()
                 .orElse(0.0);
