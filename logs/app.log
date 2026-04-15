@@ -1,0 +1,18 @@
+2026-04-15 23:50:09 [main] INFO  ukma.service.AuthorizationService - New user successfully registered: test.admin@ukma.edu.ua with role MANAGER
+2026-04-15 23:50:09 [main] INFO  ukma.service.AuthorizationService - User logged in successfully: test.admin@ukma.edu.ua
+2026-04-15 23:50:09 [main] INFO  ukma.service.AuthorizationService - Users file was successfully created at files/users.csv
+2026-04-15 23:50:09 [main] INFO  ukma.service.AuthorizationService - New user successfully registered: test.admin@ukma.edu.ua with role ADMIN
+2026-04-15 23:50:09 [main] INFO  ukma.service.AuthorizationService - Users file was successfully created at files/users.csv
+2026-04-15 23:50:09 [main] INFO  ukma.service.AuthorizationService - New user successfully registered: test.admin@ukma.edu.ua with role USER
+2026-04-15 23:50:09 [main] INFO  ukma.service.AuthorizationService - User logged in successfully: test.admin@ukma.edu.ua
+2026-04-15 23:50:09 [main] INFO  ukma.service.AuthorizationService - User logged out: test.admin@ukma.edu.ua
+2026-04-15 23:50:09 [main] INFO  ukma.service.AuthorizationService - Users file was successfully created at files/users.csv
+2026-04-15 23:50:09 [main] INFO  ukma.service.AuthorizationService - New user successfully registered: test.admin@ukma.edu.ua with role USER
+2026-04-15 23:50:09 [main] WARN  ukma.service.AuthorizationService - Blocked user attempted to login: test.admin@ukma.edu.ua
+2026-04-15 23:50:09 [main] INFO  ukma.service.AuthorizationService - Users file was successfully created at files/users.csv
+2026-04-15 23:50:09 [main] INFO  ukma.service.AuthorizationService - New user successfully registered: test.admin@ukma.edu.ua with role USER
+2026-04-15 23:50:09 [main] WARN  ukma.service.AuthorizationService - Failed login attempt for email: test.admin@ukma.edu.ua
+2026-04-15 23:50:09 [main] INFO  ukma.service.AuthorizationService - Users file was successfully created at files/users.csv
+2026-04-15 23:50:09 [main] INFO  ukma.service.AuthorizationService - New user successfully registered: test.admin@ukma.edu.ua with role USER
+2026-04-15 23:50:09 [main] WARN  ukma.service.AuthorizationService - Failed registration attempt: Email test.admin@ukma.edu.ua already exists
+2026-04-15 23:50:22 [main] INFO  ukma.service.RegistryManager - Faculty with ID 3 was successfully removed

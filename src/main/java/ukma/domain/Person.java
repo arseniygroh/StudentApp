@@ -1,6 +1,6 @@
 package ukma.domain;
 
-
+import lombok.Getter;
 import ukma.service.validation.EmailValidator;
 
 import java.io.Serial;
@@ -10,6 +10,7 @@ import java.util.Objects;
 import ukma.domain.annotations.Length;
 import ukma.service.validation.AnnotationValidator;
 
+@Getter
 abstract public sealed class Person implements Serializable permits Student, Teacher {
     @Serial
     private static final long serialVersionUID = 1L;
@@ -95,31 +96,10 @@ abstract public sealed class Person implements Serializable permits Student, Tea
         }
         this.phoneNumber = phoneNumber.trim();
     }
-    public long getId() {
-        return this.id;
-    }
-    public String getFirstName() {
-        return this.firstName;
-    }
-    public String getLastName() {
-        return this.lastName;
-    }
-    public String getFatherName() {
-        return this.fatherName;
-    }
-    public String getEmail() {
-        return this.email;
-    }
-    public String getPhoneNumber() {
-        return this.phoneNumber;
-    }
-    public LocalDate getBirthDate() {
-        return this.birthDate;
-    }
 
     public String getInitials() {
-        return lastName + " " + firstName.charAt(0) + ". " + fatherName.charAt(0) + "."; 
-    }  
+        return lastName + " " + firstName.charAt(0) + ". " + fatherName.charAt(0) + ".";
+    }
   
     @Override
     public boolean equals(Object o) {
