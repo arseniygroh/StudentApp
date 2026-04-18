@@ -11,8 +11,8 @@ import ukma.domain.enums.Degree;
 import ukma.domain.enums.Role;
 import ukma.domain.enums.StudentStatus;
 import ukma.domain.enums.StudyForm;
+import ukma.service.ApplicationContext;
 import ukma.service.AuthorizationService;
-import ukma.service.RegistryManager;
 import ukma.service.validation.AnnotationValidator;
 
 import java.time.LocalDate;
@@ -20,11 +20,11 @@ import java.util.*;
 
 public class Menu {
     private static final Logger logger = LoggerFactory.getLogger(Menu.class);
-    private final RegistryManager manager;
+    private final ApplicationContext manager;
     private final ConsoleInput inputValidator;
     private final AuthorizationService authService;
 
-    public Menu(RegistryManager manager, ConsoleInput inputValidator, AuthorizationService authService) {
+    public Menu(ApplicationContext manager, ConsoleInput inputValidator, AuthorizationService authService) {
         this.manager = manager;
         this.inputValidator = inputValidator;
         this.authService = authService;
@@ -74,7 +74,7 @@ public class Menu {
                     } else if (option == 2) {
                         if (authService.isManager() || authService.isAdmin()) {
                             long id = inputValidator.readLong("Enter an ID of a student you want to delete: ");
-                            manager.deleteStudent(id);
+                            manager.getStudentService().deleteStudent(id);
                         } else handleUnauthorizedAccess();
 
                     } else if (option == 3) {
@@ -91,7 +91,7 @@ public class Menu {
                         if (choice == 1) {
                             long id = inputValidator.readLong("Enter an ID of a student you want to get: ");
                             try {
-                                Student s = manager.getStudentById(id);
+                                Student s = manager.getStudentService().getStudentById(id);
                                 System.out.println("-- STUDENT FOUND --");
                                 System.out.println(s);
                                 System.out.println("---------------------");
@@ -102,13 +102,13 @@ public class Menu {
                             List<Student> result = new ArrayList<>();
                             if (choice == 2){
                                 String query = inputValidator.readString("Enter some name details of a student you want to get: ");
-                                result = manager.getStudentByNameInfo(query);
+                                result = manager.getStudentService().getStudentByNameInfo(query);
                             } else if (choice == 3) {
                                 int year = inputValidator.readInt("Enter study year: ", 1, 6);
-                                result = manager.findByCourse(year);
+                                result = manager.getStudentService().findByCourse(year);
                             } else {
                                 String courseCode = inputValidator.readString("Enter course code: ");
-                                result = manager.findByCourseCode(courseCode);
+                                result = manager.getStudentService().findByCourseCode(courseCode);
                             }
 
                             if (!result.isEmpty()) {
@@ -141,21 +141,21 @@ public class Menu {
                         int choice = inputValidator.readInt("Enter your option", 1, 6);
                         if (choice == 1) {
                             Faculty f = selectFaculty();
-                            if (f != null) manager.showAllStudentsInFaculty(f.getShortName());
+                            if (f != null) manager.getStudentService().showAllStudentsInFaculty(f.getShortName());
                         } else if (choice == 2) {
-                            manager.showAllStudentsSortedByStudyYear();
+                            manager.getStudentService().showAllStudentsSortedByStudyYear();
                         } else if (choice == 3) {
                             Department department = selectDepartment();
-                            if (department != null) manager.showAllStudentsInDepartmentSortedByStudyYear(department);
+                            if (department != null) manager.getStudentService().showAllStudentsInDepartmentSortedByStudyYear(department);
                         } else if (choice == 4) {
                             Department department = selectDepartment();
-                            if (department != null) manager.showAllStudentsInDepartmentSortedAlphabetically(department);
+                            if (department != null) manager.getStudentService().showAllStudentsInDepartmentSortedAlphabetically(department);
                         } else if (choice == 5) {
                             Department department = selectDepartment();
                             int studyYear = inputValidator.readInt("Enter a study year (1-6): ", 1, 6);
-                            if (department != null) manager.showAllStudentsOfSameCourseInDepartmentSortedAlphabetically(department, studyYear);
+                            if (department != null) manager.getStudentService().showAllStudentsOfSameCourseInDepartmentSortedAlphabetically(department, studyYear);
                         } else {
-                            manager.showAll();
+                            manager.getStudentService().showAll();
                         }
                     } else if (option == 6) {
                         System.out.println("Which report would you like to see ?" + "\n"
@@ -166,14 +166,14 @@ public class Menu {
                         );
                         int choice = inputValidator.readInt("Enter an option:", 1, 4);
                         if (choice == 1) {
-                            manager.printStudentCountByStudyForm();
+                            manager.getReportService().printStudentCountByStudyForm();
                         } else if (choice == 2) {
-                            manager.printStudentCountByFaculty();
+                            manager.getReportService().printStudentCountByFaculty();
                         } else if (choice == 3) {
-                            manager.printStudentCountByStatus();
+                            manager.getReportService().printStudentCountByStatus();
                         } else {
                             Faculty f = selectFaculty();
-                            if (f != null) manager.printAvarageStudentAge(f.getName().trim());
+                            if (f != null) manager.getReportService().printAvarageStudentAge(f.getName().trim());
                         }
                     } else break;
                 }
@@ -194,7 +194,7 @@ public class Menu {
                     } else if (option == 2) {
                         if (authService.isManager() || authService.isAdmin()) {
                             int id = inputValidator.readInt("Enter ID of the faculty you want to delete: ", 1, Integer.MAX_VALUE);
-                            manager.deleteFaculty(id);
+                            manager.getFacultyService().deleteFaculty(id);
                         } else handleUnauthorizedAccess();
                     } else if (option == 3) {
                         if (authService.isManager() || authService.isAdmin()) handleUpdateFaculty();
@@ -207,11 +207,11 @@ public class Menu {
                         if (choice == 1) {
                             int id = inputValidator.readInt("Enter ID of the faculty you want to get: ", 1, Integer.MAX_VALUE);
                             try {
-                                System.out.println(manager.getFacultyById(id));
+                                System.out.println(manager.getFacultyService().getFacultyById(id));
                             } catch (Exception e) {
                                 System.out.println(e.getMessage());
                             }
-                        } else manager.showFacultiesAlphabeticallySorted();
+                        } else manager.getFacultyService().showFacultiesAlphabeticallySorted();
                     } else break;
                 }
             }
@@ -233,7 +233,7 @@ public class Menu {
                     } else if (option == 2) {
                         if (authService.isManager() || authService.isAdmin()) {
                             long id = inputValidator.readLong("Enter ID of the teacher you want to delete: ");
-                            manager.deleteTeacher(id);
+                            manager.getTeacherService().deleteTeacher(id);
                         } else handleUnauthorizedAccess();
                     } else if (option == 3) {
                         System.out.println("How would you like to get a teacher ?" + "\n"
@@ -244,13 +244,13 @@ public class Menu {
                         if (choice == 1) {
                             long id = inputValidator.readLong("Enter ID of the teacher you want to get: ");
                             try {
-                                System.out.println(manager.getTeacherById(id));
+                                System.out.println(manager.getTeacherService().getTeacherById(id));
                             } catch (TeacherNotFoundException e) {
                                 System.out.println("Error: " + e.getMessage());
                             }
                         } else {
                             String query = inputValidator.readString("Enter some name details of a teacher you want to get: ");
-                            List<Teacher> result = manager.getTeachersByNameInfo(query);
+                            List<Teacher> result = manager.getTeacherService().getTeachersByNameInfo(query);
                             result.forEach(teacher -> {
                                 System.out.println(teacher);
                                 System.out.println("================================================");
@@ -265,15 +265,15 @@ public class Menu {
                         );
                         int choice = inputValidator.readInt("Enter your option: ", 1, 4);
                         if (choice == 1) {
-                            manager.showAllTeachers();
+                            manager.getTeacherService().showAllTeachers();
                         } else if (choice == 2) {
                             Faculty faculty = selectFaculty();
-                            if (faculty != null) manager.showAllTeachersInFaculty(faculty.getShortName());
+                            if (faculty != null) manager.getTeacherService().showAllTeachersInFaculty(faculty.getShortName());
                         } else if (choice == 3) {
                             Department d = selectDepartment();
-                            if (d != null) manager.showDepartmentTeachersAlphabetically(d);
+                            if (d != null) manager.getTeacherService().showDepartmentTeachersAlphabetically(d);
                         } else {
-                            manager.printAverageTeacherRate();
+                            manager.getReportService().printAverageTeacherRate();
                         }
                     } else if (option == 5) {
                         if (authService.isManager() || authService.isAdmin()) handleUpdateTeacher();
@@ -298,17 +298,17 @@ public class Menu {
                     } else if (option == 2) {
                         if (authService.isManager() || authService.isAdmin()) {
                             int id = inputValidator.readInt("Enter ID of the department you want to delete: ", 1, Integer.MAX_VALUE);
-                            manager.deleteDepartment(id);
+                            manager.getDepartmentService().deleteDepartment(id);
                         } else handleUnauthorizedAccess();
                     } else if (option == 3) {
                         int id = inputValidator.readInt("Enter ID of the department you want to get: ", 1, Integer.MAX_VALUE);
                         try {
-                            System.out.println(manager.getDepartmentById(id));
+                            System.out.println(manager.getDepartmentService().getDepartmentById(id));
                         } catch (Exception e) {
                             System.out.println("Error: " + e.getMessage());
                         }
                     } else if (option == 4) {
-                        manager.showAllDepartments();
+                        manager.getDepartmentService().showAllDepartments();
                     } else if (option == 5) {
                         if (authService.isManager() || authService.isAdmin()) handleUpdateDepartment();
                         else handleUnauthorizedAccess();
@@ -368,13 +368,13 @@ public class Menu {
                 while (true) {
                     try {
                         email = inputValidator.readEmail("Enter new email: ");
-                        manager.storeEmail(email);
+                        manager.getEmailRegistry().storeEmail(email);
                         break;
                     } catch (IllegalArgumentException e) {
                         System.out.println(e.getMessage() + " Try another one!");
                     }
                 }
-                if (!oldEmail.equals(email)) manager.removeEmail(oldEmail);
+                if (!oldEmail.equals(email)) manager.getEmailRegistry().removeEmail(oldEmail);
                 userToUpdate.setEmail(email);
 
             } else if (option == 2) {
@@ -447,7 +447,7 @@ public class Menu {
         while (isRunning) {
             int id = inputValidator.readInt("Enter ID of the faculty you want to update: ", 1, Integer.MAX_VALUE);
             try {
-                Faculty facultyToUpdate = manager.getFacultyById(id);
+                Faculty facultyToUpdate = manager.getFacultyService().getFacultyById(id);
                 while (true) {
                     System.out.println("What would you like to update?" + "\n"
                             + "0 - update another faculty" + "\n"
@@ -479,7 +479,7 @@ public class Menu {
                         String shortName = inputValidator.readString("Enter short name: ");
                         facultyToUpdate.setShortName(shortName);
                     } else if (option == 2) {
-                        List<Teacher> availableTeachers = manager.getAvailableTeacherForPosition();
+                        List<Teacher> availableTeachers = manager.getTeacherService().getAvailableTeacherForPosition();
                         boolean hasDean = true;
                         if (availableTeachers.isEmpty()) {
                             System.out.println("There are no available teachers." + "\nWould you like to continue without a dean? (1 - yes, 0 - no)");
@@ -490,7 +490,7 @@ public class Menu {
                         if (hasDean) {
                             long teacherId = selectAvailableTeacherId(availableTeachers, true);
                             try {
-                                Teacher dean = manager.getTeacherById(teacherId);
+                                Teacher dean = manager.getTeacherService().getTeacherById(teacherId);
                                 facultyToUpdate.setDean(dean);
                                 System.out.println("Dean updated!");
                             } catch (Exception e) {
@@ -503,13 +503,13 @@ public class Menu {
                         while (true) {
                             try {
                                 email = inputValidator.readEmail("Enter new email: ");
-                                manager.storeEmail(email);
+                                manager.getEmailRegistry().storeEmail(email);
                                 break;
                             } catch (IllegalArgumentException e) {
                                 System.out.println(e.getMessage() + " Try another one!");
                             }
                         }
-                        if (!oldEmail.equals(email)) manager.removeEmail(oldEmail);
+                        if (!oldEmail.equals(email)) manager.getEmailRegistry().removeEmail(oldEmail);
                         facultyToUpdate.setEmail(email);
                     } else if (option == 4) {
                         String phone = inputValidator.readString("Enter new phone number: ");
@@ -520,7 +520,7 @@ public class Menu {
                         facultyToUpdate.setPhone(phone);
                     } else break;
                     System.out.println("Faculty with ID " + id + " has been successfully updated");
-                    manager.updateFaculty(facultyToUpdate);
+                    manager.getFacultyService().updateFaculty(facultyToUpdate);
                 }
             } catch (FacultyNotFoundException e) {
                 System.out.println(e.getMessage());
@@ -540,7 +540,7 @@ public class Menu {
         String shortName = inputValidator.readString("Enter faculty's short name: ");
         boolean hasDean = true;
         Teacher dean = null;
-        List<Teacher> availableTeachers = manager.getAvailableTeacherForPosition();
+        List<Teacher> availableTeachers = manager.getTeacherService().getAvailableTeacherForPosition();
         if (availableTeachers.isEmpty()) {
             System.out.println("There are no available teachers." + "\nWould you like to continue without a dean? (1 - yes, 0 - no)");
             int choice = inputValidator.readInt("Enter you choice", 0, 1);
@@ -550,7 +550,7 @@ public class Menu {
         if (hasDean) {
             long teacherId = selectAvailableTeacherId(availableTeachers, true);
             try {
-                dean = manager.getTeacherById(teacherId);
+                dean = manager.getTeacherService().getTeacherById(teacherId);
             } catch (Exception e) {
                 System.out.println("Teacher not found");
             }
@@ -560,7 +560,7 @@ public class Menu {
         while (true) {
             try {
                 email = inputValidator.readEmail("Enter email of the faculty");
-                manager.storeEmail(email);
+                manager.getEmailRegistry().storeEmail(email);
                 break;
             } catch (IllegalArgumentException e) {
                 System.out.println(e.getMessage() + " Try another one");
@@ -574,7 +574,7 @@ public class Menu {
 
         try {
             Faculty faculty = new Faculty(name, shortName, dean, email, phone);
-            manager.addFaculty(faculty);
+            manager.getFacultyService().addFaculty(faculty);
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
         }
@@ -591,7 +591,7 @@ public class Menu {
         while (true) {
             try {
                 email = inputValidator.readEmail("Enter email of the student");
-                manager.storeEmail(email);
+                manager.getEmailRegistry().storeEmail(email);
                 break;
             } catch (IllegalArgumentException e) {
                 System.out.println(e.getMessage() + " Try another one");
@@ -618,7 +618,7 @@ public class Menu {
                     recordBookId, year, courseCode, admYear, studyForm, status, faculty, department
             );
 
-            manager.addStudent(newStudent);
+            manager.getStudentService().addStudent(newStudent);
             System.out.println("Student added successfully!");
 
         } catch (IllegalArgumentException e) {
@@ -636,7 +636,7 @@ public class Menu {
         while (true) {
             try {
                 email = inputValidator.readEmail("Enter email of the teacher");
-                manager.storeEmail(email);
+                manager.getEmailRegistry().storeEmail(email);
                 break;
             } catch (IllegalArgumentException e) {
                 System.out.println(e.getMessage() + " Try another one");
@@ -664,7 +664,7 @@ public class Menu {
 
         try {
             Teacher teacher = new Teacher(firstName, lastName, fatherName, birthDate, email, phone, degree, occupation, academicRank, hireDate, rate, department);
-            manager.addTeacher(teacher);
+            manager.getTeacherService().addTeacher(teacher);
             System.out.println("Teacher added successfully!");
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
@@ -676,7 +676,7 @@ public class Menu {
         while (isRunning) {
             long teacherId = inputValidator.readLong("Enter an id of a teacher you want to find: ");
             try {
-                Teacher teacherToUpdate = manager.getTeacherById(teacherId);
+                Teacher teacherToUpdate = manager.getTeacherService().getTeacherById(teacherId);
                 while (true) {
                     System.out.println("What would you like to update? \n"
                             + "0 - update another teacher\n"
@@ -723,13 +723,13 @@ public class Menu {
                         while (true) {
                             try {
                                 email = inputValidator.readEmail("Enter new email: ");
-                                manager.storeEmail(email);
+                                manager.getEmailRegistry().storeEmail(email);
                                 break;
                             } catch (IllegalArgumentException e) {
                                 System.out.println(e.getMessage() + " Try another one!");
                             }
                         }
-                        if (!oldEmail.equals(email)) manager.removeEmail(oldEmail);
+                        if (!oldEmail.equals(email)) manager.getEmailRegistry().removeEmail(oldEmail);
                         teacherToUpdate.setEmail(email);
                     } else if (option == 5) {
                         String phone = inputValidator.readString("Enter new phone number: ");
@@ -765,7 +765,7 @@ public class Menu {
                     }
                     try {
                         AnnotationValidator.validate(teacherToUpdate);
-                        manager.updateTeacher(teacherToUpdate);
+                        manager.getTeacherService().updateTeacher(teacherToUpdate);
                         System.out.println("Teacher with ID " + teacherId + " has been successfully updated!");
                     } catch (IllegalArgumentException e) {
                         System.out.println("Validation failed: " + e.getMessage());
@@ -788,7 +788,7 @@ public class Menu {
         String location = inputValidator.readString("Location: ");
 
         Faculty faculty = selectFaculty();
-        List<Teacher> availableTeachers = manager.getAvailableTeacherForPosition();
+        List<Teacher> availableTeachers = manager.getTeacherService().getAvailableTeacherForPosition();
         boolean hasHead = true;
         Teacher head = null;
         if (availableTeachers.isEmpty()) {
@@ -800,7 +800,7 @@ public class Menu {
         if (hasHead) {
             long teacherId = selectAvailableTeacherId(availableTeachers, false);
             try {
-                head = manager.getTeacherById(teacherId);
+                head = manager.getTeacherService().getTeacherById(teacherId);
             } catch (Exception e) {
                 System.out.println("Teacher not found");
             }
@@ -808,7 +808,7 @@ public class Menu {
 
         try {
             Department dept = new Department(name, faculty, head, location);
-            manager.addDepartment(dept);
+            manager.getDepartmentService().addDepartment(dept);
             System.out.println("Department added successfully!");
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
@@ -820,7 +820,7 @@ public class Menu {
         while (isRunning) {
             int deptId = inputValidator.readInt("Enter ID of the department you want to update: ", 1, Integer.MAX_VALUE);
             try {
-                Department deptToUpdate = manager.getDepartmentById(deptId);
+                Department deptToUpdate = manager.getDepartmentService().getDepartmentById(deptId);
                 while (true) {
                     System.out.println("What would you like to update?\n"
                             + "0 - update another department\n"
@@ -860,7 +860,7 @@ public class Menu {
                         }
                     } else if (option == 4) {
                         boolean hasHead = true;
-                        List<Teacher> availableTeachers = manager.getAvailableTeacherForPosition();
+                        List<Teacher> availableTeachers = manager.getTeacherService().getAvailableTeacherForPosition();
                         if (availableTeachers.isEmpty()) {
                             System.out.println("There are no available teachers." + "\nWould you like to continue without a head? (1 - yes, 0 - no)");
                             int choice = inputValidator.readInt("Enter you choice", 0, 1);
@@ -870,7 +870,7 @@ public class Menu {
                         if (hasHead) {
                             long teacherId = selectAvailableTeacherId(availableTeachers, false);
                             try {
-                                Teacher head = manager.getTeacherById(teacherId);
+                                Teacher head = manager.getTeacherService().getTeacherById(teacherId);
                                 deptToUpdate.setHead(head);
                                 System.out.println("Head of department updated!");
                             } catch (Exception e) {
@@ -881,7 +881,7 @@ public class Menu {
                     } else break;
 
                     System.out.println("Department with ID " + deptId + " has been successfully updated!");
-                    manager.updateDepartment(deptToUpdate);
+                    manager.getDepartmentService().updateDepartment(deptToUpdate);
                 }
             } catch (DepartmentNotFoundException e) {
                 System.out.println("Error: " + e.getMessage());
@@ -914,7 +914,7 @@ public class Menu {
 
     private Faculty selectFaculty() {
         System.out.println("Available Faculties:");
-        Map<Integer, Faculty> availableFaculties = manager.getFaculties();
+        Map<Integer, Faculty> availableFaculties = manager.getFacultyService().getFaculties();
 
         if (availableFaculties.isEmpty()) {
             System.out.println("No faculties available in the registry!");
@@ -931,7 +931,7 @@ public class Menu {
         while (chosen == null) {
             int id = inputValidator.readInt("Enter Faculty ID: ", 1, Integer.MAX_VALUE);
             try {
-                chosen = manager.getFacultyById(id);
+                chosen = manager.getFacultyService().getFacultyById(id);
             } catch (Exception e) {
                 System.out.println("Faculty with ID " + id + " not found. Try again.");
             }
@@ -941,7 +941,7 @@ public class Menu {
 
     private Department selectDepartment() {
         System.out.println("Available departments:");
-        Map<Integer, Department> availableDepartments = manager.getDepartments();
+        Map<Integer, Department> availableDepartments = manager.getDepartmentService().getDepartments();
 
         if (availableDepartments.isEmpty()) {
             System.out.println("There are no available departments");
@@ -956,7 +956,7 @@ public class Menu {
         while (chosen == null) {
             int id = inputValidator.readInt("Enter Department ID: ", 1, Integer.MAX_VALUE);
             try {
-                chosen = manager.getDepartmentById(id);
+                chosen = manager.getDepartmentService().getDepartmentById(id);
             } catch (DepartmentNotFoundException e) {
                 System.out.println(e.getMessage());
             }
@@ -969,7 +969,7 @@ public class Menu {
         while (isRunning) {
             long studentId = inputValidator.readLong("Enter an id of the student you want to update");
             try {
-                Student studentToUpdate = manager.getStudentById(studentId);
+                Student studentToUpdate = manager.getStudentService().getStudentById(studentId);
 
                 while (true) {
                     System.out.println("What would you like to update? " + "\n"
@@ -1025,13 +1025,13 @@ public class Menu {
                         while (true) {
                             try {
                                 email = inputValidator.readEmail("Enter new email of the student");
-                                manager.storeEmail(email);
+                                manager.getEmailRegistry().storeEmail(email);
                                 break;
                             } catch (IllegalArgumentException e) {
                                 System.out.println(e.getMessage() + " Try another one");
                             }
                         }
-                        if (!oldEmail.equals(email)) manager.removeEmail(oldEmail);
+                        if (!oldEmail.equals(email)) manager.getEmailRegistry().removeEmail(oldEmail);
                         studentToUpdate.setEmail(email);
                     } else if (option == 8) {
                         String phone = inputValidator.readString("Enter a new phone number for the student: ");
@@ -1058,7 +1058,7 @@ public class Menu {
                     }
                     try {
                         AnnotationValidator.validate(studentToUpdate);
-                        manager.updateStudent(studentToUpdate);
+                        manager.getStudentService().updateStudent(studentToUpdate);
                         System.out.println("Student with an id = " + studentToUpdate.getId() + " was successfully updated!");
                     } catch (IllegalArgumentException e) {
                         System.out.println("Validation failed: " + e.getMessage());

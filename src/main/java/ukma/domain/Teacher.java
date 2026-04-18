@@ -1,12 +1,13 @@
 package ukma.domain;
 
+import lombok.Getter;
 import ukma.domain.enums.Degree;
 
 import java.io.Serial;
 import java.time.LocalDate;
 import java.time.Period;
 
-
+@Getter
 public final class Teacher extends Person implements ShortViewable {
     @Serial
     private static final long serialVersionUID = 1L;
@@ -41,10 +42,6 @@ public final class Teacher extends Person implements ShortViewable {
 
     public void setDepartment(Department department) {
         this.department = department;
-    }
-
-    public Degree getDegree() {
-        return degree;
     }
 
     public void setDegree(Degree degree) {
@@ -88,10 +85,6 @@ public final class Teacher extends Person implements ShortViewable {
             throw new IllegalArgumentException("Hire date is invalid: teacher must be at least 18 years old at the time of hiring");
         }
         this.hireDate = hireDate;
-    }
-
-    public double getRate() {
-        return rate;
     }
 
     public void setRate(double rate) {

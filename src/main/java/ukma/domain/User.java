@@ -1,11 +1,13 @@
 package ukma.domain;
 
+import lombok.Getter;
 import ukma.domain.enums.Role;
 import ukma.service.validation.EmailValidator;
 import ukma.service.validation.PasswordValidator;
 
 import java.util.Objects;
 
+@Getter
 public class User {
     private String email;
     private String password;
@@ -23,17 +25,6 @@ public class User {
         this.email = email;
         this.role = role;
         this.isBlocked = false;
-    }
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public Role getRole() {
-        return role;
     }
 
     public void setEmail(String email) {

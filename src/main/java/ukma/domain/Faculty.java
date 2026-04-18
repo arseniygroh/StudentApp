@@ -1,11 +1,13 @@
 package ukma.domain;
 
+import lombok.Getter;
 import ukma.service.validation.EmailValidator;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
 
+@Getter
 public class Faculty implements ShortViewable, Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
@@ -60,26 +62,6 @@ public class Faculty implements ShortViewable, Serializable {
             throw new IllegalArgumentException("input can't be empty");
         }
         this.phone = phone;
-    }
-
-    public String getName() {
-        return name;
-    }
-    public String getShortName() {
-        return shortName;
-    }
-    public Teacher getDean() {
-        return dean;
-    }
-    public String getEmail() {
-        return email;
-    }
-    public String getPhone() {
-        return phone;
-    }
-
-    public int getId() {
-        return id;
     }
 
     @Override

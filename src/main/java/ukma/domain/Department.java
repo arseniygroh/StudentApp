@@ -1,9 +1,12 @@
 package ukma.domain;
 
+import lombok.Getter;
+
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
 
+@Getter
 public class Department implements ShortViewable, Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
@@ -42,26 +45,6 @@ public class Department implements ShortViewable, Serializable {
     public void setLocation(String location) {
         if (location == null || location.trim().isEmpty()) throw new IllegalArgumentException("input can't be empty");
         this.location = location;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public Faculty getFaculty() {
-        return faculty;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public Teacher getHead() {
-        return head;
     }
 
     @Override
