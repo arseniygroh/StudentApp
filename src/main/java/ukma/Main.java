@@ -10,7 +10,7 @@ public class Main {
     public static void main(String[] args) {
         ApplicationContext manager = new ApplicationContext();
         ConsoleInput inputValidator = new ConsoleInput();
-        AuthorizationService authService = new AuthorizationService(manager);
+        AuthorizationService authService = new AuthorizationService(manager, false);
         boolean isRunningProgram = true;
 
         System.out.println("WELCOME TO OUR APP!");

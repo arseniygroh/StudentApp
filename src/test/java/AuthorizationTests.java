@@ -19,13 +19,22 @@ public class AuthorizationTests {
     @BeforeEach
     public void setUp() {
         manager = new ApplicationContext(true);
-        authService = new AuthorizationService(manager);
+        authService = new AuthorizationService(manager, true);
     }
 
     @AfterEach
     public void tearDown() {
-        File file = new File("files/users.csv");
+        deleteDirectory(new File("test_files"));
+    }
+
+    private void deleteDirectory(File file) {
         if (file.exists()) {
+            File[] contents = file.listFiles();
+            if (contents != null) {
+                for (File f : contents) {
+                    deleteDirectory(f);
+                }
+            }
             file.delete();
         }
     }

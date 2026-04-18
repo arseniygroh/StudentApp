@@ -13,11 +13,13 @@ import java.util.Map;
 public class AuthorizationService {
 
     private Map<String, User> users = new HashMap<>();
-    private static final String FILE_NAME = "files/users.csv";
+    private static String FILE_NAME = "users.csv";
     private User currentUser;
     private ApplicationContext context;
 
-    public AuthorizationService(ApplicationContext context) {
+    public AuthorizationService(ApplicationContext context, boolean isTestMode) {
+        String dir = isTestMode ? "test_files/" : "files/";
+        FILE_NAME = dir + FILE_NAME;
         this.context = context;
         loadUsersFromFile();
     }
