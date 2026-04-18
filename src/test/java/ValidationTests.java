@@ -33,6 +33,13 @@ public class ValidationTests {
         assertTrue(PasswordValidator.validate(password));
     }
 
+    @Test
+    public void testNullOrEmptyPassword() {
+        assertFalse(PasswordValidator.validate(null));
+        assertFalse(PasswordValidator.validate(""));
+        assertFalse(PasswordValidator.validate("   "));
+    }
+
     @ParameterizedTest
     @ValueSource(strings = {"weakpass", "Nodigits", "12345678", "Short1!"})
     public void testInvalidPasswords(String password) {
@@ -48,8 +55,10 @@ public class ValidationTests {
 
     @Test
     public void testAnnotationValidatorFails() {
-        assertThrows(IllegalArgumentException.class, () ->
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () ->
                 new University("A", "NaUKMA", "Kyiv", "Skovorody st.")
         );
+
+        assertTrue(exception.getMessage().contains("length must be between"));
     }
 }
