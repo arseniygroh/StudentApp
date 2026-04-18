@@ -4,11 +4,11 @@ import ukma.domain.enums.Role;
 import ukma.service.AuthorizationService;
 import ukma.ui.cli.ConsoleInput;
 import ukma.ui.cli.Menu;
-import ukma.service.RegistryManager;
+import ukma.service.ApplicationContext;
 
 public class Main {
     public static void main(String[] args) {
-        RegistryManager manager = new RegistryManager();
+        ApplicationContext manager = new ApplicationContext();
         ConsoleInput inputValidator = new ConsoleInput();
         AuthorizationService authService = new AuthorizationService(manager);
         boolean isRunningProgram = true;

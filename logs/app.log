@@ -15,4 +15,4 @@
 2026-04-15 23:50:09 [main] INFO  ukma.service.AuthorizationService - Users file was successfully created at files/users.csv
 2026-04-15 23:50:09 [main] INFO  ukma.service.AuthorizationService - New user successfully registered: test.admin@ukma.edu.ua with role USER
 2026-04-15 23:50:09 [main] WARN  ukma.service.AuthorizationService - Failed registration attempt: Email test.admin@ukma.edu.ua already exists
-2026-04-15 23:50:22 [main] INFO  ukma.service.RegistryManager - Faculty with ID 3 was successfully removed
+2026-04-15 23:50:22 [main] INFO  ukma.service.ApplicationContext - Faculty with ID 3 was successfully removed

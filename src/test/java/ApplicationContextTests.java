@@ -10,7 +10,7 @@ import ukma.domain.enums.StudentStatus;
 import ukma.domain.enums.StudyForm;
 import ukma.domain.exception.FacultyNotFoundException;
 import ukma.domain.exception.StudentNotFoundException;
-import ukma.service.RegistryManager;
+import ukma.service.ApplicationContext;
 
 import java.io.File;
 import java.time.LocalDate;
@@ -18,13 +18,13 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class RegistryManagerTests {
+public class ApplicationContextTests {
 
-    private RegistryManager manager;
+    private ApplicationContext manager;
 
     @BeforeEach
     public void setUp() {
-        manager = new RegistryManager(true);
+        manager = new ApplicationContext(true);
     }
 
     @AfterEach

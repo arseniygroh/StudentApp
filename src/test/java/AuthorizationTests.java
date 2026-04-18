@@ -2,8 +2,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ukma.domain.enums.Role;
+import ukma.service.ApplicationContext;
 import ukma.service.AuthorizationService;
-import ukma.service.RegistryManager;
 
 import java.io.File;
 
@@ -12,13 +12,13 @@ import static org.junit.jupiter.api.Assertions.*;
 public class AuthorizationTests {
 
     private AuthorizationService authService;
-    private RegistryManager manager;
+    private ApplicationContext manager;
     private final String testEmail = "test.admin@ukma.edu.ua";
     private final String testPassword = "StrongPassword123";
 
     @BeforeEach
     public void setUp() {
-        manager = new RegistryManager(true);
+        manager = new ApplicationContext(true);
         authService = new AuthorizationService(manager);
     }
 

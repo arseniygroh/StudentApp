@@ -11,8 +11,8 @@ import ukma.domain.enums.Degree;
 import ukma.domain.enums.Role;
 import ukma.domain.enums.StudentStatus;
 import ukma.domain.enums.StudyForm;
+import ukma.service.ApplicationContext;
 import ukma.service.AuthorizationService;
-import ukma.service.RegistryManager;
 import ukma.service.validation.AnnotationValidator;
 
 import java.time.LocalDate;
@@ -20,11 +20,11 @@ import java.util.*;
 
 public class Menu {
     private static final Logger logger = LoggerFactory.getLogger(Menu.class);
-    private final RegistryManager manager;
+    private final ApplicationContext manager;
     private final ConsoleInput inputValidator;
     private final AuthorizationService authService;
 
-    public Menu(RegistryManager manager, ConsoleInput inputValidator, AuthorizationService authService) {
+    public Menu(ApplicationContext manager, ConsoleInput inputValidator, AuthorizationService authService) {
         this.manager = manager;
         this.inputValidator = inputValidator;
         this.authService = authService;

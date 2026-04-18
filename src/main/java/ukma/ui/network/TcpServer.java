@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ukma.domain.Student;
 import ukma.domain.exception.StudentNotFoundException;
-import ukma.service.RegistryManager;
+import ukma.service.ApplicationContext;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -16,7 +16,7 @@ public class TcpServer {
 
     public static void main(String[] args) {
         // Сервер має свій власний менеджер з даними
-        RegistryManager manager = new RegistryManager();
+        ApplicationContext manager = new ApplicationContext();
 
         logger.info("University TCP Server is starting on port 8080...");
 
@@ -38,9 +38,9 @@ public class TcpServer {
 // Клас, який обслуговує одного конкретного клієнта
 class ClientHandler implements Runnable {
     private Socket socket;
-    private RegistryManager manager;
+    private ApplicationContext manager;
 
-    public ClientHandler(Socket socket, RegistryManager manager) {
+    public ClientHandler(Socket socket, ApplicationContext manager) {
         this.socket = socket;
         this.manager = manager;
     }
