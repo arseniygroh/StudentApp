@@ -15,6 +15,7 @@ public class ApplicationContext {
     private final FacultyService facultyService;
     private final DepartmentService departmentService;
     private final ReportService reportService;
+    private final EmailRegistry emailRegistry;
 
     public ApplicationContext(boolean isTestMode) {
         String dir = isTestMode ? "test_files/" : "files/";
@@ -24,7 +25,7 @@ public class ApplicationContext {
         Repository<Faculty, Integer> facultyRepo = new FacultyRepo(dir + "faculties.ser");
         Repository<Department, Integer> departmentRepo = new DepartmentRepo(dir + "departments.ser");
 
-        EmailRegistry emailRegistry = new EmailRegistry();
+        this.emailRegistry = new EmailRegistry();
         studentRepo.getAll().forEach(s -> emailRegistry.storeEmail(s.getEmail()));
         teacherRepo.getAll().forEach(t -> emailRegistry.storeEmail(t.getEmail()));
         facultyRepo.getAll().forEach(f -> emailRegistry.storeEmail(f.getEmail()));

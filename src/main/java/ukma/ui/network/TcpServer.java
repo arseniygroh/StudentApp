@@ -1,7 +1,6 @@
 package ukma.ui.network;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import ukma.domain.Student;
 import ukma.domain.exception.StudentNotFoundException;
 import ukma.service.ApplicationContext;
@@ -10,15 +9,13 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+@Slf4j
 public class TcpServer {
-    // Створюємо логер
-    private static final Logger logger = LoggerFactory.getLogger(TcpServer.class);
-
     public static void main(String[] args) {
         // Сервер має свій власний менеджер з даними
         ApplicationContext manager = new ApplicationContext();
 
-        logger.info("University TCP Server is starting on port 8080...");
+        log.info("University TCP Server is starting on port 8080...");
 
         try (ServerSocket serverSocket = new ServerSocket(8080)) {
             while (true) {
@@ -30,7 +27,7 @@ public class TcpServer {
                 new Thread(new ClientHandler(clientSocket, manager)).start();
             }
         } catch (IOException e) {
-            logger.error("Server error occurred", e);
+            log.error("Server error occurred", e);
         }
     }
 }
@@ -38,11 +35,11 @@ public class TcpServer {
 // Клас, який обслуговує одного конкретного клієнта
 class ClientHandler implements Runnable {
     private Socket socket;
-    private ApplicationContext manager;
+    private ApplicationContext context;
 
-    public ClientHandler(Socket socket, ApplicationContext manager) {
+    public ClientHandler(Socket socket, ApplicationContext context) {
         this.socket = socket;
-        this.manager = manager;
+        this.context = context;
     }
 
     @Override
@@ -65,7 +62,7 @@ class ClientHandler implements Runnable {
                 if (inputLine.startsWith("GET_STUDENT ")) {
                     try {
                         long id = Long.parseLong(inputLine.split(" ")[1]);
-                        Student s = manager.getStudentById(id);
+                        Student s = context.getStudentService().getStudentById(id);
                         out.println(s.toShortString()); // Відправляємо рядок таблиці
                     } catch (StudentNotFoundException e) {
                         out.println("Error: " + e.getMessage());

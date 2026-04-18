@@ -1,8 +1,6 @@
 package ukma.service;
 
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import ukma.domain.User;
 import ukma.domain.enums.Role;
 import ukma.service.validation.PasswordValidator;
@@ -17,10 +15,10 @@ public class AuthorizationService {
     private Map<String, User> users = new HashMap<>();
     private static final String FILE_NAME = "files/users.csv";
     private User currentUser;
-    private ApplicationContext manager;
+    private ApplicationContext context;
 
-    public AuthorizationService(ApplicationContext manager) {
-        this.manager = manager;
+    public AuthorizationService(ApplicationContext context) {
+        this.context = context;
         loadUsersFromFile();
     }
 
@@ -99,7 +97,7 @@ public class AuthorizationService {
         }
 
         try {
-            manager.storeEmail(email);
+            context.getEmailRegistry().storeEmail(email);
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
             log.warn("Failed registration attempt: Email validation failed for {}", email);
