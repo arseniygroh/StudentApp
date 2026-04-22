@@ -37,3 +37,6 @@
 2026-04-18 19:11:11 [main] INFO  ukma.service.AuthorizationService - Users file was successfully created at files/users.csv
 2026-04-18 19:11:11 [main] INFO  ukma.service.AuthorizationService - New user successfully registered: test.admin@ukma.edu.ua with role USER
 2026-04-18 19:11:11 [main] WARN  ukma.service.AuthorizationService - Failed registration attempt: Email test.admin@ukma.edu.ua already exists
+2026-04-22 21:09:54 [main] INFO  ukma.service.AuthorizationService - User logged in successfully: admin.naukma@edu.ua
+2026-04-22 21:14:39 [main] INFO  ukma.service.AuthorizationService - User logged in successfully: admin.naukma@edu.ua
+2026-04-22 21:31:16 [main] INFO  ukma.ui.network.TcpServer - University TCP Server is starting on port 8080...
