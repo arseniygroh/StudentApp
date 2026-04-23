@@ -1,5 +1,6 @@
 package ukma.domain;
 
+import lombok.Getter;
 import ukma.domain.enums.StudentStatus;
 import ukma.domain.enums.StudyForm;
 
@@ -7,6 +8,7 @@ import java.io.Serial;
 import java.time.LocalDate;
 import java.time.Period;
 
+@Getter
 public final class Student extends Person implements ShortViewable {
     @Serial
     private static final long serialVersionUID = 1L;
@@ -48,11 +50,6 @@ public final class Student extends Person implements ShortViewable {
         this.faculty = faculty;
     }
 
-
-    public Faculty getFaculty() {
-        return this.faculty;
-    }
-
     public void setDepartment(Department department) {
         this.department = department;
     }
@@ -90,30 +87,6 @@ public final class Student extends Person implements ShortViewable {
             throw new IllegalArgumentException("invalid input, it can't be empty");
         }
         this.courseCode = code;
-    }
-
-    public String getStudentRecordBookId() {
-        return this.studentRecordBookId;
-    }
-
-    public int getStudyYear() {
-        return this.studyYear;
-    }
-
-    public String getCourseCode() {
-        return this.courseCode;
-    }
-
-    public int getAdmissionYear() {
-        return this.admissionYear;
-    }
-
-    public StudyForm getStudyForm() {
-        return this.studyForm;
-    }
-
-    public StudentStatus getStatus() {
-        return this.status;
     }
 
     public int getAge() {
