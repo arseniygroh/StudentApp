@@ -1,5 +1,6 @@
 package ukma.ui.cli;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ukma.domain.*;
@@ -17,9 +18,10 @@ import ukma.service.validation.AnnotationValidator;
 
 import java.time.LocalDate;
 import java.util.*;
-
+import java.util.stream.Collectors;
+@Slf4j
 public class Menu {
-    private static final Logger logger = LoggerFactory.getLogger(Menu.class);
+    //private static final Logger logger = LoggerFactory.getLogger(Menu.class);
     private final ApplicationContext manager;
     private final ConsoleInput inputValidator;
     private final AuthorizationService authService;
@@ -55,6 +57,7 @@ public class Menu {
 
             if (mainMenuOption == 0) {
                 System.out.println("Goodbye!");
+                log.info("User '{}' exited the menu.", getCurrentUserEmail());
                 break;
             }
             else if (mainMenuOption == 1) {
@@ -97,6 +100,7 @@ public class Menu {
                                 System.out.println("---------------------");
                             } catch (StudentNotFoundException e) {
                                 System.out.println("Error: " + e.getMessage());
+                                log.warn("User '{}' failed to find student by ID {}: {}", getCurrentUserEmail(), id, e.getMessage());
                             }
                         } else {
                             List<Student> result = new ArrayList<>();
@@ -208,8 +212,9 @@ public class Menu {
                             int id = inputValidator.readInt("Enter ID of the faculty you want to get: ", 1, Integer.MAX_VALUE);
                             try {
                                 System.out.println(manager.getFacultyService().getFacultyById(id));
-                            } catch (Exception e) {
+                            } catch (FacultyNotFoundException e) {
                                 System.out.println(e.getMessage());
+                                log.warn("User '{}' failed to find faculty by ID {}: {}", getCurrentUserEmail(), id, e.getMessage());
                             }
                         } else manager.getFacultyService().showFacultiesAlphabeticallySorted();
                     } else break;
@@ -246,6 +251,7 @@ public class Menu {
                             try {
                                 System.out.println(manager.getTeacherService().getTeacherById(id));
                             } catch (TeacherNotFoundException e) {
+                                log.warn("User '{}' failed to find teacher by ID {}: {}", getCurrentUserEmail(), id, e.getMessage());
                                 System.out.println("Error: " + e.getMessage());
                             }
                         } else {
@@ -304,8 +310,9 @@ public class Menu {
                         int id = inputValidator.readInt("Enter ID of the department you want to get: ", 1, Integer.MAX_VALUE);
                         try {
                             System.out.println(manager.getDepartmentService().getDepartmentById(id));
-                        } catch (Exception e) {
+                        } catch (DepartmentNotFoundException e) {
                             System.out.println("Error: " + e.getMessage());
+                            log.warn("User '{}' failed to find department by ID {}: {}", getCurrentUserEmail(), id, e.getMessage());
                         }
                     } else if (option == 4) {
                         manager.getDepartmentService().showAllDepartments();
@@ -372,25 +379,31 @@ public class Menu {
                         break;
                     } catch (IllegalArgumentException e) {
                         System.out.println(e.getMessage() + " Try another one!");
+                        log.warn("Admin '{}' failed email validation during user update: {}", getCurrentUserEmail(), e.getMessage());
                     }
                 }
                 if (!oldEmail.equals(email)) manager.getEmailRegistry().removeEmail(oldEmail);
                 userToUpdate.setEmail(email);
+                log.info("Admin '{}' updated user email from {} to {}", getCurrentUserEmail(), oldEmail, email);
 
             } else if (option == 2) {
                 String password = inputValidator.readPassword("Enter password: ");
                 userToUpdate.setPassword(password);
+                log.info("Admin '{}' updated password for user {}", getCurrentUserEmail(), userToUpdate.getEmail());
             } else if (option == 3) {
                 Role role = getSelectedRole();
                 userToUpdate.setRole(role);
+                log.info("Admin '{}' changed role for user {} to {}", getCurrentUserEmail(), userToUpdate.getEmail(), role);
 
             } else if (option == 4) {
                 if (userToUpdate.isBlocked()) {
                     System.out.println("User is currently BLOCKED. Unblocking...");
                     userToUpdate.setBlocked(false);
+                    log.info("Admin '{}' unblocked user {}", getCurrentUserEmail(), userToUpdate.getEmail());
                 } else {
                     System.out.println("User is currently ACTIVE. Blocking...");
                     userToUpdate.setBlocked(true);
+                    log.info("Admin '{}' blocked user {}", getCurrentUserEmail(), userToUpdate.getEmail());
                 }
 
             } else {
@@ -414,10 +427,15 @@ public class Menu {
 
         try {
             boolean isAdded = authService.register(email, password, role);
-            if (isAdded) System.out.println("User was successfully registred");
-            else System.out.println("Such user already exists");
+            if (isAdded) {
+                System.out.println("User was successfully registered");
+                log.info("Admin '{}' registered a new user: {} with role {}", getCurrentUserEmail(), email, role);
+            } else {
+                System.out.println("Such user already exists");
+            }
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
+            log.warn("Admin '{}' failed to register user {}: {}", getCurrentUserEmail(), email, e.getMessage());
         }
     }
 
@@ -495,6 +513,7 @@ public class Menu {
                                 System.out.println("Dean updated!");
                             } catch (Exception e) {
                                 System.out.println("Teacher not found. Dean not updated.");
+                                log.warn("User '{}' tried to set non-existent teacher ID {} as dean", getCurrentUserEmail(), teacherId);
                             }
                         } else facultyToUpdate.setDean(null);
                     } else if (option == 3) {
@@ -520,10 +539,12 @@ public class Menu {
                         facultyToUpdate.setPhone(phone);
                     } else break;
                     System.out.println("Faculty with ID " + id + " has been successfully updated");
+                    log.info("User '{}' successfully updated faculty ID: {}", getCurrentUserEmail(), facultyToUpdate.getId());
                     manager.getFacultyService().updateFaculty(facultyToUpdate);
                 }
             } catch (FacultyNotFoundException e) {
                 System.out.println(e.getMessage());
+                log.warn("User '{}' failed to update faculty: {}", getCurrentUserEmail(), e.getMessage());
                 continue;
             }
 
@@ -553,6 +574,7 @@ public class Menu {
                 dean = manager.getTeacherService().getTeacherById(teacherId);
             } catch (Exception e) {
                 System.out.println("Teacher not found");
+                log.warn("User '{}' tried to set non-existent teacher ID {} as dean during faculty creation", getCurrentUserEmail(), teacherId);
             }
         }
 
@@ -575,8 +597,10 @@ public class Menu {
         try {
             Faculty faculty = new Faculty(name, shortName, dean, email, phone);
             manager.getFacultyService().addFaculty(faculty);
+            log.info("User '{}' successfully added a new faculty: {}", getCurrentUserEmail(), name);
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
+            log.warn("User '{}' failed to add faculty: {}", getCurrentUserEmail(), e.getMessage());
         }
     }
 
@@ -610,19 +634,20 @@ public class Menu {
         StudyForm studyForm = selectStudyForm();
         StudentStatus status = selectStudentStatus();
         Faculty faculty = selectFaculty();
-        Department department = selectDepartment();
+        Department department = selectDepartmentWithinFaculty(faculty);
 
         try {
             Student newStudent = new Student(
                     firstName, lastName, fatherName, birthDate, email, phone,
                     recordBookId, year, courseCode, admYear, studyForm, status, faculty, department
             );
-
+            AnnotationValidator.validate(newStudent);
             manager.getStudentService().addStudent(newStudent);
             System.out.println("Student added successfully!");
-
+            log.info("User '{}' successfully added a new student: {} {}", getCurrentUserEmail(), firstName, lastName);
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
+            log.warn("User '{}' failed to add student: {}", getCurrentUserEmail(), e.getMessage());
         }
     }
 
@@ -664,10 +689,13 @@ public class Menu {
 
         try {
             Teacher teacher = new Teacher(firstName, lastName, fatherName, birthDate, email, phone, degree, occupation, academicRank, hireDate, rate, department);
+            AnnotationValidator.validate(teacher);
             manager.getTeacherService().addTeacher(teacher);
             System.out.println("Teacher added successfully!");
+            log.info("User '{}' successfully added a new teacher: {} {}", getCurrentUserEmail(), firstName, lastName);
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
+            log.warn("User '{}' failed to add teacher: {}", getCurrentUserEmail(), e.getMessage());
         }
     }
 
@@ -767,12 +795,15 @@ public class Menu {
                         AnnotationValidator.validate(teacherToUpdate);
                         manager.getTeacherService().updateTeacher(teacherToUpdate);
                         System.out.println("Teacher with ID " + teacherId + " has been successfully updated!");
+                        log.info("User '{}' successfully updated teacher ID: {}", getCurrentUserEmail(), teacherId);
                     } catch (IllegalArgumentException e) {
                         System.out.println("Validation failed: " + e.getMessage());
+                        log.warn("User '{}' failed validation while updating teacher ID {}: {}", getCurrentUserEmail(), teacherId, e.getMessage());
                     }
                 }
             } catch (TeacherNotFoundException e) {
                 System.out.println("Error: " + e.getMessage());
+                log.warn("User '{}' failed to update teacher: {}", getCurrentUserEmail(), e.getMessage());
                 continue;
             }
 
@@ -803,6 +834,7 @@ public class Menu {
                 head = manager.getTeacherService().getTeacherById(teacherId);
             } catch (Exception e) {
                 System.out.println("Teacher not found");
+                log.warn("User '{}' tried to set non-existent teacher ID {} as head during department creation", getCurrentUserEmail(), teacherId);
             }
         }
 
@@ -810,8 +842,10 @@ public class Menu {
             Department dept = new Department(name, faculty, head, location);
             manager.getDepartmentService().addDepartment(dept);
             System.out.println("Department added successfully!");
+            log.info("User '{}' successfully added a new department: {}", getCurrentUserEmail(), name);
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
+            log.warn("User '{}' failed to add department: {}", getCurrentUserEmail(), e.getMessage());
         }
     }
 
@@ -875,16 +909,19 @@ public class Menu {
                                 System.out.println("Head of department updated!");
                             } catch (Exception e) {
                                 System.out.println("Teacher not found. Head not updated.");
+                                log.warn("User '{}' tried to set non-existent teacher ID {} as head", getCurrentUserEmail(), teacherId);
                             }
                         } else deptToUpdate.setHead(null);
 
                     } else break;
 
-                    System.out.println("Department with ID " + deptId + " has been successfully updated!");
                     manager.getDepartmentService().updateDepartment(deptToUpdate);
+                    System.out.println("Department with ID " + deptId + " has been successfully updated!");
+                    log.info("User '{}' successfully updated department ID: {}", getCurrentUserEmail(), deptId);
                 }
             } catch (DepartmentNotFoundException e) {
                 System.out.println("Error: " + e.getMessage());
+                log.warn("User '{}' failed to update department: {}", getCurrentUserEmail(), e.getMessage());
                 continue;
             }
 
@@ -961,6 +998,34 @@ public class Menu {
                 System.out.println(e.getMessage());
             }
         }
+        return chosen;
+    }
+
+    private Department selectDepartmentWithinFaculty(Faculty faculty) {
+        Map<Integer, Department> availableDeps = manager.getDepartmentService().getDepartments().values()
+                .stream()
+                .filter(depart -> faculty.equals(depart.getFaculty()))
+                .collect(Collectors.toMap(Department::getId, java.util.function.Function.identity()));
+
+        if (availableDeps.isEmpty()) {
+            System.out.println("There are no available departments within " + faculty.getName());
+            return null;
+        }
+
+        System.out.println("Available departments for " + faculty.getName() + ":");
+        for (Department d : availableDeps.values()) {
+            System.out.println(d.getId() + " - " + d.getName());
+        }
+
+        Department chosen = null;
+        while (chosen == null) {
+            int id = inputValidator.readInt("Enter Department ID: ", 1, Integer.MAX_VALUE);
+            chosen = availableDeps.get(id);
+            if (chosen == null) {
+                System.out.println("Error: Department with ID " + id + " does not exist in this faculty. Try again.");
+            }
+        }
+
         return chosen;
     }
 
@@ -1049,9 +1114,11 @@ public class Menu {
                             studentToUpdate.setFaculty(newFaculty);
                         }
                     } else if (option == 11) {
-                        Department newDept = selectDepartment();
+                        Department newDept = selectDepartmentWithinFaculty(studentToUpdate.getFaculty());
                         if (newDept != null) {
                             studentToUpdate.setDepartment(newDept);
+                        } else {
+                            log.warn("User '{}' attempted to assign null department to student ID {}", getCurrentUserEmail(), studentToUpdate.getId());
                         }
                     } else {
                         break;
@@ -1060,12 +1127,15 @@ public class Menu {
                         AnnotationValidator.validate(studentToUpdate);
                         manager.getStudentService().updateStudent(studentToUpdate);
                         System.out.println("Student with an id = " + studentToUpdate.getId() + " was successfully updated!");
+                        log.info("User '{}' successfully updated student ID: {}", getCurrentUserEmail(), studentToUpdate.getId());
                     } catch (IllegalArgumentException e) {
                         System.out.println("Validation failed: " + e.getMessage());
+                        log.warn("User '{}' failed validation while updating student ID {}: {}", getCurrentUserEmail(), studentToUpdate.getId(), e.getMessage());
                     }
                 }
             } catch (StudentNotFoundException e) {
                 System.out.println("Error: " + e.getMessage());
+                log.warn("User '{}' failed to update student: {}", getCurrentUserEmail(), e.getMessage());
                 continue;
             }
 
@@ -1112,6 +1182,10 @@ public class Menu {
     private void handleUnauthorizedAccess() {
         System.out.println("Access denied: You don't have a right to do it");
         String userEmail = (authService.getCurrentUser() != null) ? authService.getCurrentUser().getEmail() : "Unknown";
-        logger.warn("Unauthorized access attempt (Access Denied) by user: {}", userEmail);
+        log.warn("Unauthorized access attempt (Access Denied) by user: {}", userEmail);
+    }
+
+    private String getCurrentUserEmail() {
+        return (authService.getCurrentUser() != null) ? authService.getCurrentUser().getEmail() : "Unknown/System";
     }
 }

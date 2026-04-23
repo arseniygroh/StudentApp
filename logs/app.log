@@ -40,3 +40,39 @@
 2026-04-22 21:09:54 [main] INFO  ukma.service.AuthorizationService - User logged in successfully: admin.naukma@edu.ua
 2026-04-22 21:14:39 [main] INFO  ukma.service.AuthorizationService - User logged in successfully: admin.naukma@edu.ua
 2026-04-22 21:31:16 [main] INFO  ukma.ui.network.TcpServer - University TCP Server is starting on port 8080...
+2026-04-23 13:46:47 [main] INFO  ukma.service.AuthorizationService - User logged in successfully: admin.naukma@edu.ua
+2026-04-23 13:48:03 [main] INFO  ukma.service.AuthorizationService - User logged in successfully: admin.naukma@edu.ua
+2026-04-23 13:53:46 [main] INFO  ukma.service.AuthorizationService - User logged in successfully: admin.naukma@edu.ua
+2026-04-23 13:55:48 [main] INFO  ukma.ui.cli.Menu - User 'admin.naukma@edu.ua' successfully added a new student: Юрій Волошанович
+2026-04-23 13:57:20 [main] INFO  ukma.ui.cli.Menu - User 'admin.naukma@edu.ua' successfully added a new faculty: Факультет гуманітарних наук
+2026-04-23 13:57:26 [main] INFO  ukma.ui.cli.Menu - User 'admin.naukma@edu.ua' exited the menu.
+2026-04-23 14:01:45 [main] INFO  ukma.service.AuthorizationService - User logged in successfully: admin.naukma@edu.ua
+2026-04-23 14:05:39 [main] INFO  ukma.ui.cli.Menu - User 'admin.naukma@edu.ua' successfully updated teacher ID: 2
+2026-04-23 14:06:58 [main] INFO  ukma.ui.cli.Menu - User 'admin.naukma@edu.ua' exited the menu.
+2026-04-23 14:07:43 [main] INFO  ukma.service.FacultyService - Faculty with ID 3 was successfully removed
+2026-04-23 14:07:49 [main] INFO  ukma.service.AuthorizationService - Users file was successfully created at test_files/users.csv
+2026-04-23 14:07:49 [main] INFO  ukma.service.AuthorizationService - New user successfully registered: test.admin@ukma.edu.ua with role MANAGER
+2026-04-23 14:07:49 [main] INFO  ukma.service.AuthorizationService - User logged in successfully: test.admin@ukma.edu.ua
+2026-04-23 14:07:49 [main] INFO  ukma.service.AuthorizationService - Users file was successfully created at test_files/test_files/users.csv
+2026-04-23 14:07:49 [main] INFO  ukma.service.AuthorizationService - New user successfully registered: test.admin@ukma.edu.ua with role ADMIN
+2026-04-23 14:07:49 [main] INFO  ukma.service.AuthorizationService - Users file was successfully created at test_files/test_files/test_files/users.csv
+2026-04-23 14:07:49 [main] INFO  ukma.service.AuthorizationService - New user successfully registered: test.admin@ukma.edu.ua with role USER
+2026-04-23 14:07:49 [main] INFO  ukma.service.AuthorizationService - User logged in successfully: test.admin@ukma.edu.ua
+2026-04-23 14:07:49 [main] INFO  ukma.service.AuthorizationService - User logged out: test.admin@ukma.edu.ua
+2026-04-23 14:07:49 [main] INFO  ukma.service.AuthorizationService - Users file was successfully created at test_files/test_files/test_files/test_files/users.csv
+2026-04-23 14:07:49 [main] INFO  ukma.service.AuthorizationService - New user successfully registered: test.admin@ukma.edu.ua with role USER
+2026-04-23 14:07:49 [main] WARN  ukma.service.AuthorizationService - Blocked user attempted to login: test.admin@ukma.edu.ua
+2026-04-23 14:07:49 [main] INFO  ukma.service.AuthorizationService - Users file was successfully created at test_files/test_files/test_files/test_files/test_files/users.csv
+2026-04-23 14:07:49 [main] INFO  ukma.service.AuthorizationService - New user successfully registered: test.admin@ukma.edu.ua with role USER
+2026-04-23 14:07:49 [main] WARN  ukma.service.AuthorizationService - Failed login attempt for email: test.admin@ukma.edu.ua
+2026-04-23 14:07:49 [main] INFO  ukma.service.AuthorizationService - Users file was successfully created at test_files/test_files/test_files/test_files/test_files/test_files/users.csv
+2026-04-23 14:07:49 [main] INFO  ukma.service.AuthorizationService - New user successfully registered: test.admin@ukma.edu.ua with role USER
+2026-04-23 14:07:49 [main] WARN  ukma.service.AuthorizationService - Failed registration attempt: Email test.admin@ukma.edu.ua already exists
+2026-04-23 14:08:14 [main] WARN  ukma.service.validation.AnnotationValidator - Validation Failed for field 'name': current length is 1, required [5, 100]
+2026-04-23 14:08:50 [main] INFO  ukma.service.AuthorizationService - User logged in successfully: admin.naukma@edu.ua
+2026-04-23 14:09:56 [main] INFO  ukma.service.AuthorizationService - User logged in successfully: admin.naukma@edu.ua
+2026-04-23 14:13:51 [main] INFO  ukma.service.AuthorizationService - User logged in successfully: admin.naukma@edu.ua
+2026-04-23 14:14:59 [main] WARN  ukma.service.validation.AnnotationValidator - Validation Failed for field 'firstName': current length is 1, required [2, 50]
+2026-04-23 14:14:59 [main] WARN  ukma.ui.cli.Menu - User 'admin.naukma@edu.ua' failed to add student: Validation Failed: Field 'firstName' length must be between 2 and 50. Current length is 1
+2026-04-23 14:15:40 [main] INFO  ukma.service.AuthorizationService - User logged in successfully: admin.naukma@edu.ua
+2026-04-23 14:15:56 [main] INFO  ukma.ui.cli.Menu - User 'admin.naukma@edu.ua' exited the menu.

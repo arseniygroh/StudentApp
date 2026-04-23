@@ -95,7 +95,9 @@ public class StudentService {
     }
 
     public void showAll() {
-        List<Student> students = studentRepository.getAll();
+        List<Student> students = studentRepository.getAll().stream()
+                .sorted(Comparator.comparing(Student::getFullName))
+                .toList();
         if (students.isEmpty()) {
             System.out.println("Student repository is empty");
             return;
