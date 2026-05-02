@@ -1,8 +1,7 @@
 package ukma.ui.cli;
 
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import ukma.domain.*;
 import ukma.domain.exception.DepartmentNotFoundException;
 import ukma.domain.exception.FacultyNotFoundException;
@@ -21,7 +20,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 @Slf4j
 public class Menu {
-    //private static final Logger logger = LoggerFactory.getLogger(Menu.class);
     private final ApplicationContext manager;
     private final ConsoleInput inputValidator;
     private final AuthorizationService authService;
@@ -538,9 +536,11 @@ public class Menu {
                         }
                         facultyToUpdate.setPhone(phone);
                     } else break;
+                    manager.getFacultyService().updateFaculty(facultyToUpdate);
+                    synchronizeRelationships();
                     System.out.println("Faculty with ID " + id + " has been successfully updated");
                     log.info("User '{}' successfully updated faculty ID: {}", getCurrentUserEmail(), facultyToUpdate.getId());
-                    manager.getFacultyService().updateFaculty(facultyToUpdate);
+
                 }
             } catch (FacultyNotFoundException e) {
                 System.out.println(e.getMessage());
@@ -634,7 +634,10 @@ public class Menu {
         StudyForm studyForm = selectStudyForm();
         StudentStatus status = selectStudentStatus();
         Faculty faculty = selectFaculty();
-        Department department = selectDepartmentWithinFaculty(faculty);
+        Department department;
+        if (faculty != null) {
+             department = selectDepartmentWithinFaculty(faculty);
+        } else department = selectDepartment();
 
         try {
             Student newStudent = new Student(
@@ -794,6 +797,7 @@ public class Menu {
                     try {
                         AnnotationValidator.validate(teacherToUpdate);
                         manager.getTeacherService().updateTeacher(teacherToUpdate);
+                        synchronizeRelationships();
                         System.out.println("Teacher with ID " + teacherId + " has been successfully updated!");
                         log.info("User '{}' successfully updated teacher ID: {}", getCurrentUserEmail(), teacherId);
                     } catch (IllegalArgumentException e) {
@@ -916,6 +920,7 @@ public class Menu {
                     } else break;
 
                     manager.getDepartmentService().updateDepartment(deptToUpdate);
+                    synchronizeRelationships();
                     System.out.println("Department with ID " + deptId + " has been successfully updated!");
                     log.info("User '{}' successfully updated department ID: {}", getCurrentUserEmail(), deptId);
                 }
@@ -1126,6 +1131,7 @@ public class Menu {
                     try {
                         AnnotationValidator.validate(studentToUpdate);
                         manager.getStudentService().updateStudent(studentToUpdate);
+                        synchronizeRelationships();
                         System.out.println("Student with an id = " + studentToUpdate.getId() + " was successfully updated!");
                         log.info("User '{}' successfully updated student ID: {}", getCurrentUserEmail(), studentToUpdate.getId());
                     } catch (IllegalArgumentException e) {
@@ -1183,6 +1189,84 @@ public class Menu {
         System.out.println("Access denied: You don't have a right to do it");
         String userEmail = (authService.getCurrentUser() != null) ? authService.getCurrentUser().getEmail() : "Unknown";
         log.warn("Unauthorized access attempt (Access Denied) by user: {}", userEmail);
+    }
+
+    private void synchronizeRelationships() {
+        log.info("Starting synchronization of object relationships...");
+
+        for (Student student : manager.getStudentService().getStudents().values()) {
+            if (student.getFaculty() != null) {
+                try {
+                    Faculty freshFaculty = manager.getFacultyService().getFacultyById(student.getFaculty().getId());
+                    student.setFaculty(freshFaculty);
+                } catch (Exception e) {
+                    log.warn("Faculty ID {} not found for Student ID {}. Setting to null.", student.getFaculty().getId(), student.getId());
+                    student.setFaculty(null);
+                }
+            }
+
+            if (student.getDepartment() != null) {
+                try {
+                    Department freshDept = manager.getDepartmentService().getDepartmentById(student.getDepartment().getId());
+                    student.setDepartment(freshDept);
+                } catch (Exception e) {
+                    log.warn("Department ID {} not found for Student ID {}. Setting to null.", student.getDepartment().getId(), student.getId());
+                    student.setDepartment(null);
+                }
+            }
+        }
+
+        for (Teacher teacher : manager.getTeacherService().getTeachers().values()) {
+            if (teacher.getDepartment() != null) {
+                try {
+                    Department freshDept = manager.getDepartmentService().getDepartmentById(teacher.getDepartment().getId());
+                    teacher.setDepartment(freshDept);
+                } catch (Exception e) {
+                    log.warn("Department ID {} not found for Teacher ID {}. Setting to null.", teacher.getDepartment().getId(), teacher.getId());
+                    teacher.setDepartment(null);
+                }
+            }
+        }
+
+        for (Department department : manager.getDepartmentService().getDepartments().values()) {
+            if (department.getFaculty() != null) {
+                try {
+                    Faculty freshFaculty = manager.getFacultyService().getFacultyById(department.getFaculty().getId());
+                    department.setFaculty(freshFaculty);
+                } catch (Exception e) {
+                    log.warn("Faculty ID {} not found for Department ID {}. Setting to null.", department.getFaculty().getId(), department.getId());
+                    department.setFaculty(null);
+                }
+            }
+            if (department.getHead() != null) {
+                try {
+                    Teacher freshHead = manager.getTeacherService().getTeacherById(department.getHead().getId());
+                    department.setHead(freshHead);
+                } catch (Exception e) {
+                    log.warn("Head Teacher ID {} not found for Department ID {}. Setting to null.", department.getHead().getId(), department.getId());
+                    department.setHead(null);
+                }
+            }
+        }
+
+        for (Faculty faculty : manager.getFacultyService().getFaculties().values()) {
+            if (faculty.getDean() != null) {
+                try {
+                    Teacher freshDean = manager.getTeacherService().getTeacherById(faculty.getDean().getId());
+                    faculty.setDean(freshDean);
+                } catch (Exception e) {
+                    log.warn("Dean Teacher ID {} not found for Faculty ID {}. Setting to null.", faculty.getDean().getId(), faculty.getId());
+                    faculty.setDean(null);
+                }
+            }
+        }
+
+        manager.getFacultyService().updateFacultyFile();
+        manager.getStudentService().updateStudentsFile();
+        manager.getTeacherService().updateTeachersFile();
+        manager.getDepartmentService().updateDepartmentFile();
+
+        log.info("Synchronization of object relationships completed successfully.");
     }
 
     private String getCurrentUserEmail() {

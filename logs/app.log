@@ -76,3 +76,42 @@
 2026-04-23 14:14:59 [main] WARN  ukma.ui.cli.Menu - User 'admin.naukma@edu.ua' failed to add student: Validation Failed: Field 'firstName' length must be between 2 and 50. Current length is 1
 2026-04-23 14:15:40 [main] INFO  ukma.service.AuthorizationService - User logged in successfully: admin.naukma@edu.ua
 2026-04-23 14:15:56 [main] INFO  ukma.ui.cli.Menu - User 'admin.naukma@edu.ua' exited the menu.
+2026-04-23 20:09:25 [main] INFO  ukma.service.AuthorizationService - User logged in successfully: admin.naukma@edu.ua
+2026-04-23 20:16:29 [main] INFO  ukma.service.AuthorizationService - User logged in successfully: admin.naukma@edu.ua
+2026-04-23 20:17:04 [main] INFO  ukma.ui.cli.Menu - User 'admin.naukma@edu.ua' successfully updated department ID: 1
+2026-04-23 20:20:13 [main] INFO  ukma.service.AuthorizationService - User logged in successfully: admin.naukma@edu.ua
+2026-04-23 20:21:35 [main] INFO  ukma.service.DepartmentService - Department with ID 1 was successfully removed
+2026-04-23 20:26:22 [main] INFO  ukma.service.FacultyService - Faculty with ID 3 was successfully removed
+2026-04-23 20:26:30 [main] INFO  ukma.service.AuthorizationService - Users file was successfully created at test_files/users.csv
+2026-04-23 20:26:30 [main] INFO  ukma.service.AuthorizationService - New user successfully registered: test.admin@ukma.edu.ua with role MANAGER
+2026-04-23 20:26:30 [main] INFO  ukma.service.AuthorizationService - User logged in successfully: test.admin@ukma.edu.ua
+2026-04-23 20:26:30 [main] INFO  ukma.service.AuthorizationService - Users file was successfully created at test_files/test_files/users.csv
+2026-04-23 20:26:30 [main] INFO  ukma.service.AuthorizationService - New user successfully registered: test.admin@ukma.edu.ua with role ADMIN
+2026-04-23 20:26:30 [main] INFO  ukma.service.AuthorizationService - Users file was successfully created at test_files/test_files/test_files/users.csv
+2026-04-23 20:26:30 [main] INFO  ukma.service.AuthorizationService - New user successfully registered: test.admin@ukma.edu.ua with role USER
+2026-04-23 20:26:30 [main] INFO  ukma.service.AuthorizationService - User logged in successfully: test.admin@ukma.edu.ua
+2026-04-23 20:26:30 [main] INFO  ukma.service.AuthorizationService - User logged out: test.admin@ukma.edu.ua
+2026-04-23 20:26:30 [main] INFO  ukma.service.AuthorizationService - Users file was successfully created at test_files/test_files/test_files/test_files/users.csv
+2026-04-23 20:26:30 [main] INFO  ukma.service.AuthorizationService - New user successfully registered: test.admin@ukma.edu.ua with role USER
+2026-04-23 20:26:30 [main] WARN  ukma.service.AuthorizationService - Blocked user attempted to login: test.admin@ukma.edu.ua
+2026-04-23 20:26:30 [main] INFO  ukma.service.AuthorizationService - Users file was successfully created at test_files/test_files/test_files/test_files/test_files/users.csv
+2026-04-23 20:26:30 [main] INFO  ukma.service.AuthorizationService - New user successfully registered: test.admin@ukma.edu.ua with role USER
+2026-04-23 20:26:30 [main] WARN  ukma.service.AuthorizationService - Failed login attempt for email: test.admin@ukma.edu.ua
+2026-04-23 20:26:30 [main] INFO  ukma.service.AuthorizationService - Users file was successfully created at test_files/test_files/test_files/test_files/test_files/test_files/users.csv
+2026-04-23 20:26:30 [main] INFO  ukma.service.AuthorizationService - New user successfully registered: test.admin@ukma.edu.ua with role USER
+2026-04-23 20:26:30 [main] WARN  ukma.service.AuthorizationService - Failed registration attempt: Email test.admin@ukma.edu.ua already exists
+2026-05-02 14:27:29 [main] INFO  ukma.service.AuthorizationService - User logged in successfully: admin.naukma@edu.ua
+2026-05-02 14:27:46 [main] WARN  ukma.ui.cli.Menu - User 'admin.naukma@edu.ua' failed to update department: Department with id 1 was not found
+2026-05-02 14:28:03 [main] INFO  ukma.ui.cli.Menu - Starting synchronization of object relationships...
+2026-05-02 14:28:03 [main] WARN  ukma.ui.cli.Menu - Department ID 1 not found for Student ID 4. Setting to null.
+2026-05-02 14:28:03 [main] WARN  ukma.ui.cli.Menu - Department ID 1 not found for Student ID 5. Setting to null.
+2026-05-02 14:28:03 [main] WARN  ukma.ui.cli.Menu - Department ID 1 not found for Student ID 6. Setting to null.
+2026-05-02 14:28:03 [main] INFO  ukma.ui.cli.Menu - Synchronization of object relationships completed successfully.
+2026-05-02 14:28:03 [main] INFO  ukma.ui.cli.Menu - User 'admin.naukma@edu.ua' successfully updated department ID: 2
+2026-05-02 14:28:52 [main] INFO  ukma.service.AuthorizationService - User logged in successfully: admin.naukma@edu.ua
+2026-05-02 14:32:49 [main] INFO  ukma.ui.cli.Menu - Starting synchronization of object relationships...
+2026-05-02 14:32:49 [main] INFO  ukma.ui.cli.Menu - Synchronization of object relationships completed successfully.
+2026-05-02 14:32:49 [main] INFO  ukma.ui.cli.Menu - User 'admin.naukma@edu.ua' successfully updated student ID: 4
+2026-05-02 14:34:14 [main] INFO  ukma.ui.cli.Menu - Starting synchronization of object relationships...
+2026-05-02 14:34:14 [main] INFO  ukma.ui.cli.Menu - Synchronization of object relationships completed successfully.
+2026-05-02 14:34:14 [main] INFO  ukma.ui.cli.Menu - User 'admin.naukma@edu.ua' successfully updated department ID: 5
