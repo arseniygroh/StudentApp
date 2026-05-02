@@ -3,8 +3,10 @@ package ukma.service;
 import lombok.extern.slf4j.Slf4j;
 import ukma.domain.Department;
 import ukma.domain.exception.DepartmentNotFoundException;
+import ukma.repository.DataStorage;
 import ukma.repository.Repository;
 
+import java.nio.file.Path;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -39,6 +41,11 @@ public class DepartmentService {
         }
         return departmentMap;
     }
+
+    public void updateDepartmentFile() {
+        DataStorage.saveData(Path.of("files/departments.ser"), getDepartments());
+    }
+
 
 
     public void showAllDepartments() {

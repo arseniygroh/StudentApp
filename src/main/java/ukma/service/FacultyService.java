@@ -3,8 +3,10 @@ package ukma.service;
 import lombok.extern.slf4j.Slf4j;
 import ukma.domain.Faculty;
 import ukma.domain.exception.FacultyNotFoundException;
+import ukma.repository.DataStorage;
 import ukma.repository.Repository;
 
+import java.nio.file.Path;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -60,5 +62,9 @@ public class FacultyService {
             facultyMap.put(f.getId(), f);
         }
         return facultyMap;
+    }
+
+    public void updateFacultyFile() {
+        DataStorage.saveData(Path.of("files/faculties.ser"), getFaculties());
     }
 }

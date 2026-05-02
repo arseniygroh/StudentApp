@@ -5,10 +5,14 @@ import ukma.domain.Department;
 import ukma.domain.Faculty;
 import ukma.domain.Teacher;
 import ukma.domain.exception.TeacherNotFoundException;
+import ukma.repository.DataStorage;
 import ukma.repository.Repository;
 
+import java.nio.file.Path;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 public class TeacherService {
@@ -25,6 +29,20 @@ public class TeacherService {
         this.facultyRepository = facultyRepository;
         this.departmentRepository = departmentRepository;
         this.emailRegistry = emailRegistry;
+    }
+
+
+    public Map<Long, Teacher> getTeachers() {
+        List<Teacher> teachers = teacherRepository.getAll();
+        Map<Long, Teacher> teacherMap = new HashMap<>();
+        for (Teacher t : teachers) {
+            teacherMap.put(t.getId(), t);
+        }
+        return teacherMap;
+    }
+
+    public void updateTeachersFile() {
+        DataStorage.saveData(Path.of("files/teachers.ser"), getTeachers());
     }
 
     public void addTeacher(Teacher teacher) {

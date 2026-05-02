@@ -3,11 +3,16 @@ package ukma.service;
 import lombok.extern.slf4j.Slf4j;
 import ukma.domain.Department;
 import ukma.domain.Student;
+import ukma.domain.Teacher;
 import ukma.domain.exception.StudentNotFoundException;
+import ukma.repository.DataStorage;
 import ukma.repository.Repository;
 
+import java.nio.file.Path;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 public class StudentService {
@@ -17,6 +22,19 @@ public class StudentService {
     public StudentService(Repository<Student, Long> studentRepository, EmailRegistry emailRegistry) {
         this.studentRepository = studentRepository;
         this.emailRegistry = emailRegistry;
+    }
+
+    public Map<Long, Student> getStudents() {
+        List<Student> students = studentRepository.getAll();
+        Map<Long, Student> studentMap = new HashMap<>();
+        for (Student s : students) {
+            studentMap.put(s.getId(), s);
+        }
+        return studentMap;
+    }
+
+    public void updateStudentsFile() {
+        DataStorage.saveData(Path.of("files/students.ser"), getStudents());
     }
 
     public void addStudent(Student student) {
